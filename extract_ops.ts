@@ -1,4 +1,5 @@
 const fs = require('fs');
+const assert = require('assert').strict;
 
 // pdftohtml version 0.86.1
 // pdftohtml 325383-sdm-vol-2abcd.pdf
@@ -29,6 +30,80 @@ interface OpIndexEntry {
   page: number, ops: string[]
 }
 
+function ExpandOpTitle(title: string): string[] {
+  const suffixList = ['8', '16', '32', '64', 'B', 'W', 'D', 'Q'];
+  const commaSeparated = title.split(',');
+  let ops = [];
+  for (const s of commaSeparated) {
+    const slashSeparated = s.split('/');
+    if (slashSeparated.length < 2 || !suffixList.includes(slashSeparated[1])) {
+      ops = ops.concat(slashSeparated);
+      continue;
+    }
+    // Adjustment logic for MOVDQU,VMOVDQU8/16/32/64, etc...
+    ops.push(slashSeparated[0]);
+    let base = slashSeparated[0];
+    for (const suffix of suffixList) {
+      if (!base.endsWith(suffix)) continue;
+      base = base.substr(0, base.length - suffix.length);
+    }
+    for (let i = 1; i < slashSeparated.length; i++) {
+      ops.push(base + slashSeparated[i]);
+    }
+  }
+  return ops.map((e) => e.trim());
+}
+
+function ExpandOpTitleTest() {
+  assert.deepEqual(
+      ExpandOpTitle('MOVDQU,VMOVDQU8/16/32/64'),
+      ['MOVDQU', 'VMOVDQU8', 'VMOVDQU16', 'VMOVDQU32', 'VMOVDQU64']);
+  assert.deepEqual(
+      ExpandOpTitle('MOVDQA,VMOVDQA32/64'),
+      ['MOVDQA', 'VMOVDQA32', 'VMOVDQA64']);
+  assert.deepEqual(
+      ExpandOpTitle('MOVS/MOVSB/MOVSW/MOVSD/MOVSQ'),
+      ['MOVS','MOVSB','MOVSW','MOVSD','MOVSQ']);
+  assert.deepEqual(
+      ExpandOpTitle('VPBROADCASTB/W/D/Q'),
+      ['VPBROADCASTB', 'VPBROADCASTW', 'VPBROADCASTD', 'VPBROADCASTQ']);
+  assert.deepEqual(
+      ExpandOpTitle(' XTEST '),
+      ['XTEST']);
+}
+
+ExpandOpTitleTest();
+
+function PrintOpStatistics() {
+  const opIndexList = ExtractOpIndex();
+  const op2page = GetOpToPageDict(opIndexList);
+  const alphaCount = [];
+  const lenCount = {};
+  let longestMnemonic = "";
+  for(const k in op2page) {
+    if(longestMnemonic.length < k.length) {
+      longestMnemonic = k;
+    }
+    //
+    if(lenCount[k.length] === undefined){
+      lenCount[k.length] = 0;
+    }
+    lenCount[k.length]++;
+    //
+    const c = k.substr(0, 1);
+    if(!alphaCount[c]){
+      alphaCount[c] = 0;
+    }
+    alphaCount[c]++;
+  }
+  console.log(`Longest Mnemonic: ${longestMnemonic}`);
+  console.log(alphaCount);
+  console.log(lenCount);
+  const lenSorted = Object.keys(op2page).sort((a, b) => a.length - b.length);
+  console.log(lenSorted.toString());
+}
+PrintOpStatistics();
+
 function ExtractOpIndex(): OpIndexEntry[] {
   const data = fs.readFileSync(filename, 'utf-8');
   const data_refs = data.split('<a href="');
@@ -47,11 +122,24 @@ function ExtractOpIndex(): OpIndexEntry[] {
     // if(w[0].indexOf(" Instructions (") == -1) continue;
     const title = w[0].split('&#160;').join(' ');
     if (title.indexOf('—') == -1) continue;
-    const opfamily = title.split('—')[0];
-    const opmnemonic = opfamily.split('/').map((e) => e.trim());
-    opPageList.push({page: pnum, ops: opmnemonic});
+    const optitle = title.split('—')[0];
+    opPageList.push({page: pnum, ops: ExpandOpTitle(optitle)});
   }
   return opPageList;
+}
+
+function GetOpToPageDict(index: OpIndexEntry[]): Record<string, number[]> {
+  const dict: Record<string, number[]> = {};
+  for (const e of index) {
+    for (const op of e.ops) {
+      if (!dict[op]) {
+        dict[op] = [e.page];
+        continue;
+      }
+      dict[op].push(e.page);
+    }
+  }
+  return dict;
 }
 
 function ParseOpsInPage(pnum) {
@@ -118,8 +206,6 @@ function ParseOpsInPage(pnum) {
   }
 }
 
-const opIndexList = ExtractOpIndex();
-console.log(opIndexList);
 /*
 ParseOpsInPage(133);  // ADD
 ParseOpsInPage(699);  // MOV
