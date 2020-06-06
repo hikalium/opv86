@@ -162,6 +162,46 @@ interface Op {
   description: string;
   page: number;
 }
+function IsHeaderMatched(lines, pattern) {
+  let li = 2;
+  for (let pi = 0; pi < pattern.length; pi++, li++) {
+    if (pattern[pi] !== lines[li]) return false;
+  }
+  return true;
+}
+
+function IsBeginningOfOp(nextToken: string): boolean {
+  return nextToken !== undefined &&
+      (nextToken.match(/^\s*[0-9A-F]{2}$/) ||
+       nextToken.match(/^\s*[0-9A-F]{2}\s/) || nextToken.match(/^REX.*/)) !==
+      null;
+}
+function IsEndOfOpSection(nextToken: string): boolean {
+  return nextToken === undefined ||
+      (nextToken.match(/Description\s*$/) ||
+       nextToken.match('Instruction Operand Encoding')) != null;
+}
+
+class Parser {
+  constructor(lines) {
+    this.lines = lines;
+  }
+  SetIndex(index: number) {
+    this.index = index;
+  }
+  Peek() {
+    return this.lines[this.index];
+  }
+  Pop() {
+    return this.lines[this.index++];
+  }
+  Insert(s: string) {
+    this.lines.splice(this.index, 0, s);
+  }
+  private lines: string[];
+  private index: number;
+}
+
 const headerPattern00 = [
   'Opcode',
   'Instruction',
@@ -182,37 +222,160 @@ const headerPattern01 = [
   'Mode',
   'Leg Mode',
 ];
-
-function IsHeaderMatched(lines, pattern) {
-  let li = 2;
-  for (let pi = 0; pi < pattern.length; pi++, li++) {
-    if (pattern[pi] !== lines[li]) return false;
-  }
-  return true;
-}
-
-function IsBeginningOfOp(nextToken: string): boolean {
-  return (nextToken.match(/^\s*[0-9A-F]{2}$/) ||
-          nextToken.match(/^\s*[0-9A-F]{2}\s/) || nextToken.match(/^REX.*/)) !==
-      null;
-}
-function IsEndOfOpSection(nextToken: string): boolean {
-  return (nextToken.match(/Description\s*$/) ||
-          nextToken.match('Instruction Operand Encoding')) != null;
-}
-
 function ParseOpsInPage01(pnum: number, lines: string[]): Op[] {
+  const parser = new Parser(lines);
   const ops = [];
-  for (var i = 10; i < lines.length;) {
+  parser.SetIndex(10);
+  while (parser.Peek() !== undefined) {
+    console.log(`First Op Token: ${parser.Peek()}`)
+    if (!IsBeginningOfOp(parser.Peek()) || IsEndOfOpSection(parser.Peek())) {
+      console.log(`Not matched on ${parser.Peek()}`)
+      break;
+    }
+    const opcode = NoTags(parser.Pop());
+    const instr = NoTags(parser.Pop());
+    const last_token = parser.Peek();
+    let opEn;
+    for (;;) {
+      if (parser.Peek() === undefined) {
+        throw new Error(`No valid opEn found. last_token = ${last_token}`);
+      }
+      opEn = parser.Pop();
+      if (opEnList.includes(opEn)) {
+        break;
+      }
+    }
+    let validIn64 = parser.Pop();
+    let v = validIn64Normalizer[validIn64];
+    if (v === undefined) {
+      throw new Error(`Not a valid validIn64: '${validIn64}'`);
+    }
+    if (v !== true) {
+      if (typeof v === 'string') {
+        validIn64 = validIn64Normalizer[validIn64];
+      } else if (v instanceof Array && v.length == 2) {
+        validIn64 = v[0];
+        parser.Insert(v[1]);
+      } else {
+        throw new Error(`Not a valid v: '${v}'`);
+      }
+    }
+    const compatLegacy = parser.Pop();
+    let description = '';
+    for (;;) {
+      description += NoTags(parser.Pop());
+      console.log(description);
+      if (IsBeginningOfOp(parser.Peek()) || IsEndOfOpSection(parser.Peek()))
+        break;
+    }
+    ops.push({
+      opcode: opcode,
+      instr: instr,
+      op_en: opEn,
+      valid_in_64: validIn64,
+      compat_legacy: compatLegacy,
+      description: description,
+      page: pnum,
+    });
+  }
+  return ops;
+}
+function ParseOpsInPage01Test() {
+  assert.deepEqual(
+      ParseOpsInPage01(
+          0,
+          [
+            '224></a>INSTRUCTION SET REFERENCE, A-L',
+            'CALL—Call Procedure',
+            'Opcode',
+            'Instruction',
+            'Op/  64-bit ',
+            'Compat/',
+            'Description',
+            'En',
+            'Mode',
+            'Leg Mode',
+            'E8 <i>cw</i>',
+            'CALL <i>rel16</i>',
+            'D',
+            'N.S.',
+            'Valid',
+            'Call near, relative, displacement relative to next ',
+            'instruction.',
+            'E8 <i>cd</i>',
+            'CALL <i>rel32</i>',
+            'D',
+            'Valid',
+            'Valid',
+            'Call near, relative, displacement relative to next ',
+            'instruction. 32-bit displacement sign extended to ',
+            '64-bits in 64-bit mode.',
+            'FF /2',
+            'CALL <i>r/m16</i>',
+            'M',
+            'N.E.',
+            'Valid',
+            'Call near, absolute indirect, address given in <i>r/m16. </i>',
+          ]),
+      [
+        {
+          opcode: 'E8 cw',
+          instr: 'CALL rel16',
+          op_en: 'D',
+          valid_in_64: 'N.S.',
+          compat_legacy: 'Valid',
+          description:
+              'Call near, relative, displacement relative to next instruction.',
+          page: 0
+        },
+        {
+          opcode: 'E8 cd',
+          instr: 'CALL rel32',
+          op_en: 'D',
+          valid_in_64: 'Valid',
+          compat_legacy: 'Valid',
+          description:
+              'Call near, relative, displacement relative to next instruction. 32-bit displacement sign extended to 64-bits in 64-bit mode.',
+          page: 0
+        },
+        {
+          opcode: 'FF /2',
+          instr: 'CALL r/m16',
+          op_en: 'M',
+          valid_in_64: 'N.E.',
+          compat_legacy: 'Valid',
+          description: 'Call near, absolute indirect, address given in r/m16. ',
+          page: 0
+        },
+
+      ]);
+}
+ParseOpsInPage01Test();
+
+const headerPattern02 = [
+  // ADCX
+  'Opcode/',
+  'Op/  64/32bit  CPUID ',
+  'Description',
+  'Instruction',
+  'En',
+  'Mode ',
+  'Feature ',
+  'Support',
+  'Flag',
+];
+function ParseOpsInPage02(pnum: number, lines: string[]): Op[] {
+  const parser = new Parser(lines);
+  const ops = [];
+  for (var i = 11; i < lines.length;) {
     console.log(`First Op Token: ${lines[i]}`)
     if (!IsBeginningOfOp(lines[i]) || IsEndOfOpSection(lines[i])) {
       console.log(`Not matched on ${lines[i]}`)
       break;
     }
     const opcode = NoTags(lines[i++]);
-    const instr = NoTags(lines[i++]);
-    const last_token = lines[i];
     let opEn;
+    const last_token = lines[i];
     for (;;) {
       if (i >= lines.length) {
         throw new Error(`No valid opEn found. last_token = ${last_token}`);
@@ -222,6 +385,7 @@ function ParseOpsInPage01(pnum: number, lines: string[]): Op[] {
         break;
       }
     }
+    const instr = NoTags(lines[i++]);
     let validIn64 = lines[i++];
     let v = validIn64Normalizer[validIn64];
     if (v === undefined) {
@@ -254,6 +418,7 @@ function ParseOpsInPage01(pnum: number, lines: string[]): Op[] {
       page: pnum,
     });
   }
+  throw new Error('trap');
   return ops;
 }
 
@@ -271,7 +436,9 @@ function ParseOpsInPage(pnum: number): Op[] {
     if (IsHeaderMatched(lines, headerPattern00) ||
         IsHeaderMatched(lines, headerPattern01)) {
       ops = ops.concat(ParseOpsInPage01(pnum, lines));
-    } else{
+    } else if (IsHeaderMatched(lines, headerPattern02)) {
+      ops = ops.concat(ParseOpsInPage02(pnum, lines));
+    } else {
       throw new Error('Not matched with pattern');
     }
     console.log('----');
@@ -319,4 +486,4 @@ function ParseOps(opIndex: OpIndexEntry[]) {
   fs.writeFileSync('ops.json', JSON.stringify(allops, null, ' '));
 }
 // ParseOps(ExtractOpIndex());
-ParseOpsInPage(131);
+ParseOpsInPage(224);
