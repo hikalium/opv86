@@ -25,24 +25,28 @@ function NoTags(s) {
   return s.replace(/<i>/g, '').replace(/<\/i>/g, '');
 }
 
-function ExtractOpIndex() {
+interface OpIndexEntry {
+  page: number, ops: string[]
+}
+
+function ExtractOpIndex(): OpIndexEntry[] {
   const data = fs.readFileSync(filename, 'utf-8');
   const data_refs = data.split('<a href="');
   let lastPage = 0;
-  const opPageList = [];
-  for(const refs of data_refs) {
-    if(!refs.startsWith(filename + "#")) continue;
+  const opPageList: OpIndexEntry[] = [];
+  for (const refs of data_refs) {
+    if (!refs.startsWith(filename + '#')) continue;
     const v = refs.split('">');
-    const pnum = parseInt(v[0].split("#")[1]);
-    if(pnum < lastPage) {
+    const pnum = parseInt(v[0].split('#')[1]);
+    if (pnum < lastPage) {
       // extract normal index only. do not include figure, appendix, etc...
       break;
     }
     lastPage = pnum;
     const w = v[1].split('\n');
-    //if(w[0].indexOf(" Instructions (") == -1) continue;
+    // if(w[0].indexOf(" Instructions (") == -1) continue;
     const title = w[0].split('&#160;').join(' ');
-    if(title.indexOf('—') == -1) continue;
+    if (title.indexOf('—') == -1) continue;
     const opfamily = title.split('—')[0];
     const opmnemonic = opfamily.split('/').map((e) => e.trim());
     opPageList.push({page: pnum, ops: opmnemonic});
