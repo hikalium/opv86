@@ -14,12 +14,25 @@ const opEnList = [
   'MI',
   'I',
   'ZO',
+  'O',
+  'D',
+  'M',
+  'II',
+  'NA',
 ];
 
 const validIn64Normalizer = {
   'Valid': true,
   ' Valid': 'Valid',
+  'Valid ': 'Valid',
   'Valid N.E.': ['Valid', 'N.E.'],
+  'Valid Valid': ['Valid', 'Valid'],
+  'Invalid': true,
+  'N. E.': 'N.E.',
+  'Valid*': true,
+  'N.S.': true,
+  'N.E.': true,
+  'V/N.E.': true,
 };
 
 function NoTags(s) {
@@ -27,7 +40,8 @@ function NoTags(s) {
 }
 
 interface OpIndexEntry {
-  page: number, ops: string[]
+  page: number;
+  ops: string[];
 }
 
 function ExpandOpTitle(title: string): string[] {
@@ -63,13 +77,11 @@ function ExpandOpTitleTest() {
       ['MOVDQA', 'VMOVDQA32', 'VMOVDQA64']);
   assert.deepEqual(
       ExpandOpTitle('MOVS/MOVSB/MOVSW/MOVSD/MOVSQ'),
-      ['MOVS','MOVSB','MOVSW','MOVSD','MOVSQ']);
+      ['MOVS', 'MOVSB', 'MOVSW', 'MOVSD', 'MOVSQ']);
   assert.deepEqual(
       ExpandOpTitle('VPBROADCASTB/W/D/Q'),
       ['VPBROADCASTB', 'VPBROADCASTW', 'VPBROADCASTD', 'VPBROADCASTQ']);
-  assert.deepEqual(
-      ExpandOpTitle(' XTEST '),
-      ['XTEST']);
+  assert.deepEqual(ExpandOpTitle(' XTEST '), ['XTEST']);
 }
 
 ExpandOpTitleTest();
@@ -79,19 +91,19 @@ function PrintOpStatistics() {
   const op2page = GetOpToPageDict(opIndexList);
   const alphaCount = [];
   const lenCount = {};
-  let longestMnemonic = "";
-  for(const k in op2page) {
-    if(longestMnemonic.length < k.length) {
+  let longestMnemonic = '';
+  for (const k in op2page) {
+    if (longestMnemonic.length < k.length) {
       longestMnemonic = k;
     }
     //
-    if(lenCount[k.length] === undefined){
+    if (lenCount[k.length] === undefined) {
       lenCount[k.length] = 0;
     }
     lenCount[k.length]++;
     //
     const c = k.substr(0, 1);
-    if(!alphaCount[c]){
+    if (!alphaCount[c]) {
       alphaCount[c] = 0;
     }
     alphaCount[c]++;
@@ -102,7 +114,6 @@ function PrintOpStatistics() {
   const lenSorted = Object.keys(op2page).sort((a, b) => a.length - b.length);
   console.log(lenSorted.toString());
 }
-PrintOpStatistics();
 
 function ExtractOpIndex(): OpIndexEntry[] {
   const data = fs.readFileSync(filename, 'utf-8');
@@ -142,71 +153,170 @@ function GetOpToPageDict(index: OpIndexEntry[]): Record<string, number[]> {
   return dict;
 }
 
-function ParseOpsInPage(pnum) {
+interface Op {
+  opcode: string;
+  instr: string;
+  op_en: string;
+  valid_in_64: string;
+  compat_legacy: string;
+  description: string;
+  page: number;
+}
+const headerPattern00 = [
+  'Opcode',
+  'Instruction',
+  'Op/  64-bit ',
+  'Compat/',
+  'Description',
+  'En',
+  'Mode',
+  'Leg Mode',
+];
+const headerPattern01 = [
+  'Opcode',
+  'Instruction',
+  'Op/  64-Bit ',
+  'Compat/',
+  'Description',
+  'En',
+  'Mode',
+  'Leg Mode',
+];
+
+function IsHeaderMatched(lines, pattern) {
+  let li = 2;
+  for (let pi = 0; pi < pattern.length; pi++, li++) {
+    if (pattern[pi] !== lines[li]) return false;
+  }
+  return true;
+}
+
+function IsBeginningOfOp(nextToken: string): boolean {
+  return (nextToken.match(/^\s*[0-9A-F]{2}$/) ||
+          nextToken.match(/^\s*[0-9A-F]{2}\s/) || nextToken.match(/^REX.*/)) !==
+      null;
+}
+function IsEndOfOpSection(nextToken: string): boolean {
+  return (nextToken.match(/Description\s*$/) ||
+          nextToken.match('Instruction Operand Encoding')) != null;
+}
+
+function ParseOpsInPage01(pnum: number, lines: string[]): Op[] {
+  const ops = [];
+  for (var i = 10; i < lines.length;) {
+    console.log(`First Op Token: ${lines[i]}`)
+    if (!IsBeginningOfOp(lines[i]) || IsEndOfOpSection(lines[i])) {
+      console.log(`Not matched on ${lines[i]}`)
+      break;
+    }
+    const opcode = NoTags(lines[i++]);
+    const instr = NoTags(lines[i++]);
+    const last_token = lines[i];
+    let opEn;
+    for (;;) {
+      if (i >= lines.length) {
+        throw new Error(`No valid opEn found. last_token = ${last_token}`);
+      }
+      opEn = lines[i++];
+      if (opEnList.includes(opEn)) {
+        break;
+      }
+    }
+    let validIn64 = lines[i++];
+    let v = validIn64Normalizer[validIn64];
+    if (v === undefined) {
+      throw new Error(`Not a valid validIn64: '${validIn64}'`);
+    }
+    if (v !== true) {
+      if (typeof v === 'string') {
+        validIn64 = validIn64Normalizer[validIn64];
+      } else if (v instanceof Array && v.length == 2) {
+        validIn64 = v[0];
+        lines.splice(i, 0, v[1]);
+      } else {
+        throw new Error(`Not a valid v: '${v}'`);
+      }
+    }
+    const compatLegacy = lines[i++];
+    let description = '';
+    for (;;) {
+      description += NoTags(lines[i++]);
+      console.log(description);
+      if (IsBeginningOfOp(lines[i]) || IsEndOfOpSection(lines[i])) break;
+    }
+    ops.push({
+      opcode: opcode,
+      instr: instr,
+      op_en: opEn,
+      valid_in_64: validIn64,
+      compat_legacy: compatLegacy,
+      description: description,
+      page: pnum,
+    });
+  }
+  return ops;
+}
+
+function ParseOpsInPage(pnum: number): Op[] {
   console.log(`ParseOpsInPage: ${pnum}`);
   const data = fs.readFileSync(filename, 'utf-8');
   const data_pages = data.split('<a name=');
+  let ops = [];
   for (const page of data_pages) {
     const lines =
         page.split('\n').join('').split('&#160;').join(' ').split('<br/>');
     if (!lines[0].startsWith(`${pnum}>`)) continue;
+    console.log(lines);
     const opRefTitle = lines[1];
-    if (lines[2] != 'Opcode') continue;
-    const ops = [];
-    for (var i = 10; i < lines.length;) {
-      if (!lines[i].match(/^[0-9A-F]{2}/) && !lines[i].match(/^REX.*/)) {
-        // console.log(`Not matched on ${lines[i]}`)
-        break;
-      }
-      const opcode = NoTags(lines[i++]);
-      const instr = NoTags(lines[i++]);
-      let opEn;
-      for (;;) {
-        if (i >= lines.length) {
-          throw new Error('No valid opEn found');
-        }
-        opEn = lines[i++];
-        if (opEnList.includes(opEn)) {
-          break;
-        }
-      }
-      let validIn64 = lines[i++];
-      let v = validIn64Normalizer[validIn64];
-      if (v === undefined) {
-        throw new Error(`Not a valid validIn64: '${validIn64}'`);
-      }
-      if (v !== true) {
-        if (typeof v === 'string') {
-          validIn64 = validIn64Normalizer[validIn64];
-        } else if (v instanceof Array && v.length == 2) {
-          validIn64 = v[0];
-          lines.splice(i, 0, v[1]);
-        } else {
-          throw new Error(`Not a valid v: '${v}'`);
-        }
-      }
-      const compatLegacy = lines[i++];
-      let description = '';
-      for (;;) {
-        description += NoTags(lines[i++]);
-        if (description.endsWith('.')) break;
-      }
-      ops.push({
-        opcode: opcode,
-        instr: instr,
-        op_en: opEn,
-        valid_in_64: validIn64,
-        compat_legacy: compatLegacy,
-        description: description
-      });
+    if (IsHeaderMatched(lines, headerPattern00) ||
+        IsHeaderMatched(lines, headerPattern01)) {
+      ops = ops.concat(ParseOpsInPage01(pnum, lines));
+    } else{
+      throw new Error('Not matched with pattern');
     }
     console.log('----');
     console.log(opRefTitle);
     console.log(ops);
   }
+  return ops;
 }
 
-/*
-ParseOpsInPage(133);  // ADD
-ParseOpsInPage(699);  // MOV
-*/
+function ParseOps(opIndex: OpIndexEntry[]) {
+  const ignorePageOps = [
+    'ADCX',
+    'ADDPD',
+    'ADDPS',
+  ];
+  const shouldSkipThisOps = (e: OpIndexEntry) => {
+    for (const op of e.ops) {
+      if (ignorePageOps.includes(op)) {
+        return true;
+      }
+    }
+    return false;
+  };
+  let failedOps = {};
+  let allops = [];
+  for (const e of opIndex) {
+    // if(shouldSkipThisOps(e)) continue;
+    console.log('----');
+    console.log(e.ops);
+    console.log('----');
+    console.log(e.page);
+    try {
+      const ops = ParseOpsInPage(e.page);
+      if (ops.length == 0) {
+        throw new Error('Zero ops returned. Parse failed?');
+      }
+      console.log(ops);
+      allops = allops.concat(ops);
+    } catch (err) {
+      failedOps[e.ops.toString()] = err.toString();
+    }
+    console.log(failedOps);
+  }
+  fs.writeFileSync('failed.json', JSON.stringify(failedOps, null, ' '));
+  fs.writeFileSync('ops.json', JSON.stringify(allops, null, ' '));
+}
+// ParseOps(ExtractOpIndex());
+ParseOpsInPage(131);
