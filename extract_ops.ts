@@ -30,7 +30,7 @@ function ExtractOpIndex() {
   const data_refs = data.split('<a href="');
   let lastPage = 0;
   const opPageList = [];
-  for(refs of data_refs) {
+  for(const refs of data_refs) {
     if(!refs.startsWith(filename + "#")) continue;
     const v = refs.split('">');
     const pnum = parseInt(v[0].split("#")[1]);
@@ -116,7 +116,7 @@ function ParseOpsInPage(pnum) {
 
 const opIndexList = ExtractOpIndex();
 console.log(opIndexList);
-return;
-
+/*
 ParseOpsInPage(133);  // ADD
 ParseOpsInPage(699);  // MOV
+*/

@@ -2,3 +2,5 @@
 *.swp
 *.html
 *.png
+*.js
+node_modules/
