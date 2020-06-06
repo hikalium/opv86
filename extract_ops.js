@@ -25,6 +25,31 @@ function NoTags(s) {
   return s.replace(/<i>/g, '').replace(/<\/i>/g, '');
 }
 
+function ExtractOpIndex() {
+  const data = fs.readFileSync(filename, 'utf-8');
+  const data_refs = data.split('<a href="');
+  let lastPage = 0;
+  const opPageList = [];
+  for(refs of data_refs) {
+    if(!refs.startsWith(filename + "#")) continue;
+    const v = refs.split('">');
+    const pnum = parseInt(v[0].split("#")[1]);
+    if(pnum < lastPage) {
+      // extract normal index only. do not include figure, appendix, etc...
+      break;
+    }
+    lastPage = pnum;
+    const w = v[1].split('\n');
+    //if(w[0].indexOf(" Instructions (") == -1) continue;
+    const title = w[0].split('&#160;').join(' ');
+    if(title.indexOf('—') == -1) continue;
+    const opfamily = title.split('—')[0];
+    const opmnemonic = opfamily.split('/').map((e) => e.trim());
+    opPageList.push({page: pnum, ops: opmnemonic});
+  }
+  return opPageList;
+}
+
 function ParseOpsInPage(pnum) {
   console.log(`ParseOpsInPage: ${pnum}`);
   const data = fs.readFileSync(filename, 'utf-8');
@@ -88,6 +113,10 @@ function ParseOpsInPage(pnum) {
     console.log(ops);
   }
 }
+
+const opIndexList = ExtractOpIndex();
+console.log(opIndexList);
+return;
 
 ParseOpsInPage(133);  // ADD
 ParseOpsInPage(699);  // MOV
