@@ -367,60 +367,108 @@ const headerPattern02 = [
 function ParseOpsInPage02(pnum: number, lines: string[]): Op[] {
   const parser = new Parser(lines);
   const ops = [];
-  for (var i = 11; i < lines.length;) {
-    console.log(`First Op Token: ${lines[i]}`)
-    if (!IsBeginningOfOp(lines[i]) || IsEndOfOpSection(lines[i])) {
-      console.log(`Not matched on ${lines[i]}`)
+  parser.SetIndex(11);
+  const isExpected6432Support = {
+    'V/V': true,
+    'V/NE': true,
+  };
+  const CPUIDFeatureFlags = {
+    'ADX': true,
+  };
+  while (parser.Peek() !== undefined) {
+    console.log(`First Op Token: ${parser.Peek()}`)
+    if (!IsBeginningOfOp(parser.Peek()) || IsEndOfOpSection(parser.Peek())) {
+      console.log(`Not matched on ${parser.Peek()}`)
       break;
     }
-    const opcode = NoTags(lines[i++]);
+    const opcode = NoTags(parser.Pop());
+    const last_token = parser.Peek();
     let opEn;
-    const last_token = lines[i];
     for (;;) {
-      if (i >= lines.length) {
+      if (parser.Peek() === undefined) {
         throw new Error(`No valid opEn found. last_token = ${last_token}`);
       }
-      opEn = lines[i++];
+      opEn = parser.Pop();
       if (opEnList.includes(opEn)) {
         break;
       }
     }
-    const instr = NoTags(lines[i++]);
-    let validIn64 = lines[i++];
-    let v = validIn64Normalizer[validIn64];
-    if (v === undefined) {
-      throw new Error(`Not a valid validIn64: '${validIn64}'`);
+    let v = parser.Pop();
+    if (!isExpected6432Support[v]) {
+      throw new Error(`Not a valid v: '${v}'`);
     }
-    if (v !== true) {
-      if (typeof v === 'string') {
-        validIn64 = validIn64Normalizer[validIn64];
-      } else if (v instanceof Array && v.length == 2) {
-        validIn64 = v[0];
-        lines.splice(i, 0, v[1]);
-      } else {
-        throw new Error(`Not a valid v: '${v}'`);
-      }
+    console.log(v);
+    let cpuidf = parser.Pop();
+    if (!CPUIDFeatureFlags[cpuidf]) {
+      throw new Error(`Not a valid cpuidf: '${cpuidf}'`);
     }
-    const compatLegacy = lines[i++];
-    let description = '';
-    for (;;) {
-      description += NoTags(lines[i++]);
-      console.log(description);
-      if (IsBeginningOfOp(lines[i]) || IsEndOfOpSection(lines[i])) break;
+    console.log(`cpuidf: ${cpuidf}`);
+    let description = NoTags(parser.Pop());
+    const instr = NoTags(parser.Pop());
+    while (!IsBeginningOfOp(parser.Peek()) &&
+           !IsEndOfOpSection(parser.Peek())) {
+      description += NoTags(parser.Pop());
     }
     ops.push({
       opcode: opcode,
       instr: instr,
       op_en: opEn,
-      valid_in_64: validIn64,
-      compat_legacy: compatLegacy,
       description: description,
       page: pnum,
     });
   }
-  throw new Error('trap');
   return ops;
 }
+function ParseOpsInPage02Test() {
+  assert.deepEqual(
+      ParseOpsInPage02(
+          0,
+          [
+            '131></a>INSTRUCTION SET REFERENCE, A-L',
+            'ADCX — Unsigned Integer Addition of Two Operands with Carry Flag',
+            'Opcode/',
+            'Op/  64/32bit  CPUID ',
+            'Description',
+            'Instruction',
+            'En',
+            'Mode ',
+            'Feature ',
+            'Support',
+            'Flag',
+            '66 0F 38 F6 /r',
+            'RM',
+            'V/V',
+            'ADX',
+            'Unsigned addition of r32 with CF, r/m32 to r32, writes CF.',
+            'ADCX r32, r/m32',
+            '66 REX.w 0F 38 F6 /r',
+            'RM',
+            'V/NE',
+            'ADX',
+            'Unsigned addition of r64 with CF, r/m64 to r64, writes CF.',
+            'ADCX r64, r/m64',
+            'Instruction Operand Encoding',
+          ]),
+      [
+        {
+          opcode: '66 0F 38 F6 /r',
+          instr: 'ADCX r32, r/m32',
+          op_en: 'RM',
+          description:
+              'Unsigned addition of r32 with CF, r/m32 to r32, writes CF.',
+          page: 0
+        },
+        {
+          opcode: '66 REX.w 0F 38 F6 /r',
+          instr: 'ADCX r64, r/m64',
+          op_en: 'RM',
+          description:
+              'Unsigned addition of r64 with CF, r/m64 to r64, writes CF.',
+          page: 0
+        }
+      ]);
+}
+ParseOpsInPage02Test();
 
 function ParseOpsInPage(pnum: number): Op[] {
   console.log(`ParseOpsInPage: ${pnum}`);
@@ -485,5 +533,5 @@ function ParseOps(opIndex: OpIndexEntry[]) {
   fs.writeFileSync('failed.json', JSON.stringify(failedOps, null, ' '));
   fs.writeFileSync('ops.json', JSON.stringify(allops, null, ' '));
 }
-// ParseOps(ExtractOpIndex());
-ParseOpsInPage(224);
+ParseOps(ExtractOpIndex());
+// ParseOpsInPage(131);
