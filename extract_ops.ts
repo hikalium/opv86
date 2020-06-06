@@ -173,8 +173,8 @@ function IsHeaderMatched(lines, pattern) {
 function IsBeginningOfOp(nextToken: string): boolean {
   return nextToken !== undefined &&
       (nextToken.match(/^\s*[0-9A-F]{2}$/) ||
-       nextToken.match(/^\s*[0-9A-F]{2}\s/) || nextToken.match(/^REX.*/)) !==
-      null;
+       nextToken.match(/^\s*[0-9A-F]{2}\s/) ||
+       nextToken.match(/^(REX|NP).*/)) !== null;
 }
 function IsEndOfOpSection(nextToken: string): boolean {
   return nextToken === undefined ||
@@ -470,6 +470,102 @@ function ParseOpsInPage02Test() {
 }
 ParseOpsInPage02Test();
 
+const headerPattern03 = [
+  // CLFLUSH
+  'Opcode /',
+  'Op/  64-bit ',
+  'Compat/',
+  'Description',
+  'Instruction',
+  'En',
+  'Mode',
+  'Leg Mode',
+];
+
+function ReadOpEn(parser: Parser) {
+  const last_token = parser.Peek();
+  let opEn;
+  while (opEn = parser.Pop()) {
+    if (opEnList.includes(opEn)) {
+      return opEn;
+    }
+  }
+  throw new Error(`No valid opEn found. last_token = ${last_token}`);
+}
+function ParseOpsInPage03(pnum: number, lines: string[]): Op[] {
+  console.log(lines);
+  const parser = new Parser(lines);
+  const ops = [];
+  const isExpected6432Support = {
+    'V/V': true,
+    'V/NE': true,
+  };
+  const CPUIDFeatureFlags = {
+    'ADX': true,
+  };
+  parser.SetIndex(10);
+  while (parser.Peek() !== undefined) {
+    console.log(`First Op Token: ${parser.Peek()}`)
+    if (!IsBeginningOfOp(parser.Peek()) || IsEndOfOpSection(parser.Peek())) {
+      console.log(`Not matched on ${parser.Peek()}`)
+      break;
+    }
+    const opcode = NoTags(parser.Pop());
+    const opEn = ReadOpEn(parser);
+    let validIn64 = parser.Pop();
+    let validInCompatLegacy = parser.Pop();
+    let description = NoTags(parser.Pop());
+    const instr = NoTags(parser.Pop());
+    while (!IsBeginningOfOp(parser.Peek()) &&
+           !IsEndOfOpSection(parser.Peek())) {
+      description += NoTags(parser.Pop());
+    }
+    ops.push({
+      opcode: opcode,
+      instr: instr,
+      op_en: opEn,
+      description: description,
+      page: pnum,
+    });
+  }
+  return ops;
+}
+function ParseOpsInPage03Test() {
+  assert.deepEqual(
+      ParseOpsInPage03(
+          0,
+          [
+            '244></a>INSTRUCTION SET REFERENCE, A-L',
+            'CLFLUSH—Flush Cache Line',
+            'Opcode /',
+            'Op/  64-bit ',
+            'Compat/',
+            'Description',
+            'Instruction',
+            'En',
+            'Mode',
+            'Leg Mode',
+            'NP 0F AE /7',
+            'M',
+            'Valid',
+            'Valid',
+            'Flushes cache line containing <i>m8</i>.',
+            'CLFLUSH <i>m8</i>',
+            'Instruction Operand Encoding',
+          ]),
+      [
+        {
+          opcode: 'NP 0F AE /7',
+          instr: 'CLFLUSH m8',
+          op_en: 'M',
+          description:
+              'Flushes cache line containing m8.',
+          page: 0
+        },
+      ]);
+}
+ParseOpsInPage03Test();
+
 function ParseOpsInPage(pnum: number): Op[] {
   console.log(`ParseOpsInPage: ${pnum}`);
   const data = fs.readFileSync(filename, 'utf-8');
@@ -479,13 +575,14 @@ function ParseOpsInPage(pnum: number): Op[] {
     const lines =
         page.split('\n').join('').split('&#160;').join(' ').split('<br/>');
     if (!lines[0].startsWith(`${pnum}>`)) continue;
-    console.log(lines);
     const opRefTitle = lines[1];
     if (IsHeaderMatched(lines, headerPattern00) ||
         IsHeaderMatched(lines, headerPattern01)) {
       ops = ops.concat(ParseOpsInPage01(pnum, lines));
     } else if (IsHeaderMatched(lines, headerPattern02)) {
       ops = ops.concat(ParseOpsInPage02(pnum, lines));
+    } else if (IsHeaderMatched(lines, headerPattern03)) {
+      ops = ops.concat(ParseOpsInPage03(pnum, lines));
     } else {
       throw new Error('Not matched with pattern');
     }
@@ -534,4 +631,4 @@ function ParseOps(opIndex: OpIndexEntry[]) {
   fs.writeFileSync('ops.json', JSON.stringify(allops, null, ' '));
 }
 ParseOps(ExtractOpIndex());
-// ParseOpsInPage(131);
+//ParseOpsInPage(244);
