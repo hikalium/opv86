@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'/>
+    <title>opv86</title>
+    <link href="css/tabulator.min.css" rel="stylesheet">
+    <script type="text/javascript" src="js/tabulator.min.js"></script>
+  </head>
+  <body>
+    <input id="filter-value" type="text" placeholder="hex, mnemonic, ...">
+    <div id="example-table"></div>
+  </body>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script>
+$.getJSON(`data/ops.json` , function(data) {
+  //define table
+  var table = new Tabulator("#example-table", {
+    data:data,
+    columns:[
+        {title:"Opcode", field:"opcode"},
+        {title:"Instr", field:"instr"},
+        {title:"SDM page", field:"page"},
+        {title:"Description", field:"description"},
+        {title:"Encoding", field:"op_en"},
+    ]
+  });
+  document.getElementById("filter-value").addEventListener("keyup", () => {
+    table.setFilter("opcode","like", document.getElementById("filter-value").value);
+  });
+});
+  </script>
+</html>
