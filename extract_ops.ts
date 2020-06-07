@@ -558,17 +558,15 @@ function ParseOpsInPage03Test() {
           opcode: 'NP 0F AE /7',
           instr: 'CLFLUSH m8',
           op_en: 'M',
-          description:
-              'Flushes cache line containing m8.',
+          description: 'Flushes cache line containing m8.',
           page: 0
         },
       ]);
 }
 ParseOpsInPage03Test();
 
-function ParseOpsInPage(pnum: number): Op[] {
+function ParseOpsInPage(data: string, pnum: number): Op[] {
   console.log(`ParseOpsInPage: ${pnum}`);
-  const data = fs.readFileSync(filename, 'utf-8');
   const data_pages = data.split('<a name=');
   let ops = [];
   for (const page of data_pages) {
@@ -596,10 +594,13 @@ function ParseOpsInPage(pnum: number): Op[] {
 interface Result {
   source_file: string;
   date_parsed: string;
+  document_id: string;
+  document_version: string;
   ops: Op[];
 }
 
 function ParseOps(opIndex: OpIndexEntry[]) {
+  const data = fs.readFileSync(filename, 'utf-8');
   const ignorePageOps = [
     'ADCX',
     'ADDPD',
@@ -622,7 +623,7 @@ function ParseOps(opIndex: OpIndexEntry[]) {
     console.log('----');
     console.log(e.page);
     try {
-      const ops = ParseOpsInPage(e.page);
+      const ops = ParseOpsInPage(data, e.page);
       if (ops.length == 0) {
         throw new Error('Zero ops returned. Parse failed?');
       }
@@ -633,9 +634,34 @@ function ParseOps(opIndex: OpIndexEntry[]) {
     }
     console.log(failedOps);
   }
-  const result: Result = {source_file: filename, date_parsed: new Date().toISOString(), ops: allops}
+  const idAndVersion = ExtractDocIdAndVersion(data);
+  const result: Result = {
+    source_file: filename,
+    date_parsed: new Date().toISOString(),
+    ops: allops,
+    document_id: idAndVersion.document_id,
+    document_version: idAndVersion.document_version,
+  };
   fs.writeFileSync('failed.json', JSON.stringify(failedOps, null, ' '));
   fs.writeFileSync('ops.json', JSON.stringify(result, null, ' '));
 }
+
+function ExtractDocIdAndVersion(data: string) {
+  const rows = data.split('\n');
+  let docId;
+  let version;
+  for (let i = 0; i < rows.length; i++) {
+    if (!rows[i].startsWith('Order Number:')) continue;
+    docId = rows[i]
+                .split('&#160;')
+                .join(' ')
+                .split(':')[1]
+                .split('<br/>')[0]
+                .trim();
+    version = rows[i + 1].split('&#160;').join(' ').split('<br/>').join('');
+    break;
+  }
+  return {document_id: docId, document_version: version};
+}
 ParseOps(ExtractOpIndex());
-//ParseOpsInPage(244);
+// ParseOpsInPage(244);
