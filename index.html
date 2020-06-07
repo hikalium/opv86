@@ -26,7 +26,18 @@ body {
 h1 small {
   color: #808080;
 }
+a {
+  color: #1d68cd;
+  text-decoration: none;
+}
+a:visited {
+  color: #1d68cd;
+}
 .opv86-data-info {
+  text-align: right;
+  margin-bottom: 8px;
+}
+.opv86-site-info {
   text-align: right;
   margin-bottom: 8px;
 }
@@ -69,6 +80,7 @@ h1 small {
     <h1>opv86 <small>Opcode/Instruction finder for x86_64</small></h1>
     <input id="filter-value" class="opv86-main-hex-input" type="text" placeholder="Filter with opcode, instr...">
     <div id="data-info" class="opv86-data-info"></div>
+    <div id="site-info" class="opv86-site-info"><a href="https://github.com/hikalium/opv86">GitHub: hikalium/opv86</a></div>
     <div id="oplist" class="opv86-oplist-container"></div>
     <div id="example-table"></div>
   </body>
@@ -96,7 +108,7 @@ function updateTable(data, filter){
     oplist.append($("<div>").addClass("opv86-oplist-item-opcode").text(op.opcode));
     oplist.append($("<div>").addClass("opv86-oplist-item-instr").text(op.instr));
     oplist.append($("<div>").addClass("opv86-oplist-item-encoding").text(op.op_en));
-    oplist.append($("<div>").addClass("opv86-oplist-item-page").append($(`<a href='https://software.intel.com/content/dam/develop/public/us/en/documents/325383-sdm-vol-2abcd.pdf#page=${op.page}'>${op.page}</a>`)));
+    oplist.append($("<div>").addClass("opv86-oplist-item-page").append($(`<a target="_blank" href='https://software.intel.com/content/dam/develop/public/us/en/documents/325383-sdm-vol-2abcd.pdf#page=${op.page}'>p.${op.page}</a>`)));
     oplist.append($("<div>").addClass("opv86-oplist-item-description").text(op.description));
   }
 }
