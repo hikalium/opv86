@@ -78,6 +78,7 @@ h1 small {
 function isMatchedWithFilter(op, filter) {
   if(filter.length == 0) return true;
   if(op.opcode.replace(/ /g, "").toLowerCase().indexOf(filter) != -1) return true;
+  if(op.instr.replace(/ /g, "").toLowerCase().indexOf(filter) != -1) return true;
   return false;
 }
 
