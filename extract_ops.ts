@@ -593,6 +593,12 @@ function ParseOpsInPage(pnum: number): Op[] {
   return ops;
 }
 
+interface Result {
+  source_file: string;
+  date_parsed: string;
+  ops: Op[];
+}
+
 function ParseOps(opIndex: OpIndexEntry[]) {
   const ignorePageOps = [
     'ADCX',
@@ -627,8 +633,9 @@ function ParseOps(opIndex: OpIndexEntry[]) {
     }
     console.log(failedOps);
   }
+  const result: Result = {source_file: filename, date_parsed: new Date().toISOString(), ops: allops}
   fs.writeFileSync('failed.json', JSON.stringify(failedOps, null, ' '));
-  fs.writeFileSync('ops.json', JSON.stringify(allops, null, ' '));
+  fs.writeFileSync('ops.json', JSON.stringify(result, null, ' '));
 }
 ParseOps(ExtractOpIndex());
 //ParseOpsInPage(244);
