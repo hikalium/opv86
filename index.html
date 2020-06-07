@@ -5,9 +5,30 @@
     <title>opv86</title>
     <link href="css/tabulator.min.css" rel="stylesheet">
     <script type="text/javascript" src="js/tabulator.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro&display=swap" rel="stylesheet">
   </head>
+  <style>
+body {
+  font-family: 'Source Code Pro', monospace;
+}
+.opv86-main-hex-input {
+  font-size: 24px;
+  width: 100%;
+  border: 0px;
+  border-bottom: 2px solid #808080;
+  padding-bottom: 8px;
+  margin-bottom: 8px;
+}
+.opv86-main-hex-input:focus {
+  outline: 0;
+}
+h1 small {
+  color: #808080;
+}
+  </style>
   <body>
-    <input id="filter-value" type="text" placeholder="hex, mnemonic, ...">
+    <h1>opv86 <small>Opcode / Instruction finder for x86_64</small></h1>
+    <input id="filter-value" class="opv86-main-hex-input" type="text" placeholder="Filter with opcode...">
     <div id="example-table"></div>
   </body>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
