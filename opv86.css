@@ -47,6 +47,41 @@ a:visited {
   text-align: center;
   background-color: #c0ffee;
 }
+.opv86-opcode-byte-modrm {
+  width: 60px;
+  height: 20px;
+  display: inline;
+  text-align: center;
+  background-color: #ffeec0;
+}
+.opv86-opcode-byte-imm8 {
+  grid-column: span 1;
+  height: 20px;
+  display: inline;
+  text-align: center;
+  background-color: #eeeeee;
+}
+.opv86-opcode-byte-imm16 {
+  grid-column: span 2;
+  height: 20px;
+  display: inline;
+  text-align: center;
+  background-color: #eeeeee;
+}
+.opv86-opcode-byte-imm32 {
+  grid-column: span 4;
+  height: 20px;
+  display: inline;
+  text-align: center;
+  background-color: #eeeeee;
+}
+.opv86-opcode-byte-imm64 {
+  grid-column: span 8;
+  height: 20px;
+  display: inline;
+  text-align: center;
+  background-color: #eeeeee;
+}
 .opv86-opcode-byte-normal {
   width: 60px;
   height: 20px;

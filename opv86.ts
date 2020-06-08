@@ -21,11 +21,25 @@ function updateTable(data, filter){
     const opcodeBytes = op.opcode
       .replace(/REX\.W \+/g, "REX.W")
       .replace(/REX \+/g, "REX")
+      .replace(/ \+ /g, "+")
+      .replace(/\+ /g, "+")
+      .replace(/ \+/g, "+")
+      .trim()
       .split(" ");
     for(const opByte of opcodeBytes) {
       const e = $("<div>").text(opByte);
       if(opByte.indexOf("REX") != -1) {
         e.addClass("opv86-opcode-byte-prefix");
+      } else if(opByte.indexOf("/") != -1) {
+        e.addClass("opv86-opcode-byte-modrm");
+      } else if(opByte.indexOf("ib") != -1) {
+        e.addClass("opv86-opcode-byte-imm8");
+      } else if(opByte.indexOf("iw") != -1) {
+        e.addClass("opv86-opcode-byte-imm16");
+      } else if(opByte.indexOf("id") != -1) {
+        e.addClass("opv86-opcode-byte-imm32");
+      } else if(opByte.indexOf("io") != -1) {
+        e.addClass("opv86-opcode-byte-imm64");
       } else{
         e.addClass("opv86-opcode-byte-normal");
       }
