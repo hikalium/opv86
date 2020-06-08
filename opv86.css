@@ -1,0 +1,67 @@
+body {
+  font-family: 'Source Code Pro', monospace;
+}
+.opv86-main-hex-input {
+  font-family: 'Source Code Pro', monospace;
+  font-size: 24px;
+  width: 100%;
+  border: 0px;
+  border-bottom: 2px solid #808080;
+  padding-bottom: 8px;
+  margin-bottom: 8px;
+}
+.opv86-main-hex-input:focus {
+  outline: 0;
+}
+h1 small {
+  color: #808080;
+}
+a {
+  color: #1d68cd;
+  text-decoration: none;
+}
+a:visited {
+  color: #1d68cd;
+}
+.opv86-data-info {
+  text-align: right;
+  margin-bottom: 8px;
+}
+.opv86-site-info {
+  text-align: right;
+  margin-bottom: 8px;
+}
+.opv86-oplist-container {
+  display: grid;
+  grid-template-columns: 256px 256px 100px 100px auto;
+  row-gap: 2px;
+  background-color: #808080;
+}
+.opv86-oplist-header {
+  background-color: #eeeeee;
+}
+.opv86-oplist-item-opcode {
+  grid-column-start: 1;
+  grid-column-end: 2;
+  background-color: #ffffff;
+}
+.opv86-oplist-item-instr {
+  grid-column-start: 2;
+  grid-column-end: 3;
+  background-color: #ffffff;
+}
+.opv86-oplist-item-encoding {
+  grid-column-start: 3;
+  grid-column-end: 4;
+  background-color: #ffffff;
+}
+.opv86-oplist-item-page {
+  grid-column-start: 4;
+  grid-column-end: 5;
+  background-color: #ffffff;
+}
+.opv86-oplist-item-description {
+  grid-column-start: 5;
+  grid-column-end: 6;
+  background-color: #ffffff;
+}
