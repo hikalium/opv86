@@ -85,52 +85,5 @@ a:visited {
     <div id="example-table"></div>
   </body>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script>
-
-function isMatchedWithFilter(op, filter) {
-  if(filter.length == 0) return true;
-  if(op.opcode.replace(/ /g, "").toLowerCase().indexOf(filter) != -1) return true;
-  if(op.instr.replace(/ /g, "").toLowerCase().indexOf(filter) != -1) return true;
-  return false;
-}
-
-function updateTable(data, filter){
-  const oplist = $("#oplist");
-  oplist.empty();
-  filter = filter.trim().toLowerCase();
-  oplist.append($("<div>").addClass("opv86-oplist-header").text("Opcode"));
-  oplist.append($("<div>").addClass("opv86-oplist-header").text("Instr"));
-  oplist.append($("<div>").addClass("opv86-oplist-header").text("Encoding"));
-  oplist.append($("<div>").addClass("opv86-oplist-header").text("Page in SDM(phys)"));
-  oplist.append($("<div>").addClass("opv86-oplist-header").text("Description"));
-  for(const op of data.ops) {
-    if(!isMatchedWithFilter(op, filter)) continue;
-    oplist.append($("<div>").addClass("opv86-oplist-item-opcode").text(op.opcode));
-    oplist.append($("<div>").addClass("opv86-oplist-item-instr").text(op.instr));
-    oplist.append($("<div>").addClass("opv86-oplist-item-encoding").text(op.op_en));
-    oplist.append($("<div>").addClass("opv86-oplist-item-page").append($(`<a target="_blank" href='https://software.intel.com/content/dam/develop/public/us/en/documents/325383-sdm-vol-2abcd.pdf#page=${op.page}'>p.${op.page}</a>`)));
-    oplist.append($("<div>").addClass("opv86-oplist-item-description").text(op.description));
-  }
-}
-
-$.getJSON(`data/ops.json` , function(data) {
-  $("#data-info").text(`Parsed at: ${data.date_parsed}, based on: ${data.source_file} (${data.document_id}), ${data.document_version}`);
-  /*
-  var table = new Tabulator("#example-table", {
-    data:data.ops,
-    columns:[
-        {title:"Opcode", field:"opcode"},
-        {title:"Instr", field:"instr"},
-        {title:"SDM page", field:"page"},
-        {title:"Description", field:"description"},
-        {title:"Encoding", field:"op_en"},
-    ]
-  });
-  */
-  document.getElementById("filter-value").addEventListener("keyup", () => {
-    updateTable(data, document.getElementById("filter-value").value);
-  });
-  updateTable(data, "");
-});
-  </script>
+  <script src="dst/opv86.js"></script>
 </html>
