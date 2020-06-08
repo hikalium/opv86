@@ -32,11 +32,11 @@ function updateTable(data, filter){
         e.addClass("opv86-opcode-byte-prefix");
       } else if(opByte.indexOf("/") != -1) {
         e.addClass("opv86-opcode-byte-modrm");
-      } else if(opByte.indexOf("ib") != -1) {
+      } else if(opByte.indexOf("ib") != -1 || opByte.indexOf("cb") != -1) {
         e.addClass("opv86-opcode-byte-imm8");
-      } else if(opByte.indexOf("iw") != -1) {
+      } else if(opByte.indexOf("iw") != -1 || opByte.indexOf("cw") != -1) {
         e.addClass("opv86-opcode-byte-imm16");
-      } else if(opByte.indexOf("id") != -1) {
+      } else if(opByte.indexOf("id") != -1 || opByte.indexOf("cd") != -1) {
         e.addClass("opv86-opcode-byte-imm32");
       } else if(opByte.indexOf("io") != -1) {
         e.addClass("opv86-opcode-byte-imm64");
