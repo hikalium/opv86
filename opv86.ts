@@ -17,7 +17,21 @@ function updateTable(data, filter){
   oplist.append($("<div>").addClass("opv86-oplist-header").text("Description"));
   for(const op of data.ops) {
     if(!isMatchedWithFilter(op, filter)) continue;
-    oplist.append($("<div>").addClass("opv86-oplist-item-opcode").text(op.opcode));
+    const opcodeByteElements = [];
+    const opcodeBytes = op.opcode
+      .replace(/REX\.W \+/g, "REX.W")
+      .replace(/REX \+/g, "REX")
+      .split(" ");
+    for(const opByte of opcodeBytes) {
+      const e = $("<div>").text(opByte);
+      if(opByte.indexOf("REX") != -1) {
+        e.addClass("opv86-opcode-byte-prefix");
+      } else{
+        e.addClass("opv86-opcode-byte-normal");
+      }
+      opcodeByteElements.push(e);
+    }
+    oplist.append($("<div>").addClass("opv86-oplist-item-opcode").append(opcodeByteElements));
     oplist.append($("<div>").addClass("opv86-oplist-item-instr").text(op.instr));
     oplist.append($("<div>").addClass("opv86-oplist-item-encoding").text(op.op_en));
     oplist.append($("<div>").addClass("opv86-oplist-item-page").append($(`<a target="_blank" href='https://software.intel.com/content/dam/develop/public/us/en/documents/325383-sdm-vol-2abcd.pdf#page=${op.page}'>p.${op.page}</a>`)));
