@@ -565,29 +565,32 @@ function ParseOpsInPage03Test() {
 }
 ParseOpsInPage03Test();
 
-function ParseOpsInPage(data: string, pnum: number): Op[] {
+function ParseOpsInPage(data_pages: string[], pnum: number): Op[] {
   console.log(`ParseOpsInPage: ${pnum}`);
-  const data_pages = data.split('<a name=');
-  let ops = [];
-  for (const page of data_pages) {
-    const lines =
-        page.split('\n').join('').split('&#160;').join(' ').split('<br/>');
-    if (!lines[0].startsWith(`${pnum}>`)) continue;
-    const opRefTitle = lines[1];
-    if (IsHeaderMatched(lines, headerPattern00) ||
-        IsHeaderMatched(lines, headerPattern01)) {
-      ops = ops.concat(ParseOpsInPage01(pnum, lines));
-    } else if (IsHeaderMatched(lines, headerPattern02)) {
-      ops = ops.concat(ParseOpsInPage02(pnum, lines));
-    } else if (IsHeaderMatched(lines, headerPattern03)) {
-      ops = ops.concat(ParseOpsInPage03(pnum, lines));
-    } else {
-      throw new Error('Not matched with pattern');
-    }
-    console.log('----');
-    console.log(opRefTitle);
-    console.log(ops);
+  const page = data_pages[pnum];
+  if(page === undefined) {
+    throw new Error(`page not found: ${pnum}`);
   }
+  const lines =
+      page.split('\n').join('').split('&#160;').join(' ').split('<br/>');
+  if (!lines[0].startsWith(`${pnum}>`)){
+    throw new Error(`page not matched: expected ${pnum} but got line ${lines[0]}`);
+  }
+  let ops = [];
+  const opRefTitle = lines[1];
+  if (IsHeaderMatched(lines, headerPattern00) ||
+      IsHeaderMatched(lines, headerPattern01)) {
+    ops = ops.concat(ParseOpsInPage01(pnum, lines));
+  } else if (IsHeaderMatched(lines, headerPattern02)) {
+    ops = ops.concat(ParseOpsInPage02(pnum, lines));
+  } else if (IsHeaderMatched(lines, headerPattern03)) {
+    ops = ops.concat(ParseOpsInPage03(pnum, lines));
+  } else {
+    throw new Error('Not matched with pattern');
+  }
+  console.log('----');
+  console.log(opRefTitle);
+  console.log(ops);
   return ops;
 }
 
@@ -599,8 +602,26 @@ interface Result {
   ops: Op[];
 }
 
-function ParseOps(opIndex: OpIndexEntry[]) {
+function SplitIntoPages(data: string): string[] {
+  const data_chunks = data.split('<a name=');
+  const pages: string[] = [];
+  for (const page of data_chunks) {
+    const first_line = page.split('\n')[0];
+    let match;
+    if(!(match = first_line.match(/(\d+)>/))) continue;
+    const idx = parseInt(match[1]);
+    if(pages[idx]) {
+      // only store first page found
+      continue;
+    }
+    pages[parseInt(match[1])] = page;
+  }
+  return pages;
+}
+
+function ParseOps(opIndex: OpIndexEntry[]): void {
   const data = fs.readFileSync(filename, 'utf-8');
+  const data_pages = SplitIntoPages(data);
   const ignorePageOps = [
     'ADCX',
     'ADDPD',
@@ -623,7 +644,7 @@ function ParseOps(opIndex: OpIndexEntry[]) {
     console.log('----');
     console.log(e.page);
     try {
-      const ops = ParseOpsInPage(data, e.page);
+      const ops = ParseOpsInPage(data_pages, e.page);
       if (ops.length == 0) {
         throw new Error('Zero ops returned. Parse failed?');
       }
