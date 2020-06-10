@@ -622,23 +622,9 @@ function SplitIntoPages(data: string): string[] {
 function ParseOps(opIndex: OpIndexEntry[]): void {
   const data = fs.readFileSync(filename, 'utf-8');
   const data_pages = SplitIntoPages(data);
-  const ignorePageOps = [
-    'ADCX',
-    'ADDPD',
-    'ADDPS',
-  ];
-  const shouldSkipThisOps = (e: OpIndexEntry) => {
-    for (const op of e.ops) {
-      if (ignorePageOps.includes(op)) {
-        return true;
-      }
-    }
-    return false;
-  };
   let failedOps = {};
   let allops = [];
   for (const e of opIndex) {
-    // if(shouldSkipThisOps(e)) continue;
     console.log('----');
     console.log(e.ops);
     console.log('----');
