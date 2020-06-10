@@ -227,7 +227,6 @@ function ParseOpsInPage01(pnum: number, lines: string[]): Op[] {
   const ops = [];
   parser.SetIndex(10);
   while (parser.Peek() !== undefined) {
-    console.log(`First Op Token: ${parser.Peek()}`)
     if (!IsBeginningOfOp(parser.Peek()) || IsEndOfOpSection(parser.Peek())) {
       console.log(`Not matched on ${parser.Peek()}`)
       break;
@@ -264,7 +263,6 @@ function ParseOpsInPage01(pnum: number, lines: string[]): Op[] {
     let description = '';
     for (;;) {
       description += NoTags(parser.Pop());
-      console.log(description);
       if (IsBeginningOfOp(parser.Peek()) || IsEndOfOpSection(parser.Peek()))
         break;
     }
@@ -376,7 +374,6 @@ function ParseOpsInPage02(pnum: number, lines: string[]): Op[] {
     'ADX': true,
   };
   while (parser.Peek() !== undefined) {
-    console.log(`First Op Token: ${parser.Peek()}`)
     if (!IsBeginningOfOp(parser.Peek()) || IsEndOfOpSection(parser.Peek())) {
       console.log(`Not matched on ${parser.Peek()}`)
       break;
@@ -397,12 +394,10 @@ function ParseOpsInPage02(pnum: number, lines: string[]): Op[] {
     if (!isExpected6432Support[v]) {
       throw new Error(`Not a valid v: '${v}'`);
     }
-    console.log(v);
     let cpuidf = parser.Pop();
     if (!CPUIDFeatureFlags[cpuidf]) {
       throw new Error(`Not a valid cpuidf: '${cpuidf}'`);
     }
-    console.log(`cpuidf: ${cpuidf}`);
     let description = NoTags(parser.Pop());
     const instr = NoTags(parser.Pop());
     while (!IsBeginningOfOp(parser.Peek()) &&
@@ -493,7 +488,6 @@ function ReadOpEn(parser: Parser) {
   throw new Error(`No valid opEn found. last_token = ${last_token}`);
 }
 function ParseOpsInPage03(pnum: number, lines: string[]): Op[] {
-  console.log(lines);
   const parser = new Parser(lines);
   const ops = [];
   const isExpected6432Support = {
@@ -505,7 +499,6 @@ function ParseOpsInPage03(pnum: number, lines: string[]): Op[] {
   };
   parser.SetIndex(10);
   while (parser.Peek() !== undefined) {
-    console.log(`First Op Token: ${parser.Peek()}`)
     if (!IsBeginningOfOp(parser.Peek()) || IsEndOfOpSection(parser.Peek())) {
       console.log(`Not matched on ${parser.Peek()}`)
       break;
@@ -566,7 +559,6 @@ function ParseOpsInPage03Test() {
 ParseOpsInPage03Test();
 
 function ParseOpsInPage(data_pages: string[], pnum: number): Op[] {
-  console.log(`ParseOpsInPage: ${pnum}`);
   const page = data_pages[pnum];
   if(page === undefined) {
     throw new Error(`page not found: ${pnum}`);
@@ -588,9 +580,7 @@ function ParseOpsInPage(data_pages: string[], pnum: number): Op[] {
   } else {
     throw new Error('Not matched with pattern');
   }
-  console.log('----');
-  console.log(opRefTitle);
-  console.log(ops);
+  console.log(`==== ${pnum}: ${opRefTitle}: ${ops.length} ====`);
   return ops;
 }
 
@@ -619,27 +609,21 @@ function SplitIntoPages(data: string): string[] {
   return pages;
 }
 
-function ParseOps(opIndex: OpIndexEntry[]): void {
+function ParseOps(opIndex: OpIndexEntry[]): Result {
   const data = fs.readFileSync(filename, 'utf-8');
   const data_pages = SplitIntoPages(data);
   let failedOps = {};
   let allops = [];
   for (const e of opIndex) {
-    console.log('----');
-    console.log(e.ops);
-    console.log('----');
-    console.log(e.page);
     try {
       const ops = ParseOpsInPage(data_pages, e.page);
       if (ops.length == 0) {
         throw new Error('Zero ops returned. Parse failed?');
       }
-      console.log(ops);
       allops = allops.concat(ops);
     } catch (err) {
       failedOps[e.ops.toString()] = err.toString();
     }
-    console.log(failedOps);
   }
   const idAndVersion = ExtractDocIdAndVersion(data);
   const result: Result = {
@@ -651,6 +635,7 @@ function ParseOps(opIndex: OpIndexEntry[]): void {
   };
   fs.writeFileSync('failed.json', JSON.stringify(failedOps, null, ' '));
   fs.writeFileSync('ops.json', JSON.stringify(result, null, ' '));
+  return result;
 }
 
 function ExtractDocIdAndVersion(data: string) {
@@ -670,5 +655,32 @@ function ExtractDocIdAndVersion(data: string) {
   }
   return {document_id: docId, document_version: version};
 }
-ParseOps(ExtractOpIndex());
+
+function EnsureResult(result: Result) {
+  const ops: Op[] = result.ops;
+  console.log("Checking result...");
+  console.log(`${ops.length} ops found.`);
+  const op2instr: Record<string, string[]> = {};
+  for(const op of ops) {
+    if(!op2instr[op.opcode]) {
+      op2instr[op.opcode] = [];
+    }
+    op2instr[op.opcode].push(op.instr);
+  }
+
+  assert.ok(op2instr["83 /2 ib"].includes("ADC r/m16, imm8"));
+  assert.ok(op2instr["REX.W + 13 /r"].includes("ADC r64, r/m64"));
+
+  assert.ok(op2instr["04 ib"].includes("ADD AL, imm8"));
+  assert.ok(op2instr["REX.W + 03 /r"].includes("ADD r64, r/m64"));
+
+  assert.ok(op2instr["88 /r"].includes("MOV r/m8,r8"));
+  assert.ok(op2instr["REX.W + C7 /0 id"].includes("MOV r/m64, imm32"));
+
+  assert.ok(op2instr["0F 05"].includes("SYSCALL"));
+
+  console.log("OK");
+}
 // ParseOpsInPage(244);
+const result: Result = ParseOps(ExtractOpIndex());
+EnsureResult(result);
