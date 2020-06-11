@@ -40,54 +40,42 @@ a:visited {
 .opv86-oplist-header {
   background-color: #eeeeee;
 }
-.opv86-opcode-byte-prefix {
-  width: 60px;
-  height: 20px;
-  display: inline;
+.opv86-opcode-byte {
   text-align: center;
-  background-color: #c0ffee;
-}
-.opv86-opcode-byte-modrm {
-  width: 60px;
-  height: 20px;
   display: inline;
-  text-align: center;
-  background-color: #ffeec0;
-}
-.opv86-opcode-byte-imm8 {
+  height: 20px;
   grid-column: span 1;
-  height: 20px;
-  display: inline;
-  text-align: center;
-  background-color: #eeeeee;
 }
-.opv86-opcode-byte-imm16 {
+.opv86-opcode-word {
+  text-align: center;
+  display: inline;
+  height: 20px;
   grid-column: span 2;
-  height: 20px;
-  display: inline;
-  text-align: center;
-  background-color: #eeeeee;
 }
-.opv86-opcode-byte-imm32 {
+.opv86-opcode-dword {
+  text-align: center;
+  display: inline;
+  height: 20px;
   grid-column: span 4;
-  height: 20px;
-  display: inline;
-  text-align: center;
-  background-color: #eeeeee;
 }
-.opv86-opcode-byte-imm64 {
+.opv86-opcode-qword {
+  text-align: center;
+  display: inline;
+  height: 20px;
   grid-column: span 8;
-  height: 20px;
-  display: inline;
-  text-align: center;
-  background-color: #eeeeee;
 }
-.opv86-opcode-byte-normal {
-  width: 60px;
-  height: 20px;
-  display: inline;
-  text-align: center;
-  background-color: #eeffc0;
+.opv86-opcode-prefix {
+  background-color: #9fe5ff;
+}
+.opv86-opcode-modrm {
+  background-color: #ffd972;
+  border-radius: 8px;
+}
+.opv86-opcode-imm {
+  background-color: #ffc0c0;
+}
+.opv86-opcode-op {
+  background-color: #d1fb61;
 }
 .opv86-oplist-item-opcode {
   grid-column-start: 1;
