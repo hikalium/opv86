@@ -31,6 +31,11 @@ a:visited {
   text-align: right;
   margin-bottom: 8px;
 }
+.opv86-opbin-container {
+  display: grid;
+  grid-template-columns: repeat(10, minmax(100px, 5%));
+  column-gap: 4px;
+}
 .opv86-oplist-container {
   display: grid;
   grid-template-columns: 600px 256px 100px 100px auto;
@@ -58,6 +63,12 @@ a:visited {
   height: 20px;
   grid-column: span 4;
 }
+.opv86-opcode-p16ofs32 {
+  text-align: center;
+  display: inline;
+  height: 20px;
+  grid-column: span 6;
+}
 .opv86-opcode-qword {
   text-align: center;
   display: inline;
@@ -76,6 +87,10 @@ a:visited {
 }
 .opv86-opcode-op {
   background-color: #d1fb61;
+}
+.opv86-opcode-unknown {
+  background-color: #000000;
+  color: #FFFF00;
 }
 .opv86-oplist-item-opcode {
   grid-column-start: 1;
