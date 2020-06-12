@@ -1,4 +1,4 @@
-TSARGS=-target es6 --out gen/opv86.js opv86.ts opinterface.ts
+TSARGS=-target es2016 --out gen/opv86.js opv86.ts opinterface.ts
 
 gen/opv86.js : opv86.ts
 	tsc ${TSARGS}

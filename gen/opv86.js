@@ -71,10 +71,30 @@ class OpV86 {
                 .split(' ');
             const opcodeByteAttrs = [];
             let phase = 1 /* EXPECT_PREFIX_AND_LATTER */;
+            const prefixes = [
+                // Group 1
+                'F0',
+                'F2',
+                'F3',
+                'F2',
+                // Group 2
+                '2E',
+                "36",
+                "3E",
+                "26",
+                "64",
+                "65",
+                "2E",
+                "3E",
+                // Group 3
+                "66",
+                // Group 4
+                "67",
+            ];
             for (const k in opcodeBytes) {
                 const opByte = opcodeBytes[k];
                 if (phase <= 1 /* EXPECT_PREFIX_AND_LATTER */) {
-                    if (opByte === 'NP' || opByte === '66' || opByte == 'F3') {
+                    if (opByte === 'NP' || prefixes.includes(opByte)) {
                         opcodeByteAttrs.push({ classAttr: 'opv86-opcode-prefix', opSize: 1 });
                         phase = 2 /* EXPECT_REX_OR_LATTER */;
                         continue;
@@ -200,5 +220,5 @@ $.getJSON(`data/ops.json`, function (data) {
         opv86.updateFilter(document.getElementById('filter-value').value);
     });
     opv86.updateTable(data);
-    //opv86.updateFilter('48 c7 c0 01 00 00 00');
+    // opv86.updateFilter('48 c7 c0 01 00 00 00');
 });

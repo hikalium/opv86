@@ -83,10 +83,30 @@ class OpV86 {
                               .split(' ');
       const opcodeByteAttrs: {classAttr: string; opSize: number}[] = <any>[];
       let phase = DecoderPhase.EXPECT_PREFIX_AND_LATTER;
+      const prefixes = [
+        // Group 1
+        'F0',  // LOCK
+        'F2',  // REPN*
+        'F3',  // REP*
+        'F2',  // BND
+        // Group 2
+        '2E', // CS override
+        "36", // SS override
+        "3E", // DS override
+        "26", // ES override
+        "64", // FS override
+        "65", // GS override
+        "2E", // Branch hint (taken)
+        "3E", // Branch hint (not taken)
+        // Group 3
+        "66", // Operand-size override
+        // Group 4
+        "67", // Address-size override
+      ];
       for (const k in opcodeBytes) {
         const opByte = opcodeBytes[k];
         if (phase <= DecoderPhase.EXPECT_PREFIX_AND_LATTER) {
-          if (opByte === 'NP' || opByte === '66' || opByte == 'F3') {
+          if (opByte === 'NP' || prefixes.includes(opByte)) {
             opcodeByteAttrs.push({classAttr: 'opv86-opcode-prefix', opSize: 1});
             phase = DecoderPhase.EXPECT_REX_OR_LATTER;
             continue;
@@ -99,21 +119,21 @@ class OpV86 {
             continue;
           }
         }
-        if(phase <= DecoderPhase.EXPECT_OPCODE_OR_LATTER) {
-          if(opByte.match(/^[\da-fA-F]{2}/)) {
+        if (phase <= DecoderPhase.EXPECT_OPCODE_OR_LATTER) {
+          if (opByte.match(/^[\da-fA-F]{2}/)) {
             opcodeByteAttrs.push({classAttr: 'opv86-opcode-op', opSize: 1});
             phase = DecoderPhase.EXPECT_OPCODE_OR_LATTER;
             continue;
           }
         }
-        if(phase <= DecoderPhase.EXPECT_MOD_RM_OR_LATTER) {
-          if(opByte.match(/^\//)) {
+        if (phase <= DecoderPhase.EXPECT_MOD_RM_OR_LATTER) {
+          if (opByte.match(/^\//)) {
             opcodeByteAttrs.push({classAttr: 'opv86-opcode-modrm', opSize: 1});
             phase = DecoderPhase.EXPECT_SIB_OR_LATTER;
             continue;
           }
         }
-        if(phase <= DecoderPhase.EXPECT_IMM) {
+        if (phase <= DecoderPhase.EXPECT_IMM) {
           if (opByte.indexOf('ib') != -1 || opByte.indexOf('cb') != -1) {
             opcodeByteAttrs.push({classAttr: 'opv86-opcode-imm', opSize: 1});
             phase = DecoderPhase.EXPECT_NONE;
@@ -218,5 +238,5 @@ $.getJSON(`data/ops.json`, function(data: Result) {
         (<HTMLInputElement>document.getElementById('filter-value')).value);
   });
   opv86.updateTable(data);
-  //opv86.updateFilter('48 c7 c0 01 00 00 00');
+  // opv86.updateFilter('48 c7 c0 01 00 00 00');
 });
