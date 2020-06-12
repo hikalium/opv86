@@ -162,7 +162,6 @@ class OpV86 {
         }
         opcodeByteAttrs.push({classAttr: 'opv86-opcode-unknown', opSize: 1});
       }
-      console.log(opcodeByteAttrs);
       const sizeAttrTable = {
         1: 'opv86-opcode-byte',
         2: 'opv86-opcode-word',
