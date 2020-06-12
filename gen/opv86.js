@@ -47,7 +47,7 @@ class OpV86 {
             }
             $(`.opv86-op-${index}`).css('display', '');
         }
-        this.updateOpByteDetails(filter);
+        //this.updateOpByteDetails(filter);
     }
     updateTable(data) {
         this.data = data;
