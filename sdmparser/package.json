@@ -1,0 +1,28 @@
+{
+  "name": "sdmparser",
+  "version": "1.0.0",
+  "description": "Intel SDM parser for opv86",
+  "main": "extract_ops.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hikalium/opv86.git"
+  },
+  "keywords": [
+    "SDM",
+    "Intel",
+    "CPU",
+    "opcode"
+  ],
+  "author": "hikalium",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hikalium/opv86/issues"
+  },
+  "homepage": "https://github.com/hikalium/opv86#readme",
+  "dependencies": {
+    "@types/node": "^14.0.13"
+  }
+}

@@ -4,5 +4,5 @@
 *.png
 *.js
 node_modules/
-*.json
+ops.json
 *.txt
