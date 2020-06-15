@@ -5,4 +5,5 @@
 *.js
 node_modules/
 ops.json
+failed.json
 *.txt

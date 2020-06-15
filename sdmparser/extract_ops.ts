@@ -1,10 +1,9 @@
 const fs = require('fs');
+const path = require('path');
 const assert = require('assert').strict;
 
 // pdftohtml version 0.86.1
 // pdftohtml 325383-sdm-vol-2abcd.pdf
-const filename = '325383-sdm-vol-2abcds.html'
-
 const opEnList = [
   'MR',
   'RM',
@@ -86,8 +85,8 @@ function ExpandOpTitleTest() {
 
 ExpandOpTitleTest();
 
-function PrintOpStatistics() {
-  const opIndexList = ExtractOpIndex();
+function PrintOpStatistics(filename: string, data: string) {
+  const opIndexList = ExtractOpIndex(filename, data);
   const op2page = GetOpToPageDict(opIndexList);
   const alphaCount = [];
   const lenCount = {};
@@ -115,8 +114,7 @@ function PrintOpStatistics() {
   console.log(lenSorted.toString());
 }
 
-function ExtractOpIndex(): OpIndexEntry[] {
-  const data = fs.readFileSync(filename, 'utf-8');
+function ExtractOpIndex(filename: string, data: string): OpIndexEntry[] {
   const data_refs = data.split('<a href="');
   let lastPage = 0;
   const opPageList: OpIndexEntry[] = [];
@@ -610,7 +608,7 @@ function SplitIntoPages(data: string): string[] {
   return pages;
 }
 
-function ParseOps(data_pages: string[], opIndex: OpIndexEntry[]): Result {
+function ParseOps(filename: string, data_pages: string[], opIndex: OpIndexEntry[]): Result {
   let failedOps = {};
   let allops = [];
   for (const e of opIndex) {
@@ -633,7 +631,7 @@ function ParseOps(data_pages: string[], opIndex: OpIndexEntry[]): Result {
     document_version: idAndVersion.document_version,
   };
   fs.writeFileSync('failed.json', JSON.stringify(failedOps, null, ' '));
-  fs.writeFileSync('ops.json', JSON.stringify(result, null, ' '));
+  fs.writeFileSync('../data/ops.json', JSON.stringify(result, null, ' '));
   return result;
 }
 
@@ -681,9 +679,11 @@ function EnsureResult(result: Result) {
   console.log('OK');
 }
 (() => {
-  const data = fs.readFileSync(filename, 'utf-8');
+  const filepath = 'pdf/325383-sdm-vol-2abcds.html'
+  const filename = path.basename(filepath);
+  const data = fs.readFileSync(filepath, 'utf-8');
   const data_pages = SplitIntoPages(data);
   // ParseOpsInPage(1237);
-  const result: Result = ParseOps(data_pages, ExtractOpIndex());
+  const result: Result = ParseOps(filename, data_pages, ExtractOpIndex(filename, data));
   EnsureResult(result);
 })();
