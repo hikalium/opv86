@@ -560,13 +560,14 @@ ParseOpsInPage03Test();
 
 function ParseOpsInPage(data_pages: string[], pnum: number): Op[] {
   const page = data_pages[pnum];
-  if(page === undefined) {
+  if (page === undefined) {
     throw new Error(`page not found: ${pnum}`);
   }
   const lines =
       page.split('\n').join('').split('&#160;').join(' ').split('<br/>');
-  if (!lines[0].startsWith(`${pnum}>`)){
-    throw new Error(`page not matched: expected ${pnum} but got line ${lines[0]}`);
+  if (!lines[0].startsWith(`${pnum}>`)) {
+    throw new Error(
+        `page not matched: expected ${pnum} but got line ${lines[0]}`);
   }
   let ops = [];
   const opRefTitle = lines[1];
@@ -598,9 +599,9 @@ function SplitIntoPages(data: string): string[] {
   for (const page of data_chunks) {
     const first_line = page.split('\n')[0];
     let match;
-    if(!(match = first_line.match(/(\d+)>/))) continue;
+    if (!(match = first_line.match(/(\d+)>/))) continue;
     const idx = parseInt(match[1]);
-    if(pages[idx]) {
+    if (pages[idx]) {
       // only store first page found
       continue;
     }
@@ -609,9 +610,7 @@ function SplitIntoPages(data: string): string[] {
   return pages;
 }
 
-function ParseOps(opIndex: OpIndexEntry[]): Result {
-  const data = fs.readFileSync(filename, 'utf-8');
-  const data_pages = SplitIntoPages(data);
+function ParseOps(data_pages: string[], opIndex: OpIndexEntry[]): Result {
   let failedOps = {};
   let allops = [];
   for (const e of opIndex) {
@@ -625,7 +624,7 @@ function ParseOps(opIndex: OpIndexEntry[]): Result {
       failedOps[e.ops.toString()] = err.toString();
     }
   }
-  const idAndVersion = ExtractDocIdAndVersion(data);
+  const idAndVersion = ExtractDocIdAndVersion(data_pages);
   const result: Result = {
     source_file: filename,
     date_parsed: new Date().toISOString(),
@@ -638,8 +637,8 @@ function ParseOps(opIndex: OpIndexEntry[]): Result {
   return result;
 }
 
-function ExtractDocIdAndVersion(data: string) {
-  const rows = data.split('\n');
+function ExtractDocIdAndVersion(data_pages: string[]) {
+  const rows = data_pages[1].split('\n');
   let docId;
   let version;
   for (let i = 0; i < rows.length; i++) {
@@ -658,29 +657,33 @@ function ExtractDocIdAndVersion(data: string) {
 
 function EnsureResult(result: Result) {
   const ops: Op[] = result.ops;
-  console.log("Checking result...");
+  console.log('Checking result...');
   console.log(`${ops.length} ops found.`);
   const op2instr: Record<string, string[]> = {};
-  for(const op of ops) {
-    if(!op2instr[op.opcode]) {
+  for (const op of ops) {
+    if (!op2instr[op.opcode]) {
       op2instr[op.opcode] = [];
     }
     op2instr[op.opcode].push(op.instr);
   }
 
-  assert.ok(op2instr["83 /2 ib"].includes("ADC r/m16, imm8"));
-  assert.ok(op2instr["REX.W + 13 /r"].includes("ADC r64, r/m64"));
+  assert.ok(op2instr['83 /2 ib'].includes('ADC r/m16, imm8'));
+  assert.ok(op2instr['REX.W + 13 /r'].includes('ADC r64, r/m64'));
 
-  assert.ok(op2instr["04 ib"].includes("ADD AL, imm8"));
-  assert.ok(op2instr["REX.W + 03 /r"].includes("ADD r64, r/m64"));
+  assert.ok(op2instr['04 ib'].includes('ADD AL, imm8'));
+  assert.ok(op2instr['REX.W + 03 /r'].includes('ADD r64, r/m64'));
 
-  assert.ok(op2instr["88 /r"].includes("MOV r/m8,r8"));
-  assert.ok(op2instr["REX.W + C7 /0 id"].includes("MOV r/m64, imm32"));
+  assert.ok(op2instr['88 /r'].includes('MOV r/m8,r8'));
+  assert.ok(op2instr['REX.W + C7 /0 id'].includes('MOV r/m64, imm32'));
 
-  assert.ok(op2instr["0F 05"].includes("SYSCALL"));
+  assert.ok(op2instr['0F 05'].includes('SYSCALL'));
 
-  console.log("OK");
+  console.log('OK');
 }
-// ParseOpsInPage(244);
-const result: Result = ParseOps(ExtractOpIndex());
-EnsureResult(result);
+(() => {
+  const data = fs.readFileSync(filename, 'utf-8');
+  const data_pages = SplitIntoPages(data);
+  // ParseOpsInPage(1237);
+  const result: Result = ParseOps(data_pages, ExtractOpIndex());
+  EnsureResult(result);
+})();
