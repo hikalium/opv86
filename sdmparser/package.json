@@ -23,6 +23,8 @@
   },
   "homepage": "https://github.com/hikalium/opv86#readme",
   "dependencies": {
-    "@types/node": "^14.0.13"
+    "@types/node": "^14.0.13",
+    "fast-xml-parser": "^3.17.4",
+    "he": "^1.2.0"
   }
 }
