@@ -10,14 +10,18 @@ interface SDMDataAttr {
   document_id: string;
   document_version: string;
 }
-;
 
 interface SDMData {
   attributes: SDMDataAttr;
 }
-;
 
-function ExtractSDMDataAttr(filepath: string, firstPage: any): SDMDataAttr {
+interface SDMPage {
+  attr: any;
+  fontspec: any;
+  text: any;
+}
+
+function ExtractSDMDataAttr(filepath: string, firstPage: SDMPage): SDMDataAttr {
   console.log(firstPage);
   const result = {
     source_file: path.basename(filepath),
@@ -61,7 +65,8 @@ function ExtractSDMDataAttr(filepath: string, firstPage: any): SDMDataAttr {
         'Not a valid xml. Please generate with `pdftohtml -xml 325383-sdm-vol-2abcd.pdf`')
     return;
   }
-  var sdm = parser.parse(data, options);
+  const sdm = parser.parse(data, options);
   assert.ok(sdm.pdf2xml.page);
+  const sdmPages: SDMPage[] = <SDMPage[]>sdm.pdf2xml.page;
   console.log(ExtractSDMDataAttr(filepath, sdm.pdf2xml.page[0]));
 })();
