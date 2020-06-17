@@ -15,10 +15,16 @@ interface SDMData {
   attributes: SDMDataAttr;
 }
 
+interface SDMText {
+  text?: string;
+  attr: any;
+  i?: string;
+}
+
 interface SDMPage {
   attr: any;
   fontspec: any;
-  text: any;
+  text: SDMText[];
 }
 
 function ExtractSDMDataAttr(filepath: string, firstPage: SDMPage): SDMDataAttr {
@@ -30,10 +36,10 @@ function ExtractSDMDataAttr(filepath: string, firstPage: SDMPage): SDMDataAttr {
     document_version: null
   };
   for (let i = 0; i < firstPage.text.length; i++) {
-    const s = firstPage.text[i]['#text'];
+    const s = firstPage.text[i].text;
     if (!s || !s.startsWith('Order Number:')) continue;
-    result.document_id = s.split(":")[1].trim();
-    result.document_version = firstPage.text[i+1]['#text'].trim();
+    result.document_id = s.split(':')[1].trim();
+    result.document_version = firstPage.text[i + 1].text.trim();
   }
   return result;
 }
@@ -44,7 +50,7 @@ function ExtractSDMDataAttr(filepath: string, firstPage: SDMPage): SDMDataAttr {
   const options = {
     attributeNamePrefix: '@_',
     attrNodeName: 'attr',  // default is 'false'
-    textNodeName: '#text',
+    textNodeName: 'text',
     ignoreAttributes: false,
     ignoreNameSpace: false,
     allowBooleanAttributes: false,
