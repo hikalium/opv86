@@ -92,7 +92,8 @@ interface SDMInstrIndex {
 
 function ExtractSDMInstrIndex(sdmPages: SDMPage[]): SDMInstrIndex[] {
   const index =
-      sdmPages.map((e) => e.text)
+      sdmPages.filter((e) => e && e.text)
+          .map((e) => e.text)
           .flat()
           .filter((e) => e.a !== undefined)
           .map((e) => e.a)
@@ -114,7 +115,9 @@ function ExtractSDMInstrIndex(sdmPages: SDMPage[]): SDMInstrIndex[] {
   return instrIndex;
 }
 
-function ParseXMLToJSON(data: string) {
+function ParseXMLToSDMPages(data: string): SDMPage[] {
+  // returns array of SDMPage. Index of the array equals physical page number in
+  // SDM.
   const options = {
     attributeNamePrefix: '',
     attrNodeName: 'attr',  // default is 'false'
@@ -140,17 +143,18 @@ function ParseXMLToJSON(data: string) {
     process.exit();
     return;
   }
-  return parser.parse(data, options);
+  const sdm = parser.parse(data, options);
+  assert.ok(sdm.pdf2xml.page);
+  sdm.pdf2xml.page.unshift(null);  // align page 1 to index 1
+  return <SDMPage[]>sdm.pdf2xml.page;
 }
 
 (() => {
   ExpandMnemonicTest();
   const filepath = 'pdf/325383-sdm-vol-2abcd.xml'
   const data = fs.readFileSync(filepath, 'utf-8');
-  const sdm = ParseXMLToJSON(data);
-  assert.ok(sdm.pdf2xml.page);
-  const sdmPages: SDMPage[] = <SDMPage[]>sdm.pdf2xml.page;
-  console.log(ExtractSDMDataAttr(filepath, sdmPages[0]));
+  const sdmPages = ParseXMLToSDMPages(data);
+  console.log(ExtractSDMDataAttr(filepath, sdmPages[1]));
   const instrIndex: SDMInstrIndex[] = ExtractSDMInstrIndex(sdmPages);
   console.log(JSON.stringify(instrIndex, null, ' '));
 })();
