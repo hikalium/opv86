@@ -114,10 +114,7 @@ function ExtractSDMInstrIndex(sdmPages: SDMPage[]): SDMInstrIndex[] {
   return instrIndex;
 }
 
-(() => {
-  ExpandMnemonicTest();
-  const filepath = 'pdf/325383-sdm-vol-2abcd.xml'
-  const data = fs.readFileSync(filepath, 'utf-8');
+function ParseXMLToJSON(data: string) {
   const options = {
     attributeNamePrefix: '',
     attrNodeName: 'attr',  // default is 'false'
@@ -140,9 +137,17 @@ function ExtractSDMInstrIndex(sdmPages: SDMPage[]): SDMInstrIndex[] {
   if (!parser.validate(data)) {
     console.error(
         'Not a valid xml. Please generate with `pdftohtml -xml 325383-sdm-vol-2abcd.pdf`')
+    process.exit();
     return;
   }
-  const sdm = parser.parse(data, options);
+  return parser.parse(data, options);
+}
+
+(() => {
+  ExpandMnemonicTest();
+  const filepath = 'pdf/325383-sdm-vol-2abcd.xml'
+  const data = fs.readFileSync(filepath, 'utf-8');
+  const sdm = ParseXMLToJSON(data);
   assert.ok(sdm.pdf2xml.page);
   const sdmPages: SDMPage[] = <SDMPage[]>sdm.pdf2xml.page;
   console.log(ExtractSDMDataAttr(filepath, sdmPages[0]));
