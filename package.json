@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "Opcode / Instruction finder for x86_64",
   "main": "js/opv86.js",
-  "dependencies": {},
+  "dependencies": {
+    "@types/jquery": "^3.5.0"
+  },
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
