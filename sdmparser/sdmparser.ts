@@ -69,7 +69,7 @@ function ExpandMnemonic(title: string): string[] {
   return ops.map((e) => e.trim());
 }
 
-function ExpandMnemonicTest() {
+function TestExpandMnemonic() {
   assert.deepEqual(
       ExpandMnemonic('MOVDQU,VMOVDQU8/16/32/64'),
       ['MOVDQU', 'VMOVDQU8', 'VMOVDQU16', 'VMOVDQU32', 'VMOVDQU64']);
@@ -151,7 +151,9 @@ function ParseXMLToSDMPages(data: string): SDMPage[] {
       if (!t.attr.top || !t.attr.left) continue;
       t.attr.top = parseInt(t.attr.top);
       t.attr.left = parseInt(t.attr.left);
-      t.attr.font = parseInt(t.attr.font);
+      t.attr.width = undefined;
+      t.attr.height = undefined;
+      t.attr.font = undefined;
     }
   }
   return <SDMPage[]>sdm.pdf2xml.page;
@@ -180,20 +182,25 @@ function CanonicalizeCompatLeg(str: string): boolean {
   if (str === 'Valid') {
     return true;
   }
+  if (str === 'Invalid') {
+    return true;
+  }
   if (str === 'N.E.') {
     return false;
   }
   throw new Error(`${str} is not valid for CompatLeg`);
 }
 function GetText(t: SDMText): string {
-  if (t.i) return " " + t.i + " ";
+  if (t.i) return ' ' + t.i + ' ';
   if (t.text) return t.text;
   throw new Error(`empty text node`);
 }
 
 const parserMap = {
-  'Opcode#Instruction#Op/#En#64-bit#Mode#Compat/#Leg Mode#Description': (
+  'opcode#instruction#op/#en#64-bit#mode#compat/#leg mode#description': (
       headers: SDMText[], tokens: SDMText[]): SDMInstr[] => {
+    console.log(JSON.stringify(headers));
+    console.log(JSON.stringify(tokens));
     const opLeft = headers[0].attr.left;
     const instrLeft = headers[1].attr.left;
     const opEnLeft = headers[2].attr.left;
@@ -204,8 +211,7 @@ const parserMap = {
     let k = 0;
     try {
       while (k < tokens.length) {
-        if(k >= tokens.length)
-          throw new Error("Out of range!");
+        if (k >= tokens.length) throw new Error('Out of range!');
         if (tokens[k].attr.left != opLeft) {
           if (instrLeft <= tokens[k].attr.left &&
               tokens[k].attr.left < opEnLeft && tokens[k].text === '*') {
@@ -219,25 +225,25 @@ const parserMap = {
         while (k < tokens.length && tokens[k].attr.left < instrLeft) {
           opcode.push(GetText(tokens[k++]).trim());
         }
-        if(k >= tokens.length)
+        if (k >= tokens.length)
           throw new Error(`Out of range! read opcode: ${opcode}`);
         const instr = [];
         while (k < tokens.length && tokens[k].attr.left < opEnLeft) {
           instr.push(GetText(tokens[k++]).trim());
         }
-        if(k >= tokens.length)
-          throw new Error("Out of range!");
+        if (k >= tokens.length) throw new Error('Out of range!');
         const op_en = tokens[k++].text;
-        if(k >= tokens.length)
-          throw new Error("Out of range!");
+        if (k >= tokens.length) throw new Error('Out of range!');
         const valid_in_64_str = tokens[k++].text;
-        if(k >= tokens.length)
-          throw new Error("Out of range!");
+        if (k >= tokens.length) throw new Error('Out of range!');
         const compat_leg_str = tokens[k++].text;
-        if(k >= tokens.length)
-          throw new Error("Out of range!");
+        if (k >= tokens.length) throw new Error('Out of range!');
         let description = '';
         while (k < tokens.length && tokens[k].attr.left >= descriptionLeft) {
+          if (tokens[k - 1].attr.top != tokens[k].attr.top) {
+            // insert space between line feeds
+            description += ' ';
+          }
           description += GetText(tokens[k++]);
         }
         instrList.push({
@@ -259,66 +265,149 @@ const parserMap = {
       throw err;
     }
     return instrList;
-  }
+  },
+};
+
+function TestParser() {
+  let parser;
+  parser =
+      parserMap['opcode#instruction#op/#en#64-bit#mode#compat/#leg mode#description'];
+  assert(parser);
+  assert.deepEqual(
+      parser(
+          [
+            {'text': 'Opcode', 'attr': {'top': 123, 'left': 72}},
+            {'text': 'Instruction', 'attr': {'top': 123, 'left': 220}},
+            {'text': 'Op/', 'attr': {'top': 123, 'left': 389}},
+            {'text': 'En', 'attr': {'top': 137, 'left': 389}},
+            {'text': '64-bit', 'attr': {'top': 123, 'left': 426}},
+            {'text': 'Mode', 'attr': {'top': 137, 'left': 426}},
+            {'text': 'Compat/', 'attr': {'top': 123, 'left': 498}},
+            {'text': 'Leg Mode', 'attr': {'top': 137, 'left': 498}},
+            {'text': 'Description', 'attr': {'top': 123, 'left': 568}}
+          ],
+          [
+            {'text': '37', 'attr': {'top': 160, 'left': 72}},
+            {'text': 'AAA', 'attr': {'top': 160, 'left': 220}},
+            {'text': 'ZO', 'attr': {'top': 160, 'left': 389}},
+            {'text': 'Invalid', 'attr': {'top': 160, 'left': 426}},
+            {'text': 'Valid', 'attr': {'top': 160, 'left': 498}}, {
+              'text': 'ASCII adjust AL after addition.',
+              'attr': {'top': 160, 'left': 568}
+            }
+          ]),
+      [{
+        opcode: ['37'],
+        instr: ['AAA'],
+        op_en: 'ZO',
+        valid_in_64bit_mode: false,
+        valid_in_compatibility_mode: true,
+        valid_in_legacy_mode: true,
+        description: 'ASCII adjust AL after addition.'
+      }]);
+  assert.deepEqual(
+      parser(
+          [
+            {'text': 'Opcode', 'attr': {'top': 123, 'left': 74}},
+            {'text': 'Instruction', 'attr': {'top': 123, 'left': 221}},
+            {'text': 'Op/', 'attr': {'top': 123, 'left': 388}},
+            {'text': 'En', 'attr': {'top': 137, 'left': 388}},
+            {'text': '64-Bit', 'attr': {'top': 123, 'left': 425}},
+            {'text': 'Mode', 'attr': {'top': 137, 'left': 425}},
+            {'text': 'Compat/', 'attr': {'top': 123, 'left': 497}},
+            {'text': 'Leg Mode', 'attr': {'top': 137, 'left': 497}},
+            {'text': 'Description', 'attr': {'top': 123, 'left': 567}}
+          ],
+          [
+            {'text': '0F 05', 'attr': {'top': 160, 'left': 74}},
+            {'text': 'SYSCALL', 'attr': {'top': 160, 'left': 221}},
+            {'text': 'ZO', 'attr': {'top': 160, 'left': 388}},
+            {'text': 'Valid', 'attr': {'top': 160, 'left': 425}},
+            {'text': 'Invalid', 'attr': {'top': 160, 'left': 497}}, {
+              'text': 'Fast call to privilege level 0 system',
+              'attr': {'top': 160, 'left': 567}
+            },
+            {'text': 'procedures.', 'attr': {'top': 177, 'left': 567}}
+          ]),
+      [{
+        opcode: ['0F 05'],
+        instr: ['SYSCALL'],
+        op_en: 'ZO',
+        valid_in_64bit_mode: true,
+        valid_in_compatibility_mode: true,
+        valid_in_legacy_mode: true,
+        description: 'Fast call to privilege level 0 system procedures.'
+      }]);
 }
 
-function ParseInstr(pages: SDMPage[], startPage: number):
-    SDMInstr[] {
-      let page = pages[startPage];
-      let sorted = page.text.sort((lhs: SDMText, rhs: SDMText) => {
-        if (lhs.attr.top == rhs.attr.top) {
-          return lhs.attr.left - rhs.attr.left;
-        }
-        return lhs.attr.top - rhs.attr.top;
-      });
-      let k = 0;
-      assert(sorted[k].text.startsWith('INSTRUCTION SET REFERENCE'));
-      k++;
-      const instrTitle = sorted[k].text;
-      console.log(`page ${startPage}: ${instrTitle}`);
-      k++;
-      const opLeft = sorted[k].attr.left;
-      const headersNotSorted = [sorted[k]];
-      k++;
-      while (k < sorted.length && sorted[k].attr.left != opLeft) {
-        headersNotSorted.push(sorted[k]);
-        k++;
-      }
-      const tokens = [];
-      while (k < sorted.length) {
-        if (sorted[k].text === 'Instruction Operand Encoding') break;
-        if (sorted[k].text === 'NOTES:') break;
-        const currentTop = sorted[k].attr.top;
-        while (k < sorted.length && sorted[k].attr.top == currentTop) {
-          tokens.push(sorted[k]);
-          k++;
-        }
-      }
-      const headers = headersNotSorted.sort((lhs: SDMText, rhs: SDMText) => {
-        if (lhs.attr.left == rhs.attr.left) {
-          return lhs.attr.top - rhs.attr.top;
-        }
-        return lhs.attr.left - rhs.attr.left;
-      });
-      const headerKey = headers.map(e => e.text).join('#');
-      if (!parserMap[headerKey]) {
-        throw new Error(`Parser not implemented for header key ${headerKey}`);
-      }
-      return parserMap[headerKey](headers, tokens);
+function ParseInstr(pages: SDMPage[], startPage: number): SDMInstr[] {
+  let page = pages[startPage];
+  let sorted = page.text.sort((lhs: SDMText, rhs: SDMText) => {
+    if (lhs.attr.top == rhs.attr.top) {
+      return lhs.attr.left - rhs.attr.left;
     }
+    return lhs.attr.top - rhs.attr.top;
+  });
+  let k = 0;
+  assert(sorted[k].text.startsWith('INSTRUCTION SET REFERENCE'));
+  k++;
+  const instrTitle = sorted[k].text;
+  console.log(`page ${startPage}: ${instrTitle}`);
+  k++;
+  const opLeft = sorted[k].attr.left;
+  const headersNotSorted = [sorted[k]];
+  k++;
+  while (k < sorted.length && sorted[k].attr.left != opLeft) {
+    headersNotSorted.push(sorted[k]);
+    k++;
+  }
+  const tokens = [];
+  while (k < sorted.length) {
+    if (sorted[k].text === 'Instruction Operand Encoding') break;
+    if (sorted[k].text === 'NOTES:') break;
+    const currentTop = sorted[k].attr.top;
+    while (k < sorted.length && sorted[k].attr.top == currentTop) {
+      tokens.push(sorted[k]);
+      k++;
+    }
+  }
+  const headers = headersNotSorted.sort((lhs: SDMText, rhs: SDMText) => {
+    if (lhs.attr.left == rhs.attr.left) {
+      return lhs.attr.top - rhs.attr.top;
+    }
+    return lhs.attr.left - rhs.attr.left;
+  });
+  const headerKey = headers.map(e => e.text).join('#').toLowerCase();
+  if (!parserMap[headerKey]) {
+    throw new Error(`Parser not implemented for header key ${headerKey}`);
+  }
+  return parserMap[headerKey](headers, tokens);
+}
 
 (() => {
-  ExpandMnemonicTest();
+  TestExpandMnemonic();
+  TestParser();
   const filepath = 'pdf/325383-sdm-vol-2abcd.xml'
   const data = fs.readFileSync(filepath, 'utf-8');
   const sdmPages = ParseXMLToSDMPages(data);
-  console.log(ExtractSDMDataAttr(filepath, sdmPages[1]));
   const instrIndex: SDMInstrIndex[] = ExtractSDMInstrIndex(sdmPages);
+  const allowedMnemonicList = {
+    'AAA': true,
+    'SYSCALL': true,
+  };
   for (const e of instrIndex) {
+    let allowedInstrPage = false;
+    for (const m of e.mnemonics) {
+      if (allowedMnemonicList[m]) {
+        allowedInstrPage = true;
+        break;
+      }
+    }
+    if (!allowedInstrPage) continue;
     try {
-    const instrs = ParseInstr(sdmPages, e.physical_page);
-    console.log(instrs);
-    } catch(err) {
+      const instrs = ParseInstr(sdmPages, e.physical_page);
+      console.log(instrs);
+    } catch (err) {
       console.log(err.message);
     }
   }
