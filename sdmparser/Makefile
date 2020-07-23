@@ -3,10 +3,13 @@ PARSERFLAGS:=
 default: run
 
 run : sdmparser.js
-	node sdmparser.js $(PARSERFLAGS)
+	node sdmparser.js $(PARSERFLAGS) | true
 
 test : sdmparser.js
 	node sdmparser.js --runtest
+	node sdmparser.js --mnemonic \
+		SYSCALL AAA ADD
+	@echo "All tests passed."
 
 format :
 	clang-format -i sdmparser.ts

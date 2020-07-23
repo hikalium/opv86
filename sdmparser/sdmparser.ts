@@ -429,7 +429,7 @@ const optionDefinitions = [
     alias : 'f',
     type : String,
     description :
-        "Path to source SDM xml file (can be generated from pdf with `pdftohtml -xml`)."
+        'Path to source SDM xml file (can be generated from pdf with `pdftohtml -xml`).'
   },
   {
     name : 'mnemonic',
@@ -437,7 +437,7 @@ const optionDefinitions = [
     type : String,
     multiple : true,
     description :
-        "Mnemonics to parse. Default is not set (parse all mnemonics)."
+        'Mnemonics to parse. Default is not set (parse all mnemonics).'
   },
 ];
 
@@ -446,20 +446,20 @@ const sections = [
   {header : 'Options', optionList : optionDefinitions}
 ];
 
-(() => {
+process.exit((() => {
   const commandLineArgs = require('command-line-args');
   const commandLineUsage = require('command-line-usage');
   const options = commandLineArgs(optionDefinitions);
   if (options.help) {
     const usage = commandLineUsage(sections);
     console.log(usage);
-    return;
+    return 0;
   }
   if (options.runtest) {
     TestExpandMnemonic();
     TestParser();
-    console.log("PASS");
-    return;
+    console.log('PASS');
+    return 0;
   }
   let filepath;
   if (options.file === undefined) {
@@ -476,15 +476,17 @@ const sections = [
       allowedMnemonicList[m] = true;
     }
     console.error(
-        `Parsing following mnemonic(s): ${options.mnemonic.join(", ")}`);
+        `Parsing following mnemonic(s): ${options.mnemonic.join(', ')}`);
   }
   const data = fs.readFileSync(filepath, 'utf-8');
   const sdmPages = ParseXMLToSDMPages(data);
   const instrIndex: SDMInstrIndex[] = ExtractSDMInstrIndex(sdmPages);
   if (options.list) {
-    console.log(JSON.stringify(instrIndex, null, " "));
-    return;
+    console.log(JSON.stringify(instrIndex, null, ' '));
+    return 0;
   }
+  let passCount = 0;
+  let failCount = 0;
   for (const e of instrIndex) {
     let allowedInstrPage = false;
     for (const m of e.mnemonics) {
@@ -498,8 +500,19 @@ const sections = [
     try {
       const instrs = ParseInstr(sdmPages, e.physical_page);
       console.log(instrs);
+      passCount++;
     } catch (err) {
       console.log(err.message);
+      failCount++;
     }
   }
-})();
+  if (passCount + failCount == 0) {
+    console.error("No instr parsed...");
+    return 1;
+  }
+  console.error(`Succesfully parsed: ${passCount} ( ${
+      (passCount / (passCount + failCount) * 100).toPrecision(3)}% )`);
+  console.error(`Failed            : ${failCount} ( ${
+      (failCount / (passCount + failCount) * 100).toPrecision(3)}% )`);
+  return failCount === 0 ? 0 : 1;
+})());
