@@ -423,6 +423,7 @@ function ParseInstr(pages: SDMPage[], startPage: number): SDMInstr[] {
 const optionDefinitions = [
   {name : 'runtest', type : Boolean},
   {name : 'help', alias : 'h', type : Boolean},
+  {name : 'list', alias : 'l', type : Boolean},
 ];
 
 const sections = [
@@ -449,6 +450,10 @@ const sections = [
   const data = fs.readFileSync(filepath, 'utf-8');
   const sdmPages = ParseXMLToSDMPages(data);
   const instrIndex: SDMInstrIndex[] = ExtractSDMInstrIndex(sdmPages);
+  if (options.list) {
+    console.log(JSON.stringify(instrIndex, null, " "));
+    return;
+  }
   const allowedMnemonicList = {
     'AAA' : true,
     'SYSCALL' : true,
