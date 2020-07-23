@@ -24,6 +24,8 @@
   "homepage": "https://github.com/hikalium/opv86#readme",
   "dependencies": {
     "@types/node": "^14.0.13",
+    "command-line-args": "^5.1.1",
+    "command-line-usage": "^6.1.0",
     "fast-xml-parser": "^3.17.4",
     "he": "^1.2.0"
   }
