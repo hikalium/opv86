@@ -1,7 +1,9 @@
+PARSERFLAGS:=
+
 default: run
 
 run : sdmparser.js
-	node sdmparser.js
+	node sdmparser.js $(PARSERFLAGS)
 
 test : sdmparser.js
 	node sdmparser.js --runtest

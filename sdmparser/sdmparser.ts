@@ -424,7 +424,21 @@ const optionDefinitions = [
   {name : 'runtest', type : Boolean},
   {name : 'help', alias : 'h', type : Boolean},
   {name : 'list', alias : 'l', type : Boolean},
-  {name : 'file', alias : 'f', type : String},
+  {
+    name : 'file',
+    alias : 'f',
+    type : String,
+    description :
+        "Path to source SDM xml file (can be generated from pdf with `pdftohtml -xml`)."
+  },
+  {
+    name : 'mnemonic',
+    alias : 'm',
+    type : String,
+    multiple : true,
+    description :
+        "Mnemonics to parse. Default is not set (parse all mnemonics)."
+  },
 ];
 
 const sections = [
@@ -455,6 +469,15 @@ const sections = [
   } else {
     filepath = options.file;
   }
+  let allowedMnemonicList: Record<string, boolean>;
+  if (options.mnemonic) {
+    allowedMnemonicList = {};
+    for (const m of options.mnemonic) {
+      allowedMnemonicList[m] = true;
+    }
+    console.error(
+        `Parsing following mnemonic(s): ${options.mnemonic.join(", ")}`);
+  }
   const data = fs.readFileSync(filepath, 'utf-8');
   const sdmPages = ParseXMLToSDMPages(data);
   const instrIndex: SDMInstrIndex[] = ExtractSDMInstrIndex(sdmPages);
@@ -462,15 +485,10 @@ const sections = [
     console.log(JSON.stringify(instrIndex, null, " "));
     return;
   }
-  const allowedMnemonicList = {
-    'AAA' : true,
-    'SYSCALL' : true,
-    'MOV' : true,
-  };
   for (const e of instrIndex) {
     let allowedInstrPage = false;
     for (const m of e.mnemonics) {
-      if (allowedMnemonicList[m]) {
+      if (allowedMnemonicList === undefined || allowedMnemonicList[m]) {
         allowedInstrPage = true;
         break;
       }
