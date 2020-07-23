@@ -3,7 +3,10 @@ PARSERFLAGS:=
 default: run
 
 run : sdmparser.js
-	node sdmparser.js $(PARSERFLAGS) | true
+	node sdmparser.js $(PARSERFLAGS) || true
+
+debug : sdmparser.js
+	node --inspect-brk sdmparser.js $(PARSERFLAGS) || true
 
 test : sdmparser.js
 	node sdmparser.js --runtest

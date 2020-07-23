@@ -154,9 +154,9 @@ function ParseXMLToSDMPages(data: string): SDMPage[] {
         continue;
       t.attr.top = parseInt(t.attr.top);
       t.attr.left = parseInt(t.attr.left);
-      t.attr.width = undefined;
-      t.attr.height = undefined;
-      t.attr.font = undefined;
+      delete t.attr.width;
+      delete t.attr.height;
+      delete t.attr.font;
     }
   }
   return <SDMPage[]>sdm.pdf2xml.page;
@@ -198,7 +198,39 @@ function GetText(t: SDMText): string {
     return ' ' + t.i + ' ';
   if (t.text)
     return t.text;
+  console.error(`Warning: GetText: converted to empty string`);
+  console.error(t);
   return '';
+}
+
+class SDMTextStream {
+  private s: SDMText[];
+  private nextIndex: number;
+  constructor(s: SDMText[]) {
+    this.s = s;
+    this.nextIndex = 0;
+  }
+  next(): SDMText {
+    if (this.nextIndex >= this.s.length) {
+      throw new Error('No more tokens in this row!');
+    }
+    return this.s[this.nextIndex++];
+  }
+  peek(): SDMText {
+    if (this.nextIndex >= this.s.length) {
+      throw new Error('No more tokens in this row!');
+    }
+    return this.s[this.nextIndex];
+  }
+  hasNext(): boolean { return this.nextIndex < this.s.length; }
+}
+
+function GetNonEmptyText(s: SDMTextStream): string {
+  while (true) {
+    const t = GetText(s.next());
+    if (t !== '')
+      return t;
+  }
 }
 
 const parserMap = {
@@ -234,52 +266,69 @@ const parserMap = {
            rhs: SDMText) => { return lhs.attr.left - rhs.attr.left; });
     }
     try {
-      for (const k in textRows) {
-        console.log(textRows[k].map(t => GetText(t)));
-      }
-      while (k < tokens.length) {
-        if (k >= tokens.length)
-          throw new Error('Out of range!');
-        if (tokens[k].attr.left != opLeft) {
-          if (instrLeft <= tokens[k].attr.left &&
-              tokens[k].attr.left < opEnLeft &&
-              (tokens[k].text === '*' || tokens[k].text === '***,' ||
-               tokens[k].text === '***')) {
-            // Ignore. e.g. ADC r/m8*, imm8
-            k++;
-            continue;
-          }
-          throw new Error(`Not op!`);
+      for (let k = 0; k < textRows.length; k++) {
+        console.error(textRows[k]
+                          .filter(e => e !== undefined)
+                          .map(e => `${GetText(e)}@${e.attr.left}`)
+                          .join(','));
+        let s = new SDMTextStream(textRows[k]);
+        if (GetText(s.peek()).indexOf("—") !== -1) {
+          // Hit text at bottom of page like "MOV—Move"
+          break;
         }
-        const opcode = [];
-        while (k < tokens.length && tokens[k].attr.left < instrLeft) {
-          opcode.push(GetText(tokens[k++]).trim());
+        let opcode = [];
+        while (s.peek().attr.left < instrLeft) {
+          opcode.push(GetText(s.next()).trim());
         }
-        if (k >= tokens.length)
-          throw new Error(`Out of range! read opcode: ${opcode}`);
+        opcode = opcode.join("").split(" ");
+        console.log(opcode);
         const instr = [];
-        while (k < tokens.length && tokens[k].attr.left < opEnLeft) {
-          instr.push(GetText(tokens[k++]).trim());
+        while (s.peek().attr.left < opEnLeft - 50) {
+          instr.push(GetText(s.next()).trim());
         }
-        if (k >= tokens.length)
-          throw new Error('Out of range!');
-        const op_en = tokens[k++].text;
-        if (k >= tokens.length)
-          throw new Error('Out of range!');
-        const valid_in_64_str = tokens[k++].text;
-        if (k >= tokens.length)
-          throw new Error('Out of range!');
-        const compat_leg_str = tokens[k++].text;
-        if (k >= tokens.length)
-          throw new Error('Out of range!');
+        console.log(instr);
+        const op_en = GetNonEmptyText(s);
+        let valid_in_64_str;
+        let compat_leg_str;
+        if (GetText(s.peek()) === 'Valid N.E.') {
+          // hack for 'MOV', 'r/m64, imm32'
+          s.next();
+          valid_in_64_str = 'Valid';
+          compat_leg_str = 'N.E.';
+        } else {
+          valid_in_64_str = GetNonEmptyText(s);
+          compat_leg_str = s.next().text;
+        }
         let description = '';
-        while (k < tokens.length && tokens[k].attr.left >= descriptionLeft) {
-          if (tokens[k - 1].attr.top != tokens[k].attr.top) {
+        while (true) {
+          if (!s.hasNext()) {
+            if (k + 1 >= textRows.length) {
+              // No more rows
+              break;
+            }
+            // Try next row
+            s = new SDMTextStream(textRows[k + 1]);
+            if (s.peek().attr.left < descriptionLeft) {
+              // Not a description line.
+              console.error('next token is not a part of description');
+              console.error(s.peek());
+              break;
+            }
             // insert space between line feeds
             description += ' ';
+            k++;
           }
-          description += GetText(tokens[k++]);
+          description += GetText(s.next());
         }
+        console.log({
+          opcode : opcode,
+          instr : instr,
+          op_en : op_en,
+          valid_in_64bit_mode : valid_in_64_str,
+          valid_in_compatibility_mode : compat_leg_str,
+          valid_in_legacy_mode : compat_leg_str,
+          description : description,
+        })
         instrList.push({
           opcode : opcode,
           instr : instr,
@@ -292,10 +341,6 @@ const parserMap = {
       }
     } catch (err) {
       console.error(instrList);
-      if (k < tokens.length) {
-        err.message =
-            err.message + `: Last token: ${JSON.stringify(tokens[k])}`;
-      }
       throw err;
     }
     return instrList;
@@ -364,7 +409,7 @@ function TestParser() {
             {'text' : 'procedures.', 'attr' : {'top' : 177, 'left' : 567}}
           ]),
       [ {
-        opcode : [ '0F 05' ],
+        opcode : [ '0F', '05' ],
         instr : [ 'SYSCALL' ],
         op_en : 'ZO',
         valid_in_64bit_mode : true,
@@ -502,12 +547,12 @@ process.exit((() => {
       console.log(instrs);
       passCount++;
     } catch (err) {
-      console.log(err.message);
+      console.error(err.stack);
       failCount++;
     }
   }
   if (passCount + failCount == 0) {
-    console.error("No instr parsed...");
+    console.error('No instr parsed...');
     return 1;
   }
   console.error(`Succesfully parsed: ${passCount} ( ${
