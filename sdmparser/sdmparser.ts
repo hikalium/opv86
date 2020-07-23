@@ -424,6 +424,7 @@ const optionDefinitions = [
   {name : 'runtest', type : Boolean},
   {name : 'help', alias : 'h', type : Boolean},
   {name : 'list', alias : 'l', type : Boolean},
+  {name : 'file', alias : 'f', type : String},
 ];
 
 const sections = [
@@ -446,7 +447,14 @@ const sections = [
     console.log("PASS");
     return;
   }
-  const filepath = 'pdf/325383-sdm-vol-2abcd.xml'
+  let filepath;
+  if (options.file === undefined) {
+    filepath = 'pdf/325383-sdm-vol-2abcd.xml'
+    console.error(
+        `--file option is not set. Using default path (${filepath}).`);
+  } else {
+    filepath = options.file;
+  }
   const data = fs.readFileSync(filepath, 'utf-8');
   const sdmPages = ParseXMLToSDMPages(data);
   const instrIndex: SDMInstrIndex[] = ExtractSDMInstrIndex(sdmPages);
