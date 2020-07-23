@@ -31,10 +31,10 @@ interface SDMPage {
 function ExtractSDMDataAttr(filepath: string, firstPage: SDMPage): SDMDataAttr {
   console.log(firstPage);
   const result = {
-    source_file : path.basename(filepath),
-    date_parsed : new Date().toISOString(),
-    document_id : null,
-    document_version : null
+    source_file: path.basename(filepath),
+    date_parsed: new Date().toISOString(),
+    document_id: null,
+    document_version: null
   };
   for (let i = 0; i < firstPage.text.length; i++) {
     const s = firstPage.text[i].text;
@@ -47,7 +47,7 @@ function ExtractSDMDataAttr(filepath: string, firstPage: SDMPage): SDMDataAttr {
 }
 
 function ExpandMnemonic(title: string): string[] {
-  const suffixList = [ '8', '16', '32', '64', 'B', 'W', 'D', 'Q' ];
+  const suffixList = ['8', '16', '32', '64', 'B', 'W', 'D', 'Q'];
   const commaSeparated = title.split(',');
   let ops = [];
   for (const s of commaSeparated) {
@@ -74,15 +74,17 @@ function ExpandMnemonic(title: string): string[] {
 function TestExpandMnemonic() {
   assert.deepEqual(
       ExpandMnemonic('MOVDQU,VMOVDQU8/16/32/64'),
-      [ 'MOVDQU', 'VMOVDQU8', 'VMOVDQU16', 'VMOVDQU32', 'VMOVDQU64' ]);
-  assert.deepEqual(ExpandMnemonic('MOVDQA,VMOVDQA32/64'),
-                   [ 'MOVDQA', 'VMOVDQA32', 'VMOVDQA64' ]);
-  assert.deepEqual(ExpandMnemonic('MOVS/MOVSB/MOVSW/MOVSD/MOVSQ'),
-                   [ 'MOVS', 'MOVSB', 'MOVSW', 'MOVSD', 'MOVSQ' ]);
+      ['MOVDQU', 'VMOVDQU8', 'VMOVDQU16', 'VMOVDQU32', 'VMOVDQU64']);
+  assert.deepEqual(
+      ExpandMnemonic('MOVDQA,VMOVDQA32/64'),
+      ['MOVDQA', 'VMOVDQA32', 'VMOVDQA64']);
+  assert.deepEqual(
+      ExpandMnemonic('MOVS/MOVSB/MOVSW/MOVSD/MOVSQ'),
+      ['MOVS', 'MOVSB', 'MOVSW', 'MOVSD', 'MOVSQ']);
   assert.deepEqual(
       ExpandMnemonic('VPBROADCASTB/W/D/Q'),
-      [ 'VPBROADCASTB', 'VPBROADCASTW', 'VPBROADCASTD', 'VPBROADCASTQ' ]);
-  assert.deepEqual(ExpandMnemonic(' XTEST '), [ 'XTEST' ]);
+      ['VPBROADCASTB', 'VPBROADCASTW', 'VPBROADCASTD', 'VPBROADCASTQ']);
+  assert.deepEqual(ExpandMnemonic(' XTEST '), ['XTEST']);
 }
 
 interface SDMInstrIndex {
@@ -101,8 +103,8 @@ function ExtractSDMInstrIndex(sdmPages: SDMPage[]): SDMInstrIndex[] {
           .map((e): SDMInstrIndex => {
             const title = e.text.toString().split('.')[0].split('—')[0];
             return {
-              mnemonics : ExpandMnemonic(title),
-              physical_page : parseInt(e.attr.href.split('#')[1]),
+              mnemonics: ExpandMnemonic(title),
+              physical_page: parseInt(e.attr.href.split('#')[1]),
             };
           });
   const instrIndex = [];
@@ -120,23 +122,23 @@ function ParseXMLToSDMPages(data: string): SDMPage[] {
   // returns array of SDMPage. Index of the array equals physical page number in
   // SDM.
   const options = {
-    attributeNamePrefix : '',
-    attrNodeName : 'attr', // default is 'false'
-    textNodeName : 'text',
-    ignoreAttributes : false,
-    ignoreNameSpace : false,
-    allowBooleanAttributes : false,
-    parseNodeValue : false,
-    parseAttributeValue : false,
-    trimValues : true,
-    cdataTagName : '__cdata', // default is 'false'
-    cdataPositionChar : '\\c',
-    parseTrueNumberOnly : true,
-    arrayMode : false, //"strict"
-    attrValueProcessor : (val, attrName) =>
-        he.decode(val, {isAttributeValue : true}),        // default is a=>a
-    tagValueProcessor : (val, tagName) => he.decode(val), // default is a=>a
-    stopNodes : [ 'parse-me-as-string' ]
+    attributeNamePrefix: '',
+    attrNodeName: 'attr',  // default is 'false'
+    textNodeName: 'text',
+    ignoreAttributes: false,
+    ignoreNameSpace: false,
+    allowBooleanAttributes: false,
+    parseNodeValue: false,
+    parseAttributeValue: false,
+    trimValues: true,
+    cdataTagName: '__cdata',  // default is 'false'
+    cdataPositionChar: '\\c',
+    parseTrueNumberOnly: true,
+    arrayMode: false,  //"strict"
+    attrValueProcessor: (val, attrName) =>
+        he.decode(val, {isAttributeValue: true}),         // default is a=>a
+    tagValueProcessor: (val, tagName) => he.decode(val),  // default is a=>a
+    stopNodes: ['parse-me-as-string']
   };
   if (!parser.validate(data)) {
     console.error(
@@ -145,7 +147,7 @@ function ParseXMLToSDMPages(data: string): SDMPage[] {
   }
   const sdm = parser.parse(data, options);
   assert.ok(sdm.pdf2xml.page);
-  sdm.pdf2xml.page.unshift(null); // align page 1 to index 1
+  sdm.pdf2xml.page.unshift(null);  // align page 1 to index 1
   for (let p of sdm.pdf2xml.page) {
     if (!p || !p.text)
       continue;
@@ -222,7 +224,9 @@ class SDMTextStream {
     }
     return this.s[this.nextIndex];
   }
-  hasNext(): boolean { return this.nextIndex < this.s.length; }
+  hasNext(): boolean {
+    return this.nextIndex < this.s.length;
+  }
 }
 
 function GetNonEmptyText(s: SDMTextStream): string {
@@ -234,8 +238,8 @@ function GetNonEmptyText(s: SDMTextStream): string {
 }
 
 const parserMap = {
-  'opcode#instruction#op/#en#64-bit#mode#compat/#leg mode#description' : (
-      headers: SDMText[], tokens: SDMText[]) : SDMInstr[] => {
+  'opcode#instruction#op/#en#64-bit#mode#compat/#leg mode#description': (
+      headers: SDMText[], tokens: SDMText[]): SDMInstr[] => {
     console.log(JSON.stringify(headers));
     console.log(JSON.stringify(tokens));
     const opLeft = headers[0].attr.left;
@@ -261,9 +265,9 @@ const parserMap = {
       textRows.push(row);
     }
     for (const k in textRows) {
-      textRows[k] = textRows[k].sort(
-          (lhs: SDMText,
-           rhs: SDMText) => { return lhs.attr.left - rhs.attr.left; });
+      textRows[k] = textRows[k].sort((lhs: SDMText, rhs: SDMText) => {
+        return lhs.attr.left - rhs.attr.left;
+      });
     }
     try {
       for (let k = 0; k < textRows.length; k++) {
@@ -272,7 +276,7 @@ const parserMap = {
                           .map(e => `${GetText(e)}@${e.attr.left}`)
                           .join(','));
         let s = new SDMTextStream(textRows[k]);
-        if (GetText(s.peek()).indexOf("—") !== -1) {
+        if (GetText(s.peek()).indexOf('—') !== -1) {
           // Hit text at bottom of page like "MOV—Move"
           break;
         }
@@ -280,7 +284,7 @@ const parserMap = {
         while (s.peek().attr.left < instrLeft) {
           opcode.push(GetText(s.next()).trim());
         }
-        opcode = opcode.join("").split(" ");
+        opcode = opcode.join('').split(' ');
         console.log(opcode);
         const instr = [];
         while (s.peek().attr.left < opEnLeft - 50) {
@@ -321,22 +325,22 @@ const parserMap = {
           description += GetText(s.next());
         }
         console.log({
-          opcode : opcode,
-          instr : instr,
-          op_en : op_en,
-          valid_in_64bit_mode : valid_in_64_str,
-          valid_in_compatibility_mode : compat_leg_str,
-          valid_in_legacy_mode : compat_leg_str,
-          description : description,
+          opcode: opcode,
+          instr: instr,
+          op_en: op_en,
+          valid_in_64bit_mode: valid_in_64_str,
+          valid_in_compatibility_mode: compat_leg_str,
+          valid_in_legacy_mode: compat_leg_str,
+          description: description,
         })
         instrList.push({
-          opcode : opcode,
-          instr : instr,
-          op_en : op_en,
-          valid_in_64bit_mode : CanonicalizeValidIn64(valid_in_64_str),
-          valid_in_compatibility_mode : CanonicalizeCompatLeg(compat_leg_str),
-          valid_in_legacy_mode : CanonicalizeCompatLeg(compat_leg_str),
-          description : description,
+          opcode: opcode,
+          instr: instr,
+          op_en: op_en,
+          valid_in_64bit_mode: CanonicalizeValidIn64(valid_in_64_str),
+          valid_in_compatibility_mode: CanonicalizeCompatLeg(compat_leg_str),
+          valid_in_legacy_mode: CanonicalizeCompatLeg(compat_leg_str),
+          description: description,
         })
       }
     } catch (err) {
@@ -355,68 +359,68 @@ function TestParser() {
   assert.deepEqual(
       parser(
           [
-            {'text' : 'Opcode', 'attr' : {'top' : 123, 'left' : 72}},
-            {'text' : 'Instruction', 'attr' : {'top' : 123, 'left' : 220}},
-            {'text' : 'Op/', 'attr' : {'top' : 123, 'left' : 389}},
-            {'text' : 'En', 'attr' : {'top' : 137, 'left' : 389}},
-            {'text' : '64-bit', 'attr' : {'top' : 123, 'left' : 426}},
-            {'text' : 'Mode', 'attr' : {'top' : 137, 'left' : 426}},
-            {'text' : 'Compat/', 'attr' : {'top' : 123, 'left' : 498}},
-            {'text' : 'Leg Mode', 'attr' : {'top' : 137, 'left' : 498}},
-            {'text' : 'Description', 'attr' : {'top' : 123, 'left' : 568}}
+            {'text': 'Opcode', 'attr': {'top': 123, 'left': 72}},
+            {'text': 'Instruction', 'attr': {'top': 123, 'left': 220}},
+            {'text': 'Op/', 'attr': {'top': 123, 'left': 389}},
+            {'text': 'En', 'attr': {'top': 137, 'left': 389}},
+            {'text': '64-bit', 'attr': {'top': 123, 'left': 426}},
+            {'text': 'Mode', 'attr': {'top': 137, 'left': 426}},
+            {'text': 'Compat/', 'attr': {'top': 123, 'left': 498}},
+            {'text': 'Leg Mode', 'attr': {'top': 137, 'left': 498}},
+            {'text': 'Description', 'attr': {'top': 123, 'left': 568}}
           ],
           [
-            {'text' : '37', 'attr' : {'top' : 160, 'left' : 72}},
-            {'text' : 'AAA', 'attr' : {'top' : 160, 'left' : 220}},
-            {'text' : 'ZO', 'attr' : {'top' : 160, 'left' : 389}},
-            {'text' : 'Invalid', 'attr' : {'top' : 160, 'left' : 426}},
-            {'text' : 'Valid', 'attr' : {'top' : 160, 'left' : 498}}, {
-              'text' : 'ASCII adjust AL after addition.',
-              'attr' : {'top' : 160, 'left' : 568}
+            {'text': '37', 'attr': {'top': 160, 'left': 72}},
+            {'text': 'AAA', 'attr': {'top': 160, 'left': 220}},
+            {'text': 'ZO', 'attr': {'top': 160, 'left': 389}},
+            {'text': 'Invalid', 'attr': {'top': 160, 'left': 426}},
+            {'text': 'Valid', 'attr': {'top': 160, 'left': 498}}, {
+              'text': 'ASCII adjust AL after addition.',
+              'attr': {'top': 160, 'left': 568}
             }
           ]),
-      [ {
-        opcode : [ '37' ],
-        instr : [ 'AAA' ],
-        op_en : 'ZO',
-        valid_in_64bit_mode : false,
-        valid_in_compatibility_mode : true,
-        valid_in_legacy_mode : true,
-        description : 'ASCII adjust AL after addition.'
-      } ]);
+      [{
+        opcode: ['37'],
+        instr: ['AAA'],
+        op_en: 'ZO',
+        valid_in_64bit_mode: false,
+        valid_in_compatibility_mode: true,
+        valid_in_legacy_mode: true,
+        description: 'ASCII adjust AL after addition.'
+      }]);
   assert.deepEqual(
       parser(
           [
-            {'text' : 'Opcode', 'attr' : {'top' : 123, 'left' : 74}},
-            {'text' : 'Instruction', 'attr' : {'top' : 123, 'left' : 221}},
-            {'text' : 'Op/', 'attr' : {'top' : 123, 'left' : 388}},
-            {'text' : 'En', 'attr' : {'top' : 137, 'left' : 388}},
-            {'text' : '64-Bit', 'attr' : {'top' : 123, 'left' : 425}},
-            {'text' : 'Mode', 'attr' : {'top' : 137, 'left' : 425}},
-            {'text' : 'Compat/', 'attr' : {'top' : 123, 'left' : 497}},
-            {'text' : 'Leg Mode', 'attr' : {'top' : 137, 'left' : 497}},
-            {'text' : 'Description', 'attr' : {'top' : 123, 'left' : 567}}
+            {'text': 'Opcode', 'attr': {'top': 123, 'left': 74}},
+            {'text': 'Instruction', 'attr': {'top': 123, 'left': 221}},
+            {'text': 'Op/', 'attr': {'top': 123, 'left': 388}},
+            {'text': 'En', 'attr': {'top': 137, 'left': 388}},
+            {'text': '64-Bit', 'attr': {'top': 123, 'left': 425}},
+            {'text': 'Mode', 'attr': {'top': 137, 'left': 425}},
+            {'text': 'Compat/', 'attr': {'top': 123, 'left': 497}},
+            {'text': 'Leg Mode', 'attr': {'top': 137, 'left': 497}},
+            {'text': 'Description', 'attr': {'top': 123, 'left': 567}}
           ],
           [
-            {'text' : '0F 05', 'attr' : {'top' : 160, 'left' : 74}},
-            {'text' : 'SYSCALL', 'attr' : {'top' : 160, 'left' : 221}},
-            {'text' : 'ZO', 'attr' : {'top' : 160, 'left' : 388}},
-            {'text' : 'Valid', 'attr' : {'top' : 160, 'left' : 425}},
-            {'text' : 'Invalid', 'attr' : {'top' : 160, 'left' : 497}}, {
-              'text' : 'Fast call to privilege level 0 system',
-              'attr' : {'top' : 160, 'left' : 567}
+            {'text': '0F 05', 'attr': {'top': 160, 'left': 74}},
+            {'text': 'SYSCALL', 'attr': {'top': 160, 'left': 221}},
+            {'text': 'ZO', 'attr': {'top': 160, 'left': 388}},
+            {'text': 'Valid', 'attr': {'top': 160, 'left': 425}},
+            {'text': 'Invalid', 'attr': {'top': 160, 'left': 497}}, {
+              'text': 'Fast call to privilege level 0 system',
+              'attr': {'top': 160, 'left': 567}
             },
-            {'text' : 'procedures.', 'attr' : {'top' : 177, 'left' : 567}}
+            {'text': 'procedures.', 'attr': {'top': 177, 'left': 567}}
           ]),
-      [ {
-        opcode : [ '0F', '05' ],
-        instr : [ 'SYSCALL' ],
-        op_en : 'ZO',
-        valid_in_64bit_mode : true,
-        valid_in_compatibility_mode : true,
-        valid_in_legacy_mode : true,
-        description : 'Fast call to privilege level 0 system procedures.'
-      } ]);
+      [{
+        opcode: ['0F', '05'],
+        instr: ['SYSCALL'],
+        op_en: 'ZO',
+        valid_in_64bit_mode: true,
+        valid_in_compatibility_mode: true,
+        valid_in_legacy_mode: true,
+        description: 'Fast call to privilege level 0 system procedures.'
+      }]);
 }
 
 function ParseInstr(pages: SDMPage[], startPage: number): SDMInstr[] {
@@ -434,7 +438,7 @@ function ParseInstr(pages: SDMPage[], startPage: number): SDMInstr[] {
   console.log(`page ${startPage}: ${instrTitle}`);
   k++;
   const opLeft = sorted[k].attr.left;
-  const headersNotSorted = [ sorted[k] ];
+  const headersNotSorted = [sorted[k]];
   k++;
   while (k < sorted.length && sorted[k].attr.left != opLeft) {
     headersNotSorted.push(sorted[k]);
@@ -466,29 +470,28 @@ function ParseInstr(pages: SDMPage[], startPage: number): SDMInstr[] {
 }
 
 const optionDefinitions = [
-  {name : 'runtest', type : Boolean},
-  {name : 'help', alias : 'h', type : Boolean},
-  {name : 'list', alias : 'l', type : Boolean},
+  {name: 'runtest', type: Boolean},
+  {name: 'help', alias: 'h', type: Boolean},
+  {name: 'list', alias: 'l', type: Boolean},
   {
-    name : 'file',
-    alias : 'f',
-    type : String,
-    description :
+    name: 'file',
+    alias: 'f',
+    type: String,
+    description:
         'Path to source SDM xml file (can be generated from pdf with `pdftohtml -xml`).'
   },
   {
-    name : 'mnemonic',
-    alias : 'm',
-    type : String,
-    multiple : true,
-    description :
-        'Mnemonics to parse. Default is not set (parse all mnemonics).'
+    name: 'mnemonic',
+    alias: 'm',
+    type: String,
+    multiple: true,
+    description: 'Mnemonics to parse. Default is not set (parse all mnemonics).'
   },
 ];
 
 const sections = [
-  {header : 'sdmparser.js', content : 'Parse Intel SDM and generate JSON'},
-  {header : 'Options', optionList : optionDefinitions}
+  {header: 'sdmparser.js', content: 'Parse Intel SDM and generate JSON'},
+  {header: 'Options', optionList: optionDefinitions}
 ];
 
 process.exit((() => {
