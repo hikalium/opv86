@@ -8,3 +8,4 @@ ops.json
 failed.json
 *.txt
 *.xml
+instr_list.json

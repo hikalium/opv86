@@ -165,8 +165,8 @@ function ParseXMLToSDMPages(data: string): SDMPage[] {
 }
 
 interface SDMInstr {
-  opcode: string[];
-  instr: string[];
+  opcode: string;
+  instr: string;
   op_en?: string;
   valid_in_64bit_mode?: boolean;
   valid_in_compatibility_mode?: boolean;
@@ -176,6 +176,9 @@ interface SDMInstr {
 
 function CanonicalizeValidIn64(str: string): boolean {
   if (str === 'Invalid') {
+    return false;
+  }
+  if (str === 'N.E.') {
     return false;
   }
   if (str === 'Valid') {
@@ -200,8 +203,6 @@ function GetText(t: SDMText): string {
     return ' ' + t.i + ' ';
   if (t.text)
     return t.text;
-  console.error(`Warning: GetText: converted to empty string`);
-  console.error(t);
   return '';
 }
 
@@ -218,14 +219,17 @@ class SDMTextStream {
     }
     return this.s[this.nextIndex++];
   }
-  peek(): SDMText {
-    if (this.nextIndex >= this.s.length) {
+  peek(ofs: number = 0): SDMText {
+    if (this.nextIndex + ofs >= this.s.length) {
       throw new Error('No more tokens in this row!');
     }
-    return this.s[this.nextIndex];
+    return this.s[this.nextIndex + ofs];
   }
   hasNext(): boolean {
     return this.nextIndex < this.s.length;
+  }
+  getFollowing(count: number = undefined): SDMText[] {
+    return this.s.concat().splice(this.nextIndex, count);
   }
 }
 
@@ -237,118 +241,250 @@ function GetNonEmptyText(s: SDMTextStream): string {
   }
 }
 
-const parserMap = {
-  'opcode#instruction#op/#en#64-bit#mode#compat/#leg mode#description': (
-      headers: SDMText[], tokens: SDMText[]): SDMInstr[] => {
-    console.log(JSON.stringify(headers));
-    console.log(JSON.stringify(tokens));
-    const opLeft = headers[0].attr.left;
-    const instrLeft = headers[1].attr.left;
-    const opEnLeft = headers[2].attr.left;
-    const validIn64Left = headers[4].attr.left;
-    const validInCompatLegacyLeft = headers[6].attr.left;
-    const descriptionLeft = headers[7].attr.left;
-    const instrList: SDMInstr[] = [];
-    let k = 0;
-    const textRows = [];
-    let row = [];
-    let currentTop = tokens[0].attr.top;
-    for (let t of tokens) {
-      if (t.attr.top > currentTop + 7) {
-        textRows.push(row);
-        currentTop = t.attr.top;
-        row = [];
-      }
-      row.push(t);
-    }
-    if (row.length) {
+function MakeRows(tokens: SDMText[]): SDMText[][] {
+  // Convert list of tokens into list of rows of tokens.
+  const textRows = [];
+  let row = [];
+  let currentTop = tokens[0].attr.top;
+  for (let t of tokens) {
+    if (t.attr.top > currentTop + 7) {
       textRows.push(row);
+      currentTop = t.attr.top;
+      row = [];
     }
-    for (const k in textRows) {
-      textRows[k] = textRows[k].sort((lhs: SDMText, rhs: SDMText) => {
-        return lhs.attr.left - rhs.attr.left;
-      });
-    }
-    try {
-      for (let k = 0; k < textRows.length; k++) {
-        console.error(textRows[k]
-                          .filter(e => e !== undefined)
-                          .map(e => `${GetText(e)}@${e.attr.left}`)
-                          .join(','));
-        let s = new SDMTextStream(textRows[k]);
-        if (GetText(s.peek()).indexOf('—') !== -1) {
-          // Hit text at bottom of page like "MOV—Move"
-          break;
-        }
-        let opcode = [];
-        while (s.peek().attr.left < instrLeft) {
-          opcode.push(GetText(s.next()).trim());
-        }
-        opcode = opcode.join('').split(' ');
-        console.log(opcode);
-        const instr = [];
-        while (s.peek().attr.left < opEnLeft - 50) {
-          instr.push(GetText(s.next()).trim());
-        }
-        console.log(instr);
-        const op_en = GetNonEmptyText(s);
-        let valid_in_64_str;
-        let compat_leg_str;
-        if (GetText(s.peek()) === 'Valid N.E.') {
-          // hack for 'MOV', 'r/m64, imm32'
-          s.next();
-          valid_in_64_str = 'Valid';
-          compat_leg_str = 'N.E.';
-        } else {
-          valid_in_64_str = GetNonEmptyText(s);
-          compat_leg_str = s.next().text;
-        }
-        let description = '';
-        while (true) {
-          if (!s.hasNext()) {
-            if (k + 1 >= textRows.length) {
-              // No more rows
-              break;
-            }
-            // Try next row
-            s = new SDMTextStream(textRows[k + 1]);
-            if (s.peek().attr.left < descriptionLeft) {
-              // Not a description line.
-              console.error('next token is not a part of description');
-              console.error(s.peek());
-              break;
-            }
-            // insert space between line feeds
-            description += ' ';
-            k++;
-          }
-          description += GetText(s.next());
-        }
-        console.log({
-          opcode: opcode,
-          instr: instr,
-          op_en: op_en,
-          valid_in_64bit_mode: valid_in_64_str,
-          valid_in_compatibility_mode: compat_leg_str,
-          valid_in_legacy_mode: compat_leg_str,
-          description: description,
-        })
-        instrList.push({
-          opcode: opcode,
-          instr: instr,
-          op_en: op_en,
-          valid_in_64bit_mode: CanonicalizeValidIn64(valid_in_64_str),
-          valid_in_compatibility_mode: CanonicalizeCompatLeg(compat_leg_str),
-          valid_in_legacy_mode: CanonicalizeCompatLeg(compat_leg_str),
-          description: description,
-        })
+    row.push(t);
+  }
+  if (row.length) {
+    textRows.push(row);
+  }
+  for (const k in textRows) {
+    textRows[k] = textRows[k].sort((lhs: SDMText, rhs: SDMText) => {
+      return lhs.attr.left - rhs.attr.left;
+    });
+  }
+  console.error('rows:');
+  console.error(
+      textRows
+          .map(e => e.map(e => `${GetText(e)}@${e.attr.left}`).join('\', \''))
+          .join('\n'));
+  console.error('rows end');
+  return textRows;
+}
+function MakeCols(tokens: SDMText[], colLeftList: number[]): SDMText[][] {
+  // Convert list of tokens into list of columns
+  // colLeftList: 'left' values for each columns. Should be monotonically
+  // increasing.
+  const textCols = [];
+  let row = [];
+  let currentTop = tokens[0].attr.top;
+  const getColIndex = (t) => {
+    for (let i = 0; i < colLeftList.length; i++) {
+      if (t.attr.left < colLeftList[i] - 5) {
+        return i - 1;
       }
-    } catch (err) {
-      console.error(instrList);
-      throw err;
     }
-    return instrList;
-  },
+    return colLeftList.length - 1;
+  };
+  for (const t of tokens) {
+    const colIndex = getColIndex(t);
+    if (!textCols[colIndex]) {
+      textCols[colIndex] = [];
+    }
+    textCols[colIndex].push(t);
+  }
+  return textCols;
+}
+function MakeTable(
+    tokens: SDMText[], colLeftList: number[],
+    keyColIndex: number): SDMText[][][] {
+  // returns table[table row][col][token index]
+  const textCols = MakeCols(tokens, colLeftList);
+  console.error(textCols);
+  const keyCol = textCols[keyColIndex];
+  const table = [];
+  for (let keyTokenIndex = 0; keyTokenIndex < keyCol.length; keyTokenIndex++) {
+    const keyTokenTop = keyCol[keyTokenIndex].attr.top;
+    const nextKeyTokenTop = (keyCol[keyTokenIndex + 1] !== undefined) ?
+        keyCol[keyTokenIndex + 1].attr.top :
+        null;
+    console.error(`${keyTokenIndex}: ${keyTokenTop} => ${nextKeyTokenTop}`);
+    const tableRow = [];
+    for (const col of textCols) {
+      const cell = [];
+      for (const t of col) {
+        if (t.attr.top <= keyTokenTop - 10)
+          continue;
+        if (nextKeyTokenTop && t.attr.top >= nextKeyTokenTop)
+          break;
+        cell.push(t);
+      }
+      tableRow.push(cell);
+    }
+    table.push(tableRow);
+  }
+  console.error(JSON.stringify(
+      table.map(tr => tr.map(c => c.map(t => GetText(t)))), null, ' '));
+  return table;
+}
+
+function IsEndOfInstrTable(t: SDMText) {
+  // Returns true if t is a next section header or text at the bottom of a page
+  // like "MOV—Move"
+  const firstText = GetText(t);
+  return firstText === 'Instruction Operand Encoding' ||
+      firstText === 'NOTES:' || firstText === 'NOTE:' ||
+      firstText.indexOf('—') !== -1;
+}
+
+const parserMap = {
+  'opcode/#instruction#op/#en#64-bit#mode#compat/#leg mode#description':
+      (headers: SDMText[], tokens: SDMText[]): SDMInstr[] => {
+        console.error(headers.filter(e => e !== undefined)
+                          .map(e => `${GetText(e)}@${e.attr.left}`)
+                          .join(', '));
+        const opcodeLeft = headers[0].attr.left;
+        const opEnLeft = headers[2].attr.left;
+        const validIn64Left = headers[4].attr.left;
+        const validInCompatLegacyLeft = headers[6].attr.left;
+        const descriptionLeft = headers[8].attr.left;
+        //
+        const table = MakeTable(
+            tokens,
+            [
+              opcodeLeft,
+              opEnLeft,
+              validIn64Left,
+              validInCompatLegacyLeft,
+              descriptionLeft,
+            ],
+            1);
+        return table.map(tr => {
+          const opInstrRows = MakeRows(tr[0]);
+          const opRow = opInstrRows[0];
+          const InstrRows = opInstrRows.splice(1);
+          const opcode = opRow.map(t => GetText(t).trim()).join(' ');
+          console.log(opcode);
+          const instr = InstrRows.flat().map(t => GetText(t).trim()).join(' ');
+          console.log(instr);
+          const op_en = GetText(tr[1][0]);
+          let valid_in_64_str;
+          let compat_leg_str;
+          if (GetText(tr[2][0]) === 'Valid N.E.') {
+            // hack for 'MOV', 'r/m64, imm32'
+            valid_in_64_str = 'Valid';
+            compat_leg_str = 'N.E.';
+          } else {
+            valid_in_64_str = GetText(tr[2][0]);
+            compat_leg_str = GetText(tr[3][0]);
+          }
+          const description = tr[4].map(t => GetText(t).trim()).join(' ');
+          console.log({
+            opcode: opcode,
+            instr: instr,
+            op_en: op_en,
+            valid_in_64bit_mode: valid_in_64_str,
+            valid_in_compatibility_mode: compat_leg_str,
+            valid_in_legacy_mode: compat_leg_str,
+            description: description,
+          });
+          return {
+            opcode: opcode,
+            instr: instr,
+            op_en: op_en,
+            valid_in_64bit_mode: CanonicalizeValidIn64(valid_in_64_str),
+            valid_in_compatibility_mode: CanonicalizeCompatLeg(compat_leg_str),
+            valid_in_legacy_mode: CanonicalizeCompatLeg(compat_leg_str),
+            description: description,
+          };
+        });
+      },
+  'opcode#instruction#op/#en#64-bit#mode#compat/#leg mode#description':
+      (headers: SDMText[], tokens: SDMText[]): SDMInstr[] => {
+        console.error(headers.filter(e => e !== undefined)
+                          .map(e => `${GetText(e)}@${e.attr.left}`)
+                          .join(', '));
+        const instrList: SDMInstr[] = [];
+        const textRows = MakeRows(tokens);
+        //
+        const instrLeft = headers[1].attr.left;
+        const opEnLeft = headers[2].attr.left;
+        const validIn64Left = headers[4].attr.left;
+        const validInCompatLegacyLeft = headers[6].attr.left;
+        const descriptionLeft = headers[7].attr.left;
+        for (let k = 0; k < textRows.length; k++) {
+          console.error(textRows[k]
+                            .filter(e => e !== undefined)
+                            .map(e => `${GetText(e)}@${e.attr.left}`)
+                            .join(','));
+          let s = new SDMTextStream(textRows[k]);
+          if (IsEndOfInstrTable(s.peek())) {
+            break;
+          }
+          let opcode = [];
+          while (s.peek().attr.left < instrLeft) {
+            opcode.push(GetText(s.next()).trim());
+          }
+          const opcodeStr = opcode.join('');
+          console.log(opcodeStr);
+          const instr = [];
+          while (s.peek().attr.left < opEnLeft - 50) {
+            instr.push(GetText(s.next()).trim());
+          }
+          console.log(instr);
+          const op_en = GetNonEmptyText(s);
+          let valid_in_64_str;
+          let compat_leg_str;
+          if (GetText(s.peek()) === 'Valid N.E.') {
+            // hack for 'MOV', 'r/m64, imm32'
+            s.next();
+            valid_in_64_str = 'Valid';
+            compat_leg_str = 'N.E.';
+          } else {
+            valid_in_64_str = GetNonEmptyText(s);
+            compat_leg_str = s.next().text;
+          }
+          let description = '';
+          while (true) {
+            if (!s.hasNext()) {
+              if (k + 1 >= textRows.length) {
+                // No more rows
+                break;
+              }
+              // Try next row
+              s = new SDMTextStream(textRows[k + 1]);
+              if (s.peek().attr.left < descriptionLeft) {
+                // Not a description line.
+                console.error('next token is not a part of description');
+                console.error(s.peek());
+                break;
+              }
+              // insert space between line feeds
+              description += ' ';
+              k++;
+            }
+            description += GetText(s.next());
+          }
+          console.log({
+            opcode: opcodeStr,
+            instr: instr,
+            op_en: op_en,
+            valid_in_64bit_mode: valid_in_64_str,
+            valid_in_compatibility_mode: compat_leg_str,
+            valid_in_legacy_mode: compat_leg_str,
+            description: description,
+          })
+          instrList.push({
+            opcode: opcodeStr,
+            instr: instr.join(' '),
+            op_en: op_en,
+            valid_in_64bit_mode: CanonicalizeValidIn64(valid_in_64_str),
+            valid_in_compatibility_mode: CanonicalizeCompatLeg(compat_leg_str),
+            valid_in_legacy_mode: CanonicalizeCompatLeg(compat_leg_str),
+            description: description,
+          })
+        }
+        return instrList;
+      },
 };
 
 function TestParser() {
@@ -380,8 +516,8 @@ function TestParser() {
             }
           ]),
       [{
-        opcode: ['37'],
-        instr: ['AAA'],
+        opcode: '37',
+        instr: 'AAA',
         op_en: 'ZO',
         valid_in_64bit_mode: false,
         valid_in_compatibility_mode: true,
@@ -413,14 +549,52 @@ function TestParser() {
             {'text': 'procedures.', 'attr': {'top': 177, 'left': 567}}
           ]),
       [{
-        opcode: ['0F', '05'],
-        instr: ['SYSCALL'],
+        opcode: '0F 05',
+        instr: 'SYSCALL',
         op_en: 'ZO',
         valid_in_64bit_mode: true,
         valid_in_compatibility_mode: true,
         valid_in_legacy_mode: true,
         description: 'Fast call to privilege level 0 system procedures.'
       }]);
+}
+
+const HeaderTexts = {
+  'Opcode': true,
+  'Opcode/': true,
+  'Op/': true,
+  '64-Bit': true,
+  '64-bit': true,
+  'Compat/': true,
+  'Description': true,
+  'Instruction': true,
+  'En': true,
+  'Mode': true,
+  'Leg Mode': true,
+};
+
+function ParseInstrTableHeader(s: SDMTextStream): SDMText[] {
+  while (!HeaderTexts[GetText(s.peek())]) {
+    // Skip page header and title
+    s.next();
+  }
+  const header = [];
+  while (HeaderTexts[GetText(s.peek())]) {
+    header.push(s.next());
+  }
+  console.error('Last non-header element:');
+  console.error(s.peek());
+  let headerSortedByColumn = header.sort((lhs: SDMText, rhs: SDMText) => {
+    if (lhs.attr.left == rhs.attr.left) {
+      return lhs.attr.top - rhs.attr.top;
+    }
+    return lhs.attr.left - rhs.attr.left;
+  });
+  console.error('Header Elements:');
+  for (const e of headerSortedByColumn) {
+    console.error(e);
+  }
+  return headerSortedByColumn;
 }
 
 function ParseInstr(pages: SDMPage[], startPage: number): SDMInstr[] {
@@ -431,42 +605,17 @@ function ParseInstr(pages: SDMPage[], startPage: number): SDMInstr[] {
     }
     return lhs.attr.top - rhs.attr.top;
   });
-  let k = 0;
-  assert(sorted[k].text.startsWith('INSTRUCTION SET REFERENCE'));
-  k++;
-  const instrTitle = sorted[k].text;
-  console.log(`page ${startPage}: ${instrTitle}`);
-  k++;
-  const opLeft = sorted[k].attr.left;
-  const headersNotSorted = [sorted[k]];
-  k++;
-  while (k < sorted.length && sorted[k].attr.left != opLeft) {
-    headersNotSorted.push(sorted[k]);
-    k++;
-  }
-  const tokens = [];
-  while (k < sorted.length) {
-    if (sorted[k].text === 'Instruction Operand Encoding')
-      break;
-    if (sorted[k].text === 'NOTES:')
-      break;
-    const currentTop = sorted[k].attr.top;
-    while (k < sorted.length && sorted[k].attr.top == currentTop) {
-      tokens.push(sorted[k]);
-      k++;
-    }
-  }
-  const headers = headersNotSorted.sort((lhs: SDMText, rhs: SDMText) => {
-    if (lhs.attr.left == rhs.attr.left) {
-      return lhs.attr.top - rhs.attr.top;
-    }
-    return lhs.attr.left - rhs.attr.left;
-  });
-  const headerKey = headers.map(e => e.text).join('#').toLowerCase();
+  const s = new SDMTextStream(sorted);
+  const header = ParseInstrTableHeader(s);
+  const headerKey = header.map(e => e.text).join('#').toLowerCase();
   if (!parserMap[headerKey]) {
     throw new Error(`Parser not implemented for header key ${headerKey}`);
   }
-  return parserMap[headerKey](headers, tokens);
+  let count = 0;
+  while (!IsEndOfInstrTable(s.peek(count))) {
+    count++;
+  }
+  return parserMap[headerKey](header, s.getFollowing(count));
 }
 
 const optionDefinitions = [
@@ -535,6 +684,7 @@ process.exit((() => {
   }
   let passCount = 0;
   let failCount = 0;
+  let instList = [];
   for (const e of instrIndex) {
     let allowedInstrPage = false;
     for (const m of e.mnemonics) {
@@ -548,6 +698,7 @@ process.exit((() => {
     try {
       const instrs = ParseInstr(sdmPages, e.physical_page);
       console.log(instrs);
+      instList = instList.concat(instrs);
       passCount++;
     } catch (err) {
       console.error(err.stack);
@@ -558,6 +709,7 @@ process.exit((() => {
     console.error('No instr parsed...');
     return 1;
   }
+  fs.writeFileSync('instr_list.json', JSON.stringify(instList, null, ' '));
   console.error(`Succesfully parsed: ${passCount} ( ${
       (passCount / (passCount + failCount) * 100).toPrecision(3)}% )`);
   console.error(`Failed            : ${failCount} ( ${
