@@ -37,6 +37,7 @@ interface SDMInstr {
   valid_in_64bit_mode?: boolean;
   valid_in_compatibility_mode?: boolean;
   valid_in_legacy_mode?: boolean;
+  cpuid_feature_flag?: string;
   description: string;
 }
 
@@ -206,6 +207,13 @@ function CanonicalizeCompatLeg(str: string): boolean {
     return false;
   }
   throw new Error(`${str} is not valid for CompatLeg`);
+}
+function CanonicalizeValidIn3264(str: string):
+    {valid32: boolean, valid64: boolean} {
+  if (str === 'V/V') {
+    return {valid32: true, valid64: true};
+  }
+  throw new Error(`${str} is not valid for 64/32 bit Mode Support`);
 }
 function GetText(t: SDMText): string {
   if (t.i)
@@ -499,6 +507,65 @@ function TestCanonicalizeOpcode() {
 }
 
 const parserMap = {
+  'opcode/#instruction#op/#en#64/32 bit#mode#support#cpuid#feature flag#description':
+      (headers: SDMText[], tokens: SDMText[]): SDMInstr[] => {
+        // CLWB
+        console.error(headers.filter(e => e !== undefined)
+                          .map(e => `${GetText(e)}@${e.attr.left}`)
+                          .join(', '));
+        const opcodeLeft = headers[0].attr.left;
+        const opEnLeft = headers[2].attr.left;
+        const validIn3264Left = headers[4].attr.left;
+        const cpuidFeatureLeft = headers[7].attr.left;
+        const descriptionLeft = headers[9].attr.left;
+        //
+        const table = MakeTable(
+            tokens,
+            [
+              opcodeLeft,
+              opEnLeft,
+              validIn3264Left,
+              cpuidFeatureLeft,
+              descriptionLeft,
+            ],
+            1);
+        return table.map(tr => {
+          const opInstrRows = MakeRows(tr[0]);
+          const opRow = opInstrRows[0];
+          const InstrRows = opInstrRows.splice(1);
+          const opcode = opRow.map(t => GetText(t).trim()).join(' ');
+          console.log(opcode);
+          const instr = InstrRows.flat().map(t => GetText(t).trim()).join(' ');
+          console.log(instr);
+          const op_en = GetText(tr[1][0]);
+          let valid_in_3264_str = GetText(tr[2][0]);
+          let cpuid_str = GetText(tr[3][0]);
+          const description = tr[4].map(t => GetText(t).trim()).join(' ');
+          console.log({
+            opcode: opcode,
+            opcode_parsed: CanonicalizeOpcode(opcode),
+            instr: instr,
+            instr_parsed: CanonicalizeInstr(instr),
+            op_en: op_en,
+            valid_in_3264_str: valid_in_3264_str,
+            cpuid_str: cpuid_str,
+            description: description,
+          });
+          const validIn3264 = CanonicalizeValidIn3264(valid_in_3264_str);
+          return {
+            opcode: opcode,
+            opcode_parsed: CanonicalizeOpcode(opcode),
+            instr: instr,
+            instr_parsed: CanonicalizeInstr(instr),
+            op_en: op_en,
+            valid_in_64bit_mode: validIn3264.valid64,
+            valid_in_compatibility_mode: validIn3264.valid32,
+            valid_in_legacy_mode: false,
+            cpuid_feature_flag: cpuid_str,
+            description: description,
+          };
+        });
+      },
   'opcode/#instruction#op/#en#64-bit#mode#compat/#leg mode#description':
       (headers: SDMText[], tokens: SDMText[]): SDMInstr[] => {
         console.error(headers.filter(e => e !== undefined)
@@ -761,6 +828,7 @@ const HeaderTexts = {
   'Opcode /': true,
   'Opcode*': true,
   'Op/': true,
+  '64/32 bit': true,
   '64-Bit': true,
   '64-bit': true,
   'Compat/': true,
@@ -769,6 +837,9 @@ const HeaderTexts = {
   'En': true,
   'Mode': true,
   'Leg Mode': true,
+  'CPUID': true,
+  'Feature Flag': true,
+  'Support': true,
 };
 
 function ParseInstrTableHeader(s: SDMTextStream):
