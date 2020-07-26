@@ -28,6 +28,18 @@ interface SDMPage {
   text: SDMText[];
 }
 
+interface SDMInstr {
+  opcode: string;
+  instr: string;
+  instr_parsed: string[];
+  op_en?: string;
+  valid_in_64bit_mode?: boolean;
+  valid_in_compatibility_mode?: boolean;
+  valid_in_legacy_mode?: boolean;
+  description: string;
+}
+
+
 function ExtractSDMDataAttr(filepath: string, firstPage: SDMPage): SDMDataAttr {
   console.log(firstPage);
   const result = {
@@ -162,16 +174,6 @@ function ParseXMLToSDMPages(data: string): SDMPage[] {
     }
   }
   return <SDMPage[]>sdm.pdf2xml.page;
-}
-
-interface SDMInstr {
-  opcode: string;
-  instr: string;
-  op_en?: string;
-  valid_in_64bit_mode?: boolean;
-  valid_in_compatibility_mode?: boolean;
-  valid_in_legacy_mode?: boolean;
-  description: string;
 }
 
 function CanonicalizeValidIn64(str: string): boolean {
@@ -342,6 +344,69 @@ function IsEndOfInstrTable(t: SDMText) {
       firstText.indexOf('—') !== -1;
 }
 
+function CanonicalizeInstr(s: string): string[] {
+  const canonicalized = [];
+  const sep = s.split(' ');
+  const reMnemonic = /^[A-Z]\w+$/;
+  const mn = sep[0];
+  if (!reMnemonic.test(mn)) {
+    throw new Error(`${mn} does not match with reMnemonic`);
+  }
+  canonicalized.push(mn);
+  // operands
+  const operands = sep.splice(1).join(' ').split(',').map(s => s.trim());
+  const reOperandList = [
+    'r(/m)?(8|16|32|64)',
+    'r16/r32/m16',
+    'r64/m16',
+    'm(16&(32|64))?',
+    '(m|ptr)16:(16|32|64)',
+    '(A|C|D|B)(L|H|X)',
+    '(R|E)(A|C|D|B)X',
+    'Sreg',
+    'DR0–DR7',
+    'CR0–CR7|CR8',
+    'moffs(8|16|32|64)',
+    'imm(8|16|32|64)',
+    'rel(8|16|32|64)',
+  ];
+  const reRemovePunctuator = /\s*\**\s*$/;
+  const reRemoveSpaces = /\s/g;
+  const reRemoveExtraCharLeft = /^1\s+/;
+  const reOperand = new RegExp('^((' + reOperandList.join(')|(') + '))$');
+  for (const operand of operands) {
+    if (operand.length === 0) {
+      continue;
+    }
+    if (reOperand.test(operand)) {
+      canonicalized.push(operand);
+      continue;
+    }
+    const operandWithoutPunctuator = operand.replace(reRemovePunctuator, '');
+    if (reOperand.test(operandWithoutPunctuator)) {
+      canonicalized.push(operandWithoutPunctuator);
+      continue;
+    }
+    const operandSpaceRemoved =
+        operandWithoutPunctuator.replace(reRemoveSpaces, '');
+    if (reOperand.test(operandSpaceRemoved)) {
+      canonicalized.push(operandSpaceRemoved);
+      continue;
+    }
+    const operandExtraLeftRemoved = operand.replace(reRemoveExtraCharLeft, '');
+    if (reOperand.test(operandExtraLeftRemoved)) {
+      canonicalized.push(operandExtraLeftRemoved);
+      continue;
+    }
+    if (mn === 'ENTER' && (operand === '0' || operand === '1')) {
+      canonicalized.push(operandExtraLeftRemoved);
+      continue;
+    }
+    throw new Error(`${operand} does not match operand criteria`);
+  }
+  return canonicalized;
+}
+
 const parserMap = {
   'opcode/#instruction#op/#en#64-bit#mode#compat/#leg mode#description':
       (headers: SDMText[], tokens: SDMText[]): SDMInstr[] => {
@@ -387,6 +452,7 @@ const parserMap = {
           console.log({
             opcode: opcode,
             instr: instr,
+            instr_parsed: CanonicalizeInstr(instr),
             op_en: op_en,
             valid_in_64bit_mode: valid_in_64_str,
             valid_in_compatibility_mode: compat_leg_str,
@@ -396,6 +462,7 @@ const parserMap = {
           return {
             opcode: opcode,
             instr: instr,
+            instr_parsed: CanonicalizeInstr(instr),
             op_en: op_en,
             valid_in_64bit_mode: CanonicalizeValidIn64(valid_in_64_str),
             valid_in_compatibility_mode: CanonicalizeCompatLeg(compat_leg_str),
@@ -427,7 +494,7 @@ const parserMap = {
             break;
           }
           let opcode = [];
-          while (s.peek().attr.left < instrLeft) {
+          while (s.peek().attr.left < instrLeft - 1) {
             opcode.push(GetText(s.next()).trim());
           }
           const opcodeStr = opcode.join(' ');
@@ -487,6 +554,7 @@ const parserMap = {
           instrList.push({
             opcode: opcodeStr,
             instr: instr.join(' '),
+            instr_parsed: CanonicalizeInstr(instr.join(' ')),
             op_en: op_en,
             valid_in_64bit_mode: CanonicalizeValidIn64(valid_in_64_str),
             valid_in_compatibility_mode: CanonicalizeCompatLeg(compat_leg_str),
@@ -535,6 +603,9 @@ function TestParser() {
       [{
         opcode: '37',
         instr: 'AAA',
+        instr_parsed: [
+          'AAA',
+        ],
         op_en: 'ZO',
         valid_in_64bit_mode: false,
         valid_in_compatibility_mode: true,
@@ -568,6 +639,9 @@ function TestParser() {
       [{
         opcode: '0F 05',
         instr: 'SYSCALL',
+        instr_parsed: [
+          'SYSCALL',
+        ],
         op_en: 'ZO',
         valid_in_64bit_mode: true,
         valid_in_compatibility_mode: true,
@@ -704,6 +778,7 @@ process.exit((() => {
   let failCount = 0;
   let instList = [];
   const matchedInstrMap = {};
+  const failedReasons = {};
   for (const e of instrIndex) {
     let requestedInstrPage = false;
     for (const m of e.mnemonics) {
@@ -722,6 +797,7 @@ process.exit((() => {
       passCount++;
     } catch (err) {
       console.error(err.stack);
+      failedReasons[e.mnemonics.join(',')] = err.stack;
       failCount++;
     }
   }
@@ -738,6 +814,10 @@ process.exit((() => {
     }
   }
   fs.writeFileSync('instr_list.json', JSON.stringify(instList, null, ' '));
+  if (failCount) {
+    console.error('Failed reasons:');
+    console.error(failedReasons);
+  }
   console.error(`Succesfully parsed: ${passCount} ( ${
       (passCount / (passCount + failCount) * 100).toPrecision(3)}% )`);
   console.error(`Failed            : ${failCount} ( ${
