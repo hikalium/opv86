@@ -178,7 +178,13 @@ function CanonicalizeValidIn64(str: string): boolean {
   if (str === 'Invalid') {
     return false;
   }
+  if (str === 'Inv.') {
+    return false;
+  }
   if (str === 'N.E.') {
+    return false;
+  }
+  if (str === 'N.S.') {
     return false;
   }
   if (str === 'Valid') {
@@ -678,11 +684,11 @@ process.exit((() => {
   } else {
     filepath = options.file;
   }
-  let allowedMnemonicList: Record<string, boolean>;
+  let requestedMnemonicList: Record<string, boolean>;
   if (options.mnemonic) {
-    allowedMnemonicList = {};
+    requestedMnemonicList = {};
     for (const m of options.mnemonic) {
-      allowedMnemonicList[m] = true;
+      requestedMnemonicList[m] = true;
     }
     console.error(
         `Parsing following mnemonic(s): ${options.mnemonic.join(', ')}`);
@@ -697,15 +703,17 @@ process.exit((() => {
   let passCount = 0;
   let failCount = 0;
   let instList = [];
+  const matchedInstrMap = {};
   for (const e of instrIndex) {
-    let allowedInstrPage = false;
+    let requestedInstrPage = false;
     for (const m of e.mnemonics) {
-      if (allowedMnemonicList === undefined || allowedMnemonicList[m]) {
-        allowedInstrPage = true;
+      if (requestedMnemonicList === undefined || requestedMnemonicList[m]) {
+        matchedInstrMap[m] = true;
+        requestedInstrPage = true;
         break;
       }
     }
-    if (!allowedInstrPage)
+    if (!requestedInstrPage)
       continue;
     try {
       const instrs = ParseInstr(sdmPages, e.physical_page);
@@ -720,6 +728,14 @@ process.exit((() => {
   if (passCount + failCount == 0) {
     console.error('No instr parsed...');
     return 1;
+  }
+  if (requestedMnemonicList) {
+    for (const m in requestedMnemonicList) {
+      if (!matchedInstrMap[m]) {
+        console.error(`Mnemonic ${m} is requested but not parsed.`);
+        return 1;
+      }
+    }
   }
   fs.writeFileSync('instr_list.json', JSON.stringify(instList, null, ' '));
   console.error(`Succesfully parsed: ${passCount} ( ${

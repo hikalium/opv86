@@ -3,15 +3,27 @@ PARSERFLAGS:=
 default: run
 
 run : sdmparser.js
-	node sdmparser.js $(PARSERFLAGS) || true
+	node sdmparser.js $(PARSERFLAGS)
 
 debug : sdmparser.js
-	node --inspect-brk sdmparser.js $(PARSERFLAGS) || true
+	node --inspect-brk sdmparser.js $(PARSERFLAGS)
 
 test : sdmparser.js
 	node sdmparser.js --runtest
 	node sdmparser.js --mnemonic \
-		SYSCALL AAA ADD MOV XOR RET
+		SYSCALL SYSRET \
+		ENTER LEAVE \
+		AAA \
+		INC DEC \
+		ADD SUB MUL DIV CMP \
+		XOR NOT AND OR \
+		MOV LEA XCHG NOP \
+		JMP CALL RET \
+		INT3 IRET UD \
+		LGDT SGDT \
+		STI CLI HLT PAUSE \
+		OUT IN \
+		CPUID
 	@echo "All tests passed."
 
 format :
