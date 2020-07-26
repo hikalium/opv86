@@ -11,7 +11,7 @@ debug : sdmparser.js
 test : sdmparser.js
 	node sdmparser.js --runtest
 	node sdmparser.js --mnemonic \
-		SYSCALL AAA ADD MOV XOR
+		SYSCALL AAA ADD MOV XOR RET
 	@echo "All tests passed."
 
 format :

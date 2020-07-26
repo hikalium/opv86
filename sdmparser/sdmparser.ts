@@ -424,7 +424,7 @@ const parserMap = {
           while (s.peek().attr.left < instrLeft) {
             opcode.push(GetText(s.next()).trim());
           }
-          const opcodeStr = opcode.join('');
+          const opcodeStr = opcode.join(' ');
           console.log(opcodeStr);
           const instr = [];
           while (s.peek().attr.left < opEnLeft - 50) {
@@ -439,6 +439,11 @@ const parserMap = {
             s.next();
             valid_in_64_str = 'Valid';
             compat_leg_str = 'N.E.';
+          } else if (GetText(s.peek()) === 'Valid Valid') {
+            // hack for C3 RET
+            s.next();
+            valid_in_64_str = 'Valid';
+            compat_leg_str = 'Valid';
           } else {
             valid_in_64_str = GetNonEmptyText(s);
             compat_leg_str = s.next().text;
@@ -485,6 +490,12 @@ const parserMap = {
         }
         return instrList;
       },
+  'opcode*#instruction#op/#en#64-bit#mode#compat/#leg mode#description': (
+      headers: SDMText[], tokens: SDMText[]): SDMInstr[] => {
+    // RET
+    return parserMap['opcode#instruction#op/#en#64-bit#mode#compat/#leg mode#description'](
+        headers, tokens);
+  }
 };
 
 function TestParser() {
@@ -562,6 +573,7 @@ function TestParser() {
 const HeaderTexts = {
   'Opcode': true,
   'Opcode/': true,
+  'Opcode*': true,
   'Op/': true,
   '64-Bit': true,
   '64-bit': true,
