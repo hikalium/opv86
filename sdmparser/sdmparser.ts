@@ -339,10 +339,9 @@ function MakeTable(
 function IsEndOfInstrTable(t: SDMText) {
   // Returns true if t is a next section header or text at the bottom of a page
   // like "MOV—Move"
-  const firstText = GetText(t);
-  return firstText === 'Instruction Operand Encoding' ||
-      firstText === 'NOTES:' || firstText === 'NOTE:' ||
-      firstText.indexOf('—') !== -1;
+  const s = GetText(t);
+  return s === 'Instruction Operand Encoding' || s === 'NOTES:' ||
+      s === 'NOTE:' || s.indexOf('—') !== -1 || s.match(/^\d-\d+/) !== null;
 }
 
 function CanonicalizeInstr(s: string): string[] {
@@ -579,7 +578,7 @@ const parserMap = {
                             .map(e => `${GetText(e)}@${e.attr.left}`)
                             .join(','));
           let s = new SDMTextStream(textRows[k]);
-          if (IsEndOfInstrTable(s.peek())) {
+          if (!s.hasNext() || IsEndOfInstrTable(s.peek())) {
             break;
           }
           let opcode = [];
@@ -621,8 +620,6 @@ const parserMap = {
               s = new SDMTextStream(textRows[k + 1]);
               if (s.peek().attr.left < descriptionLeft) {
                 // Not a description line.
-                console.error('next token is not a part of description');
-                console.error(s.peek());
                 break;
               }
               // insert space between line feeds
@@ -762,10 +759,16 @@ const HeaderTexts = {
   'Leg Mode': true,
 };
 
-function ParseInstrTableHeader(s: SDMTextStream): SDMText[] {
-  while (!HeaderTexts[GetText(s.peek())]) {
+function ParseInstrTableHeader(s: SDMTextStream):
+    {pageHeader: SDMText[], tableHeader: SDMText[]} {
+  // Returns empty array if header did not found.
+  const pageHeader = [];
+  while (s.hasNext() && !HeaderTexts[GetText(s.peek())]) {
     // Skip page header and title
-    s.next();
+    pageHeader.push(s.next());
+  }
+  if (!s.hasNext()) {
+    return {pageHeader: [], tableHeader: []};
   }
   const header = [];
   while (HeaderTexts[GetText(s.peek())]) {
@@ -783,28 +786,52 @@ function ParseInstrTableHeader(s: SDMTextStream): SDMText[] {
   for (const e of headerSortedByColumn) {
     console.error(e);
   }
-  return headerSortedByColumn;
+  return {pageHeader: pageHeader, tableHeader: headerSortedByColumn};
 }
 
 function ParseInstr(pages: SDMPage[], startPage: number): SDMInstr[] {
-  let page = pages[startPage];
-  let sorted = page.text.sort((lhs: SDMText, rhs: SDMText) => {
-    if (lhs.attr.top == rhs.attr.top) {
-      return lhs.attr.left - rhs.attr.left;
+  let instrs = [];
+  let lastHeaderKey = null;
+  for (let p = startPage; p < pages.length; p++) {
+    let page = pages[p];
+    try {
+      let sorted = page.text.sort((lhs: SDMText, rhs: SDMText) => {
+        if (lhs.attr.top == rhs.attr.top) {
+          return lhs.attr.left - rhs.attr.left;
+        }
+        return lhs.attr.top - rhs.attr.top;
+      });
+      const s = new SDMTextStream(sorted);
+      const {pageHeader, tableHeader} = ParseInstrTableHeader(s);
+      if (tableHeader.length == 0) {
+        console.error('No table header found.');
+        break;
+      }
+      console.error(`############### page ${p}`);
+      console.error(pageHeader);
+      console.error(tableHeader);
+      const headerKey = tableHeader.map(e => e.text).join('#').toLowerCase();
+      if (lastHeaderKey &&
+          (lastHeaderKey !== headerKey || pageHeader.length > 1)) {
+        break;
+      }
+      if (!parserMap[headerKey]) {
+        throw new Error(
+            `Parser not implemented for tableHeader key ${headerKey}`);
+      }
+      let count = 0;
+      while (!IsEndOfInstrTable(s.peek(count))) {
+        count++;
+      }
+      instrs = instrs.concat(
+          parserMap[headerKey](tableHeader, s.getFollowing(count)));
+      lastHeaderKey = headerKey;
+    } catch (e) {
+      console.log(page);
+      throw e;
     }
-    return lhs.attr.top - rhs.attr.top;
-  });
-  const s = new SDMTextStream(sorted);
-  const header = ParseInstrTableHeader(s);
-  const headerKey = header.map(e => e.text).join('#').toLowerCase();
-  if (!parserMap[headerKey]) {
-    throw new Error(`Parser not implemented for header key ${headerKey}`);
   }
-  let count = 0;
-  while (!IsEndOfInstrTable(s.peek(count))) {
-    count++;
-  }
-  return parserMap[headerKey](header, s.getFollowing(count));
+  return instrs;
 }
 
 const optionDefinitions = [

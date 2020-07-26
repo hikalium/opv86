@@ -21,7 +21,7 @@ test : sdmparser.js
 		ADD SUB MUL DIV CMP \
 		XOR NOT AND OR \
 		MOV LEA XCHG NOP \
-		JMP CALL RET \
+		JMP Jcc CALL RET \
 		INT3 IRET UD \
 		LGDT SGDT \
 		STI CLI HLT PAUSE \
