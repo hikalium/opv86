@@ -8,8 +8,11 @@ run : sdmparser.js
 debug : sdmparser.js
 	node --inspect-brk sdmparser.js $(PARSERFLAGS)
 
-test : sdmparser.js
+unittest : sdmparser.js
 	node sdmparser.js --runtest
+
+test : sdmparser.js
+	make unittest
 	node sdmparser.js --mnemonic \
 		SYSCALL SYSRET \
 		ENTER LEAVE \

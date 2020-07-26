@@ -30,6 +30,7 @@ interface SDMPage {
 
 interface SDMInstr {
   opcode: string;
+  opcode_parsed: string[];
   instr: string;
   instr_parsed: string[];
   op_en?: string;
@@ -407,6 +408,92 @@ function CanonicalizeInstr(s: string): string[] {
   return canonicalized;
 }
 
+function CanonicalizeOpcode(s: string): string[] {
+  const canonicalized = [];
+  const reREXPrefix = /^(REX(\.R|\.W)?)(\s*\+\s*)?/;
+  const reOpByte = /^[0-9A-F]{2}(\s|$|\/|\+)/;
+  const reImm = /^(i(b|w|d|o))/;
+  const reRemovePunctuator = /\**/g;
+  s = s.trim().replace(reRemovePunctuator, '');
+  if (s.startsWith('NP')) {
+    canonicalized.push(s.substr(0, 2));
+    s = s.substr(2).trim();
+  }
+  {
+    const match = s.match(reREXPrefix);
+    if (match) {
+      canonicalized.push(match[1]);
+      s = s.substr(match[0].length).trim();
+    }
+  }
+  while (reOpByte.test(s)) {
+    canonicalized.push(s.substr(0, 2));
+    s = s.substr(2).trim();
+  }
+  if (s[0] === 'c') {
+    const reRegCodeOfs = /^(c(b|w|d|p|o|t))/;
+    const match = s.match(reRegCodeOfs);
+    if (!match) {
+      throw new Error(`cb, cw, cd, cp, co, ct is expected. input: ${s}`);
+    }
+    canonicalized.push(match[1]);
+    s = s.substr(match[0].length).trim();
+  }
+  if (s[0] === '+') {
+    const reRegInOpcode = /^\+\s*(r(b|w|d|o))/;
+    const match = s.match(reRegInOpcode);
+    if (!match) {
+      throw new Error(`+rb, rw, rd, ro is expected. input: ${s}`);
+    }
+    canonicalized.push('+' + match[1]);
+    s = s.substr(match[0].length).trim();
+  }
+  if (s[0] === '/') {
+    // /digit (0-7) or /r
+    const reModRM = /^(\/\s*(r|[0-7]))/;
+    const match = s.match(reModRM);
+    if (!match) {
+      throw new Error(`/[0-7] or /r is expected. input: ${s}`);
+    }
+    canonicalized.push(match[1].replace(/ /g, ''));
+    s = s.substr(match[0].length).trim();
+  }
+  {
+    const match = s.match(reImm);
+    if (match) {
+      canonicalized.push(match[1]);
+      s = s.substr(match[0].length).trim();
+    }
+  }
+  if (canonicalized[0] === 'C8' /* ENTER */) {
+    while (reOpByte.test(s)) {
+      canonicalized.push(s.substr(0, 2));
+      s = s.substr(2).trim();
+    }
+    {
+      const match = s.match(reImm);
+      if (match) {
+        canonicalized.push(match[1]);
+        s = s.substr(match[0].length).trim();
+      }
+    }
+  }
+
+  if (s.length) {
+    throw new Error(`Extra input: ${s}`);
+  }
+  return canonicalized;
+}
+
+function TestCanonicalizeOpcode() {
+  assert.deepEqual(CanonicalizeOpcode('00/r'), ['00', '/r']);
+  assert.deepEqual(CanonicalizeOpcode('00 / r'), ['00', '/r']);
+  assert.deepEqual(CanonicalizeOpcode('00+rb'), ['00', '+rb']);
+  assert.deepEqual(CanonicalizeOpcode('00 + rb'), ['00', '+rb']);
+  assert.deepEqual(CanonicalizeOpcode('00 ib'), ['00', 'ib']);
+  assert.deepEqual(CanonicalizeOpcode('EB cb'), ['EB', 'cb']);
+}
+
 const parserMap = {
   'opcode/#instruction#op/#en#64-bit#mode#compat/#leg mode#description':
       (headers: SDMText[], tokens: SDMText[]): SDMInstr[] => {
@@ -451,6 +538,7 @@ const parserMap = {
           const description = tr[4].map(t => GetText(t).trim()).join(' ');
           console.log({
             opcode: opcode,
+            opcode_parsed: CanonicalizeOpcode(opcode),
             instr: instr,
             instr_parsed: CanonicalizeInstr(instr),
             op_en: op_en,
@@ -461,6 +549,7 @@ const parserMap = {
           });
           return {
             opcode: opcode,
+            opcode_parsed: CanonicalizeOpcode(opcode),
             instr: instr,
             instr_parsed: CanonicalizeInstr(instr),
             op_en: op_en,
@@ -553,6 +642,7 @@ const parserMap = {
           })
           instrList.push({
             opcode: opcodeStr,
+            opcode_parsed: CanonicalizeOpcode(opcodeStr),
             instr: instr.join(' '),
             instr_parsed: CanonicalizeInstr(instr.join(' ')),
             op_en: op_en,
@@ -602,6 +692,9 @@ function TestParser() {
           ]),
       [{
         opcode: '37',
+        opcode_parsed: [
+          '37',
+        ],
         instr: 'AAA',
         instr_parsed: [
           'AAA',
@@ -638,6 +731,10 @@ function TestParser() {
           ]),
       [{
         opcode: '0F 05',
+        opcode_parsed: [
+          '0F',
+          '05',
+        ],
         instr: 'SYSCALL',
         instr_parsed: [
           'SYSCALL',
@@ -745,6 +842,7 @@ process.exit((() => {
     return 0;
   }
   if (options.runtest) {
+    TestCanonicalizeOpcode();
     TestExpandMnemonic();
     TestParser();
     console.log('PASS');
