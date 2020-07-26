@@ -24,6 +24,7 @@ test : sdmparser.js
 		JMP Jcc CALL RET \
 		INT3 IRET UD \
 		LGDT SGDT \
+		CLFLUSH CLFLUSHOPT \
 		STI CLI HLT PAUSE \
 		OUT IN \
 		CPUID

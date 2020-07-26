@@ -360,6 +360,7 @@ function CanonicalizeInstr(s: string): string[] {
     'r16/r32/m16',
     'r64/m16',
     'm(16&(32|64))?',
+    'm8',
     '(m|ptr)16:(16|32|64)',
     '(A|C|D|B)(L|H|X)',
     '(R|E)(A|C|D|B)X',
@@ -417,6 +418,10 @@ function CanonicalizeOpcode(s: string): string[] {
   if (s.startsWith('NP')) {
     canonicalized.push(s.substr(0, 2));
     s = s.substr(2).trim();
+  }
+  if (s.startsWith('NFx')) {
+    canonicalized.push(s.substr(0, 3));
+    s = s.substr(3).trim();
   }
   {
     const match = s.match(reREXPrefix);
@@ -559,6 +564,12 @@ const parserMap = {
           };
         });
       },
+  'opcode /#instruction#op/#en#64-bit#mode#compat/#leg mode#description': (
+      headers: SDMText[], tokens: SDMText[]): SDMInstr[] => {
+    // CLFLUSH
+    return parserMap['opcode/#instruction#op/#en#64-bit#mode#compat/#leg mode#description'](
+        headers, tokens);
+  },
   'opcode#instruction#op/#en#64-bit#mode#compat/#leg mode#description':
       (headers: SDMText[], tokens: SDMText[]): SDMInstr[] => {
         console.error(headers.filter(e => e !== undefined)
@@ -747,6 +758,7 @@ function TestParser() {
 const HeaderTexts = {
   'Opcode': true,
   'Opcode/': true,
+  'Opcode /': true,
   'Opcode*': true,
   'Op/': true,
   '64-Bit': true,
