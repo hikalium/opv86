@@ -348,6 +348,10 @@ function IsEndOfInstrTable(t: SDMText) {
   // Returns true if t is a next section header or text at the bottom of a page
   // like "MOV—Move"
   const s = GetText(t);
+  if (s === 'Description' && t.attr.top >= 400) {
+    // 'Description in outside of table, not in the table header'
+    return true;
+  }
   return s === 'Instruction Operand Encoding' || s === 'NOTES:' ||
       s === 'NOTE:' || s.indexOf('—') !== -1 || s.match(/^\d-\d+/) !== null;
 }
@@ -369,6 +373,8 @@ function CanonicalizeInstr(s: string): string[] {
     'r64/m16',
     'm(16&(32|64))?',
     'm8',
+    'm(32|64)fp',
+    'm(32|16)int',
     '(m|ptr)16:(16|32|64)',
     '(A|C|D|B)(L|H|X)',
     '(R|E)(A|C|D|B)X',
@@ -378,6 +384,7 @@ function CanonicalizeInstr(s: string): string[] {
     'moffs(8|16|32|64)',
     'imm(8|16|32|64)',
     'rel(8|16|32|64)',
+    'ST\\((0|i)\\)',
   ];
   const reRemovePunctuator = /\s*\**\s*$/;
   const reRemoveSpaces = /\s/g;
@@ -452,10 +459,10 @@ function CanonicalizeOpcode(s: string): string[] {
     s = s.substr(match[0].length).trim();
   }
   if (s[0] === '+') {
-    const reRegInOpcode = /^\+\s*(r(b|w|d|o))/;
+    const reRegInOpcode = /^\+\s*((r(b|w|d|o))|i)/;
     const match = s.match(reRegInOpcode);
     if (!match) {
-      throw new Error(`+rb, rw, rd, ro is expected. input: ${s}`);
+      throw new Error(`+rb, +rw, +rd, +ro, +iis expected. input: ${s}`);
     }
     canonicalized.push('+' + match[1]);
     s = s.substr(match[0].length).trim();
@@ -507,6 +514,55 @@ function TestCanonicalizeOpcode() {
 }
 
 const parserMap = {
+  'opcode#instruction#64-bit#mode#compat/#leg mode#description':
+      (headers: SDMText[], tokens: SDMText[]): SDMInstr[] => {
+        // FDIV
+        console.error(headers.filter(e => e !== undefined)
+                          .map(e => `${GetText(e)}@${e.attr.left}`)
+                          .join(', '));
+        const opcodeLeft = headers[0].attr.left;
+        const instrLeft = headers[1].attr.left;
+        const validIn64Left = headers[2].attr.left;
+        const validInCompatLegLeft = headers[4].attr.left;
+        const descriptionLeft = headers[6].attr.left;
+        //
+        const table = MakeTable(
+            tokens,
+            [
+              opcodeLeft,
+              instrLeft,
+              validIn64Left,
+              validInCompatLegLeft,
+              descriptionLeft,
+            ],
+            2);
+        return table.map(tr => {
+          const opcode = tr[0].flat().map(t => GetText(t).trim()).join(' ');
+          const instr = tr[1].flat().map(t => GetText(t).trim()).join(' ');
+          let valid_in_64_str = GetText(tr[2][0]);
+          let valid_in_compat_leg_str = GetText(tr[3][0]);
+          const description = tr[4].map(t => GetText(t).trim()).join(' ');
+          console.log({
+            opcode: opcode,
+            opcode_parsed: CanonicalizeOpcode(opcode),
+            instr: instr,
+            instr_parsed: CanonicalizeInstr(instr),
+            description: description,
+          });
+          const valid_in_compat_leg =
+              CanonicalizeCompatLeg(valid_in_compat_leg_str);
+          return {
+            opcode: opcode,
+            opcode_parsed: CanonicalizeOpcode(opcode),
+            instr: instr,
+            instr_parsed: CanonicalizeInstr(instr),
+            valid_in_64bit_mode: CanonicalizeValidIn64(valid_in_64_str),
+            valid_in_compatibility_mode: valid_in_compat_leg,
+            valid_in_legacy_mode: valid_in_compat_leg,
+            description: description,
+          };
+        });
+      },
   'opcode/#instruction#op/#en#64/32 bit#mode#support#cpuid#feature flag#description':
       (headers: SDMText[], tokens: SDMText[]): SDMInstr[] => {
         // CLWB

@@ -19,6 +19,7 @@ test : sdmparser.js
 		AAA \
 		INC DEC \
 		ADD SUB MUL DIV CMP \
+		FADD FSUB FMUL FDIV \
 		XOR NOT AND OR \
 		MOV LEA XCHG NOP \
 		JMP Jcc CALL RET \
