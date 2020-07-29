@@ -21,6 +21,7 @@ test : sdmparser.js
 		ADD SUB MUL DIV CMP \
 		FADD FSUB FMUL FDIV \
 		XOR NOT AND OR \
+		SAL SAR SHL SHR \
 		MOV LEA XCHG NOP \
 		JMP Jcc CALL RET \
 		INT3 IRET UD \

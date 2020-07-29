@@ -385,6 +385,7 @@ function CanonicalizeInstr(s: string): string[] {
     'imm(8|16|32|64)',
     'rel(8|16|32|64)',
     'ST\\((0|i)\\)',
+    '1',
   ];
   const reRemovePunctuator = /\s*\**\s*$/;
   const reRemoveSpaces = /\s/g;
@@ -514,7 +515,7 @@ function TestCanonicalizeOpcode() {
 }
 
 const parserMap = {
-  'opcode#instruction#64-bit#mode#compat/#leg mode#description':
+  'opcode#instruction#64-bit#mode#compat/#legmode#description':
       (headers: SDMText[], tokens: SDMText[]): SDMInstr[] => {
         // FDIV
         console.error(headers.filter(e => e !== undefined)
@@ -563,7 +564,7 @@ const parserMap = {
           };
         });
       },
-  'opcode/#instruction#op/#en#64/32 bit#mode#support#cpuid#feature flag#description':
+  'opcode/#instruction#op/#en#64/32bit#mode#support#cpuid#featureflag#description':
       (headers: SDMText[], tokens: SDMText[]): SDMInstr[] => {
         // CLWB
         console.error(headers.filter(e => e !== undefined)
@@ -622,7 +623,7 @@ const parserMap = {
           };
         });
       },
-  'opcode/#instruction#op/#en#64-bit#mode#compat/#leg mode#description':
+  'opcode/#instruction#op/#en#64-bit#mode#compat/#legmode#description':
       (headers: SDMText[], tokens: SDMText[]): SDMInstr[] => {
         console.error(headers.filter(e => e !== undefined)
                           .map(e => `${GetText(e)}@${e.attr.left}`)
@@ -687,13 +688,7 @@ const parserMap = {
           };
         });
       },
-  'opcode /#instruction#op/#en#64-bit#mode#compat/#leg mode#description': (
-      headers: SDMText[], tokens: SDMText[]): SDMInstr[] => {
-    // CLFLUSH
-    return parserMap['opcode/#instruction#op/#en#64-bit#mode#compat/#leg mode#description'](
-        headers, tokens);
-  },
-  'opcode#instruction#op/#en#64-bit#mode#compat/#leg mode#description':
+  'opcode#instruction#op/#en#64-bit#mode#compat/#legmode#description':
       (headers: SDMText[], tokens: SDMText[]): SDMInstr[] => {
         console.error(headers.filter(e => e !== undefined)
                           .map(e => `${GetText(e)}@${e.attr.left}`)
@@ -785,18 +780,12 @@ const parserMap = {
         }
         return instrList;
       },
-  'opcode*#instruction#op/#en#64-bit#mode#compat/#leg mode#description': (
-      headers: SDMText[], tokens: SDMText[]): SDMInstr[] => {
-    // RET
-    return parserMap['opcode#instruction#op/#en#64-bit#mode#compat/#leg mode#description'](
-        headers, tokens);
-  }
 };
 
 function TestParser() {
   let parser;
   parser =
-      parserMap['opcode#instruction#op/#en#64-bit#mode#compat/#leg mode#description'];
+      parserMap['opcode#instruction#op/#en#64-bit#mode#compat/#legmode#description'];
   assert(parser);
   assert.deepEqual(
       parser(
@@ -883,6 +872,7 @@ const HeaderTexts = {
   'Opcode/': true,
   'Opcode /': true,
   'Opcode*': true,
+  'Opcode***': true,
   'Op/': true,
   '64/32 bit': true,
   '64-Bit': true,
@@ -949,7 +939,10 @@ function ParseInstr(pages: SDMPage[], startPage: number): SDMInstr[] {
       console.error(`############### page ${p}`);
       console.error(pageHeader);
       console.error(tableHeader);
-      const headerKey = tableHeader.map(e => e.text).join('#').toLowerCase();
+      const headerKey =
+          tableHeader.map(e => e.text.replace(/\*/g, '').replace(/ /g, ''))
+              .join('#')
+              .toLowerCase();
       if (lastHeaderKey &&
           (lastHeaderKey !== headerKey || pageHeader.length > 1)) {
         break;
@@ -1049,7 +1042,6 @@ process.exit((() => {
       if (requestedMnemonicList === undefined || requestedMnemonicList[m]) {
         matchedInstrMap[m] = true;
         requestedInstrPage = true;
-        break;
       }
     }
     if (!requestedInstrPage)
