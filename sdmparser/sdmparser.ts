@@ -793,22 +793,29 @@ const parserMap = {
             instr.push(GetText(s.next()).trim());
           }
           console.log(instr);
-          const op_en = GetNonEmptyText(s);
+          let op_en = GetNonEmptyText(s);
           let valid_in_64_str;
           let compat_leg_str;
-          if (GetText(s.peek()) === 'Valid N.E.') {
-            // hack for 'MOV', 'r/m64, imm32'
-            s.next();
+          if (op_en === 'RMI Valid') {
+            // hack for IMUL
+            op_en = 'RMI';
             valid_in_64_str = 'Valid';
-            compat_leg_str = 'N.E.';
-          } else if (GetText(s.peek()) === 'Valid Valid') {
-            // hack for C3 RET
-            s.next();
-            valid_in_64_str = 'Valid';
-            compat_leg_str = 'Valid';
-          } else {
-            valid_in_64_str = GetNonEmptyText(s);
             compat_leg_str = s.next().text;
+          } else {
+            if (GetText(s.peek()) === 'Valid N.E.') {
+              // hack for 'MOV', 'r/m64, imm32'
+              s.next();
+              valid_in_64_str = 'Valid';
+              compat_leg_str = 'N.E.';
+            } else if (GetText(s.peek()) === 'Valid Valid') {
+              // hack for C3 RET
+              s.next();
+              valid_in_64_str = 'Valid';
+              compat_leg_str = 'Valid';
+            } else {
+              valid_in_64_str = GetNonEmptyText(s);
+              compat_leg_str = s.next().text;
+            }
           }
           let description = '';
           while (true) {
@@ -1032,6 +1039,7 @@ function ParseInstr(pages: SDMPage[], startPage: number): SDMInstr[] {
       while (!IsEndOfInstrTable(s.peek(count))) {
         count++;
       }
+      console.error(`Using parser ${headerKey}`);
       instrs = instrs.concat(
           parserMap[headerKey](tableHeader, s.getFollowing(count)));
       lastHeaderKey = headerKey;
