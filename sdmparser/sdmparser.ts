@@ -379,6 +379,7 @@ function CanonicalizeInstr(s: string): string[] {
     '(A|C|D|B)(L|H|X)',
     '(R|E)(A|C|D|B)X',
     'Sreg',
+    '(ES|CS|SS|DS|FS|GS)',
     'DR0–DR7',
     'CR0–CR7|CR8',
     'moffs(8|16|32|64)',

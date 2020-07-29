@@ -23,6 +23,7 @@ test : sdmparser.js
 		XOR NOT AND OR \
 		SAL SAR SHL SHR \
 		MOV LEA XCHG NOP \
+		PUSH POP \
 		JMP Jcc CALL RET \
 		INT3 IRET UD \
 		LGDT SGDT \
