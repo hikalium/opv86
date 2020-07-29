@@ -403,6 +403,7 @@ function CanonicalizeInstr(s: string): string[] {
     'imm(8|16|32|64)',
     'rel(8|16|32|64)',
     'ST\\((0|i)\\)',
+    'ST',
     '1',
   ];
   const reRemovePunctuator = /\s*\**\s*$/;
@@ -598,6 +599,12 @@ function Parser_OpInstr_OpEn_6432_CPUID_Desc(table: SDMText[][][]) {
 }
 
 const parserMap = {
+  'opcode#instruction#mode#64-bit#compat/#legmode#description': (
+      headers: SDMText[], tokens: SDMText[]): SDMInstr[] => {
+    // FCOMI hack
+    return parserMap['opcode#instruction#64-bit#mode#compat/#legmode#description'](
+        headers, tokens);
+  },
   'opcode#instruction#64-bit#mode#compat/#legmode#description':
       (headers: SDMText[], tokens: SDMText[]): SDMInstr[] => {
         // FDIV
