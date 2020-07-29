@@ -23,7 +23,8 @@ test : sdmparser.js
 		FLD FSTP FXCH \
 		XOR NOT AND OR TEST \
 		SAL SAR SHL SHR \
-		MOV LEA XCHG NOP \
+		MOV MOVZX LEA XCHG NOP \
+		MOVSD \
 		PUSH POP \
 		JMP Jcc CALL RET \
 		INT3 IRET UD \
@@ -32,6 +33,7 @@ test : sdmparser.js
 		STI CLI HLT PAUSE \
 		OUT IN \
 		CPUID \
+		SCAS \
 		REP
 	@echo "All tests passed."
 

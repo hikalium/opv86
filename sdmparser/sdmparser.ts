@@ -392,6 +392,10 @@ function CanonicalizeInstr(s: string): string[] {
     '(R|E)(A|C|D|B)X',
     'Sreg',
     '(ES|CS|SS|DS|FS|GS)',
+    'xmm(1|2|3)',
+    'xmm1 {k1}{z}',
+    'm64 {k1}',
+    'xmm1/m64',
     'DR0–DR7',
     'CR0–CR7|CR8',
     'moffs(8|16|32|64)',
@@ -439,6 +443,9 @@ function CanonicalizeInstr(s: string): string[] {
 function TestCanonicalizeInstr() {
   assert.deepEqual(
       CanonicalizeInstr('REP OUTS DX, r/m32'), ['REP', 'OUTS', 'DX', 'r/m32']);
+  assert.deepEqual(
+      CanonicalizeInstr('VMOVSD xmm1 {k1}{z}, xmm2, xmm3'),
+      ['VMOVSD', 'xmm1 {k1}{z}', 'xmm2', 'xmm3']);
 }
 
 function CanonicalizeOpcode(s: string): string[] {
@@ -455,6 +462,10 @@ function CanonicalizeOpcode(s: string): string[] {
   if (s.startsWith('NFx')) {
     canonicalized.push(s.substr(0, 3));
     s = s.substr(3).trim();
+  }
+  if (s.startsWith('VEX.') || s.startsWith('EVEX.')) {
+    canonicalized.push(s.substr(0, s.indexOf(' ')));
+    s = s.substr(canonicalized[canonicalized.length - 1].length).trim();
   }
   {
     const match = s.match(reREXPrefix);
@@ -546,6 +557,45 @@ function TestCanonicalizeOpcode() {
   assert.deepEqual(CanonicalizeOpcode('F2 REX.W A7'), ['F2', 'REX.W', 'A7']);
 }
 
+function Parser_OpInstr_OpEn_6432_CPUID_Desc(table: SDMText[][][]) {
+  return table.map(tr => {
+    const opInstrRows = MakeRows(tr[0]);
+    const opRow = opInstrRows[0];
+    const InstrRows = opInstrRows.splice(1);
+    const opcode = opRow.map(t => GetText(t).trim()).join(' ');
+    console.log(opcode);
+    const instr = InstrRows.flat().map(t => GetText(t).trim()).join(' ');
+    console.log(instr);
+    const op_en = GetText(tr[1][0]);
+    let valid_in_3264_str = GetText(tr[2][0]);
+    let cpuid_str = GetText(tr[3][0]);
+    const description = tr[4].map(t => GetText(t).trim()).join(' ');
+    console.log({
+      opcode: opcode,
+      opcode_parsed: CanonicalizeOpcode(opcode),
+      instr: instr,
+      instr_parsed: CanonicalizeInstr(instr),
+      op_en: op_en,
+      valid_in_3264_str: valid_in_3264_str,
+      cpuid_str: cpuid_str,
+      description: description,
+    });
+    const validIn3264 = CanonicalizeValidIn3264(valid_in_3264_str);
+    return {
+      opcode: opcode,
+      opcode_parsed: CanonicalizeOpcode(opcode),
+      instr: instr,
+      instr_parsed: CanonicalizeInstr(instr),
+      op_en: op_en,
+      valid_in_64bit_mode: validIn3264.valid64,
+      valid_in_compatibility_mode: validIn3264.valid32,
+      valid_in_legacy_mode: false,
+      cpuid_feature_flag: cpuid_str,
+      description: description,
+    };
+  });
+}
+
 const parserMap = {
   'opcode#instruction#64-bit#mode#compat/#legmode#description':
       (headers: SDMText[], tokens: SDMText[]): SDMInstr[] => {
@@ -596,6 +646,30 @@ const parserMap = {
           };
         });
       },
+  'opcode/#instruction#op/en#64/32#bitmode#support#cpuid#feature#flag#description':
+      (headers: SDMText[], tokens: SDMText[]): SDMInstr[] => {
+        // MOVSD
+        console.error(headers.filter(e => e !== undefined)
+                          .map(e => `${GetText(e)}@${e.attr.left}`)
+                          .join(', '));
+        const opcodeLeft = headers[0].attr.left;
+        const opEnLeft = headers[2].attr.left;
+        const validIn3264Left = headers[3].attr.left;
+        const cpuidFeatureLeft = headers[6].attr.left;
+        const descriptionLeft = headers[9].attr.left;
+        //
+        const table = MakeTable(
+            tokens,
+            [
+              opcodeLeft,
+              opEnLeft,
+              validIn3264Left,
+              cpuidFeatureLeft,
+              descriptionLeft,
+            ],
+            1);
+        return Parser_OpInstr_OpEn_6432_CPUID_Desc(table);
+      },
   'opcode/#instruction#op/#en#64/32bit#mode#support#cpuid#featureflag#description':
       (headers: SDMText[], tokens: SDMText[]): SDMInstr[] => {
         // CLWB
@@ -618,42 +692,7 @@ const parserMap = {
               descriptionLeft,
             ],
             1);
-        return table.map(tr => {
-          const opInstrRows = MakeRows(tr[0]);
-          const opRow = opInstrRows[0];
-          const InstrRows = opInstrRows.splice(1);
-          const opcode = opRow.map(t => GetText(t).trim()).join(' ');
-          console.log(opcode);
-          const instr = InstrRows.flat().map(t => GetText(t).trim()).join(' ');
-          console.log(instr);
-          const op_en = GetText(tr[1][0]);
-          let valid_in_3264_str = GetText(tr[2][0]);
-          let cpuid_str = GetText(tr[3][0]);
-          const description = tr[4].map(t => GetText(t).trim()).join(' ');
-          console.log({
-            opcode: opcode,
-            opcode_parsed: CanonicalizeOpcode(opcode),
-            instr: instr,
-            instr_parsed: CanonicalizeInstr(instr),
-            op_en: op_en,
-            valid_in_3264_str: valid_in_3264_str,
-            cpuid_str: cpuid_str,
-            description: description,
-          });
-          const validIn3264 = CanonicalizeValidIn3264(valid_in_3264_str);
-          return {
-            opcode: opcode,
-            opcode_parsed: CanonicalizeOpcode(opcode),
-            instr: instr,
-            instr_parsed: CanonicalizeInstr(instr),
-            op_en: op_en,
-            valid_in_64bit_mode: validIn3264.valid64,
-            valid_in_compatibility_mode: validIn3264.valid32,
-            valid_in_legacy_mode: false,
-            cpuid_feature_flag: cpuid_str,
-            description: description,
-          };
-        });
+        return Parser_OpInstr_OpEn_6432_CPUID_Desc(table);
       },
   'opcode/#instruction#op/#en#64-bit#mode#compat/#legmode#description':
       (headers: SDMText[], tokens: SDMText[]): SDMInstr[] => {
@@ -906,6 +945,8 @@ const HeaderTexts = {
   'Opcode*': true,
   'Opcode***': true,
   'Op/': true,
+  'Op / En': true,
+  '64/32': true,
   '64/32 bit': true,
   '64-Bit': true,
   '64-bit': true,
@@ -913,10 +954,13 @@ const HeaderTexts = {
   'Description': true,
   'Instruction': true,
   'En': true,
+  'bit Mode': true,
   'Mode': true,
   'Leg Mode': true,
   'CPUID': true,
+  'Feature': true,
   'Feature Flag': true,
+  'Flag': true,
   'Support': true,
 };
 
