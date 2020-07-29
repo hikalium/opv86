@@ -359,7 +359,7 @@ function IsEndOfInstrTable(t: SDMText) {
 
 function CanonicalizeInstr(s: string): string[] {
   const canonicalized = [];
-  let sep = s.split(' ');
+  let sep = s.split('*').join('').trim().split(' ');
   const reMnemonic = /^[A-Z]\w+$/;
   const mn = sep[0];
   if (!reMnemonic.test(mn)) {
@@ -387,6 +387,7 @@ function CanonicalizeInstr(s: string): string[] {
     'm(8|16|32|64)',
     'm(32|64|80)fp',
     'm(32|16)int',
+    'm2byte',
     '(m|ptr)16:(16|32|64)',
     '(A|C|D|B)(L|H|X)',
     '(R|E)(A|C|D|B)X',
