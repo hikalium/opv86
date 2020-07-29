@@ -20,7 +20,7 @@ test : sdmparser.js
 		INC DEC \
 		ADD SUB MUL DIV CMP \
 		FADD FSUB FMUL FDIV \
-		FLD \
+		FLD FSTP\
 		XOR NOT AND OR TEST \
 		SAL SAR SHL SHR \
 		MOV LEA XCHG NOP \
