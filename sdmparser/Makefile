@@ -21,6 +21,7 @@ test : sdmparser.js
 		ADD SUB MUL DIV CMP \
 		CDQ \
 		IMUL \
+		SETcc \
 		FADD FSUB FMUL FDIV FCOMI \
 		FLD FILD FSTP FXCH \
 		FSTSW \
