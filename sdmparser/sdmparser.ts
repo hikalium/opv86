@@ -353,7 +353,8 @@ function IsEndOfInstrTable(t: SDMText) {
     return true;
   }
   return s === 'Instruction Operand Encoding' || s === 'NOTES:' ||
-      s === 'NOTE:' || s.indexOf('—') !== -1 || s.match(/^\d-\d+/) !== null;
+      s === 'NOTE:' || s === 'NOTE' || s.indexOf('—') !== -1 ||
+      s.match(/^\d-\d+/) !== null;
 }
 
 function CanonicalizeInstr(s: string): string[] {
@@ -373,7 +374,7 @@ function CanonicalizeInstr(s: string): string[] {
     'r64/m16',
     'm(16&(32|64))?',
     'm8',
-    'm(32|64)fp',
+    'm(32|64|80)fp',
     'm(32|16)int',
     '(m|ptr)16:(16|32|64)',
     '(A|C|D|B)(L|H|X)',
