@@ -41,7 +41,6 @@ interface SDMInstr {
   description: string;
 }
 
-
 function ExtractSDMDataAttr(filepath: string, firstPage: SDMPage): SDMDataAttr {
   console.log(firstPage);
   const result = {
@@ -179,6 +178,7 @@ function ParseXMLToSDMPages(data: string): SDMPage[] {
 }
 
 function CanonicalizeValidIn64(str: string): boolean {
+  str = str.split('*').join('').trim();
   if (str === 'Invalid') {
     return false;
   }

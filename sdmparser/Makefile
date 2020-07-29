@@ -35,7 +35,8 @@ test : sdmparser.js
 		OUT IN \
 		CPUID \
 		SCAS \
-		REP
+		REP \
+		SAHF
 	@echo "All tests passed."
 
 format :
