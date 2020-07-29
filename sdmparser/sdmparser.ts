@@ -348,7 +348,7 @@ function IsEndOfInstrTable(t: SDMText) {
   // Returns true if t is a next section header or text at the bottom of a page
   // like "MOV—Move"
   const s = GetText(t);
-  if (s === 'Description' && t.attr.top >= 300) {
+  if (s === 'Description' && t.attr.top >= 200) {
     // 'Description in outside of table, not in the table header'
     return true;
   }
