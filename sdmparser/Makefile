@@ -31,7 +31,8 @@ test : sdmparser.js
 		CLFLUSH CLFLUSHOPT CLWB \
 		STI CLI HLT PAUSE \
 		OUT IN \
-		CPUID
+		CPUID \
+		REP
 	@echo "All tests passed."
 
 format :

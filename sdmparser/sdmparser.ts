@@ -359,21 +359,32 @@ function IsEndOfInstrTable(t: SDMText) {
 
 function CanonicalizeInstr(s: string): string[] {
   const canonicalized = [];
-  const sep = s.split(' ');
+  let sep = s.split(' ');
   const reMnemonic = /^[A-Z]\w+$/;
   const mn = sep[0];
   if (!reMnemonic.test(mn)) {
     throw new Error(`${mn} does not match with reMnemonic`);
   }
   canonicalized.push(mn);
+  sep = sep.splice(1);
+
+  if (mn === 'REP' || mn === 'REPE' || mn === 'REPNE') {
+    // REP <instr> <operands, ...>
+    const subMn = sep[0];
+    if (!reMnemonic.test(subMn)) {
+      throw new Error(`${subMn} does not match with reMnemonic`);
+    }
+    canonicalized.push(subMn);
+    sep = sep.splice(1);
+  }
   // operands
-  const operands = sep.splice(1).join(' ').split(',').map(s => s.trim());
+  const operands = sep.join(' ').split(',').map(s => s.trim());
   const reOperandList = [
     'r(/m)?(8|16|32|64)',
     'r16/r32/m16',
     'r64/m16',
     'm(16&(32|64))?',
-    'm8',
+    'm(8|16|32|64)',
     'm(32|64|80)fp',
     'm(32|16)int',
     '(m|ptr)16:(16|32|64)',
@@ -425,6 +436,10 @@ function CanonicalizeInstr(s: string): string[] {
   }
   return canonicalized;
 }
+function TestCanonicalizeInstr() {
+  assert.deepEqual(
+      CanonicalizeInstr('REP OUTS DX, r/m32'), ['REP', 'OUTS', 'DX', 'r/m32']);
+}
 
 function CanonicalizeOpcode(s: string): string[] {
   const canonicalized = [];
@@ -451,6 +466,20 @@ function CanonicalizeOpcode(s: string): string[] {
   while (reOpByte.test(s)) {
     canonicalized.push(s.substr(0, 2));
     s = s.substr(2).trim();
+  }
+  if (canonicalized[0] === 'F3' || canonicalized[0] == 'F2') {
+    // REP/REPE/REPNE
+    {
+      const match = s.match(reREXPrefix);
+      if (match) {
+        canonicalized.push(match[1]);
+        s = s.substr(match[0].length).trim();
+      }
+    }
+    while (reOpByte.test(s)) {
+      canonicalized.push(s.substr(0, 2));
+      s = s.substr(2).trim();
+    }
   }
   if (s[0] === 'c') {
     const reRegCodeOfs = /^(c(b|w|d|p|o|t))/;
@@ -514,6 +543,7 @@ function TestCanonicalizeOpcode() {
   assert.deepEqual(CanonicalizeOpcode('00 + rb'), ['00', '+rb']);
   assert.deepEqual(CanonicalizeOpcode('00 ib'), ['00', 'ib']);
   assert.deepEqual(CanonicalizeOpcode('EB cb'), ['EB', 'cb']);
+  assert.deepEqual(CanonicalizeOpcode('F2 REX.W A7'), ['F2', 'REX.W', 'A7']);
 }
 
 const parserMap = {
@@ -1004,6 +1034,7 @@ process.exit((() => {
   }
   if (options.runtest) {
     TestCanonicalizeOpcode();
+    TestCanonicalizeInstr();
     TestExpandMnemonic();
     TestParser();
     console.log('PASS');
