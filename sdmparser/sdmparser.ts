@@ -386,7 +386,7 @@ function CanonicalizeInstr(s: string): string[] {
     'm(16&(32|64))?',
     'm(8|16|32|64)',
     'm(32|64|80)fp',
-    'm(32|16)int',
+    'm(16|32|64)int',
     'm2byte',
     '(m|ptr)16:(16|32|64)',
     '(A|C|D|B)(L|H|X)',
