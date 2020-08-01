@@ -1,4 +1,4 @@
-SRCS=src/opv86.ts src/opinterface.ts
+SRCS=src/opv86.ts src/opinterface.ts sdmparser/sdm_instr.ts
 
 TSARGS=-target es2016 --out gen/opv86.js ${SRCS}
 
