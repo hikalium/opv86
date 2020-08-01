@@ -1,6 +1,8 @@
-TSARGS=-target es2016 --out gen/opv86.js opv86.ts opinterface.ts
+SRCS=src/opv86.ts src/opinterface.ts
 
-gen/opv86.js : opv86.ts
+TSARGS=-target es2016 --out gen/opv86.js ${SRCS}
+
+gen/opv86.js : ${SRCS}
 	tsc ${TSARGS}
 
 watch : 
