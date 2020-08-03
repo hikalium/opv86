@@ -39,8 +39,9 @@ a:visited {
 .opv86-oplist-container {
   display: grid;
   grid-template-columns: 600px 256px 100px 100px auto;
-  row-gap: 2px;
-  background-color: #808080;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  border-bottom: 0.5px solid #d0d0d0;
 }
 .opv86-oplist-header {
   background-color: #eeeeee;
@@ -92,6 +93,29 @@ a:visited {
   background-color: #000000;
   color: #FFFF00;
 }
+
+/* oplist2 */
+.opv86-opcode-byte-opcode {
+  background-color: #d1fb61;
+}
+.opv86-opcode-byte-rex-prefix {
+  background-color: #9fe5ff;
+}
+.opv86-opcode-byte-vex-prefix {
+  font-size: 10px;
+  background-color: #9fe5ff;
+}
+.opv86-opcode-byte-evex-prefix {
+  background-color: #9fe5ff;
+}
+.opv86-opcode-byte-imm {
+  background-color: #ffc0c0;
+}
+.opv86-opcode-byte-modrm {
+  background-color: #ffd972;
+  border-radius: 8px;
+}
+
 .opv86-oplist-item-opcode {
   grid-column-start: 1;
   background-color: #ffffff;

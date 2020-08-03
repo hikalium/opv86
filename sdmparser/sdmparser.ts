@@ -570,9 +570,11 @@ function Parser_OpInstr_OpEn_6432_CPUID_Desc(table: SDMText[][][]) {
       description: description,
     });
     const validIn3264 = CanonicalizeValidIn3264(valid_in_3264_str);
+    const opcode_parsed = CanonicalizeOpcode(opcode);
     return {
       opcode: opcode,
-      opcode_parsed: CanonicalizeOpcode(opcode),
+      opcode_parsed: opcode_parsed,
+      opcode_bytes: makeOpBytes(opcode_parsed),
       instr: instr,
       instr_parsed: CanonicalizeInstr(instr),
       op_en: op_en,
@@ -583,6 +585,154 @@ function Parser_OpInstr_OpEn_6432_CPUID_Desc(table: SDMText[][][]) {
       description: description,
     };
   });
+}
+
+function makeOpBytes(op_parsed: string[]): SDMInstrOpByte[] {
+  const opcode_bytes = [];
+  const reOpByte = /^[0-9A-F]{2}$/;
+  const reModRM = /^\/([0-7]|r)$/;
+  for (let i = 0; i < op_parsed.length;) {
+    if (op_parsed[i] === 'NP' ||op_parsed[i] === 'NFx') {
+      opcode_bytes.push({
+        components: [op_parsed[i++]],
+        byte_size_min: 0,
+        byte_size_max: 0,
+      });
+      continue;
+    }
+    if (op_parsed[i].startsWith('VEX')) {
+      opcode_bytes.push({
+        components: [op_parsed[i++]],
+        byte_type: "vex-prefix",
+        byte_size_min: 2,
+        byte_size_max: 3,
+      });
+      continue;
+    }
+    if (op_parsed[i].startsWith('EVEX')) {
+      opcode_bytes.push({
+        components: [op_parsed[i++]],
+        byte_type: "evex-prefix",
+        byte_size_min: 4,
+        byte_size_max: 4,
+      });
+      continue;
+    }
+    if (op_parsed[i].startsWith('REX')) {
+      opcode_bytes.push({
+        components: [op_parsed[i++]],
+        byte_type: "rex-prefix",
+        byte_size_min: 1,
+        byte_size_max: 1,
+      });
+      continue;
+    }
+    if (reOpByte.test(op_parsed[i])) {
+      const c = {
+        components: [op_parsed[i++]],
+        byte_type: "opcode",
+        byte_size_min: 1,
+        byte_size_max: 1,
+      };
+      opcode_bytes.push(c);
+      continue;
+    }
+    if (op_parsed[i].startsWith('+')) {
+      assert(opcode_bytes.length > 0);
+      opcode_bytes[opcode_bytes.length - 1].components.push(op_parsed[i++]);
+      continue;
+    }
+    if (reModRM.test(op_parsed[i])) {
+      const c = {
+        components: [op_parsed[i++]],
+        byte_type: "modrm",
+        byte_size_min: 1,
+        byte_size_max: 1,
+      };
+      opcode_bytes.push(c);
+      continue;
+    }
+    if (op_parsed[i] == 'ib' || op_parsed[i] == 'cb') {
+      opcode_bytes.push({
+        components: [op_parsed[i++]],
+        byte_type: "imm",
+        byte_size_min: 1,
+        byte_size_max: 1,
+      });
+      continue;
+    }
+    if (op_parsed[i] == 'iw' || op_parsed[i] == 'cw') {
+      opcode_bytes.push({
+        components: [op_parsed[i++]],
+        byte_type: "imm",
+        byte_size_min: 2,
+        byte_size_max: 2,
+      });
+      continue;
+    }
+    if (op_parsed[i] == 'id' || op_parsed[i] == 'cd') {
+      opcode_bytes.push({
+        components: [op_parsed[i++]],
+        byte_type: "imm",
+        byte_size_min: 4,
+        byte_size_max: 4,
+      });
+      continue;
+    }
+    if (op_parsed[i] == 'cp') {
+      opcode_bytes.push({
+        components: [op_parsed[i++]],
+        byte_type: "imm",
+        byte_size_min: 6,
+        byte_size_max: 6,
+      });
+      continue;
+    }
+    if (op_parsed[i] == 'io') {
+      opcode_bytes.push({
+        components: [op_parsed[i++]],
+        byte_type: "imm",
+        byte_size_min: 8,
+        byte_size_max: 8,
+      });
+      continue;
+    }
+    throw new Error(`Unexpected component: ${op_parsed[i]}`);
+  }
+  return opcode_bytes;
+}
+
+function TestMakeOpBytes() {
+  assert.deepEqual(makeOpBytes(['00']), [{
+                     components: ['00'],
+                     byte_size_min: 1,
+                     byte_size_max: 1,
+                   }]);
+  assert.deepEqual(makeOpBytes(['ib']), [{
+                     components: ['ib'],
+                     byte_size_min: 1,
+                     byte_size_max: 1,
+                   }]);
+  assert.deepEqual(makeOpBytes(['iw']), [{
+                     components: ['iw'],
+                     byte_size_min: 2,
+                     byte_size_max: 2,
+                   }]);
+  assert.deepEqual(makeOpBytes(['id']), [{
+                     components: ['id'],
+                     byte_size_min: 4,
+                     byte_size_max: 4,
+                   }]);
+  assert.deepEqual(makeOpBytes(['io']), [{
+                     components: ['io'],
+                     byte_size_min: 8,
+                     byte_size_max: 8,
+                   }]);
+  assert.deepEqual(makeOpBytes(['00', '+rd']), [{
+                     components: ['00', '+rd'],
+                     byte_size_min: 1,
+                     byte_size_max: 1,
+                   }]);
 }
 
 const parserMap = {
@@ -629,9 +779,11 @@ const parserMap = {
           });
           const valid_in_compat_leg =
               CanonicalizeCompatLeg(valid_in_compat_leg_str);
+          const opcode_parsed = CanonicalizeOpcode(opcode);
           return {
             opcode: opcode,
-            opcode_parsed: CanonicalizeOpcode(opcode),
+            opcode_parsed: opcode_parsed,
+            opcode_bytes: makeOpBytes(opcode_parsed),
             instr: instr,
             instr_parsed: CanonicalizeInstr(instr),
             valid_in_64bit_mode: CanonicalizeValidIn64(valid_in_64_str),
@@ -730,9 +882,11 @@ const parserMap = {
             compat_leg_str = GetText(tr[3][0]);
           }
           const description = tr[4].map(t => GetText(t).trim()).join(' ');
+          const opcode_parsed = CanonicalizeOpcode(opcode);
           console.log({
             opcode: opcode,
-            opcode_parsed: CanonicalizeOpcode(opcode),
+            opcode_parsed: opcode_parsed,
+            opcode_bytes: makeOpBytes(opcode_parsed),
             instr: instr,
             instr_parsed: CanonicalizeInstr(instr),
             op_en: op_en,
@@ -743,7 +897,8 @@ const parserMap = {
           });
           return {
             opcode: opcode,
-            opcode_parsed: CanonicalizeOpcode(opcode),
+            opcode_parsed: opcode_parsed,
+            opcode_bytes: makeOpBytes(opcode_parsed),
             instr: instr,
             instr_parsed: CanonicalizeInstr(instr),
             op_en: op_en,
@@ -839,9 +994,11 @@ const parserMap = {
             valid_in_legacy_mode: compat_leg_str,
             description: description,
           })
+          const opcode_parsed = CanonicalizeOpcode(opcodeStr);
           instrList.push({
             opcode: opcodeStr,
-            opcode_parsed: CanonicalizeOpcode(opcodeStr),
+            opcode_parsed: opcode_parsed,
+            opcode_bytes: makeOpBytes(opcode_parsed),
             instr: instr.join(' '),
             instr_parsed: CanonicalizeInstr(instr.join(' ')),
             op_en: op_en,
@@ -888,6 +1045,11 @@ function TestParser() {
         opcode_parsed: [
           '37',
         ],
+        opcode_bytes: [{
+          components: ['37'],
+          byte_size_min: 1,
+          byte_size_max: 1,
+        }],
         instr: 'AAA',
         instr_parsed: [
           'AAA',
@@ -927,6 +1089,18 @@ function TestParser() {
         opcode_parsed: [
           '0F',
           '05',
+        ],
+        opcode_bytes: [
+          {
+            components: ['0F'],
+            byte_size_min: 1,
+            byte_size_max: 1,
+          },
+          {
+            components: ['05'],
+            byte_size_min: 1,
+            byte_size_max: 1,
+          },
         ],
         instr: 'SYSCALL',
         instr_parsed: [
@@ -1035,7 +1209,10 @@ function ParseInstr(pages: SDMPage[], startPage: number): SDMInstr[] {
       }
       console.error(`Using parser ${headerKey}`);
       instrs = instrs.concat(
-          parserMap[headerKey](tableHeader, s.getFollowing(count)));
+          parserMap[headerKey](tableHeader, s.getFollowing(count)).map(e => {
+            e.page = p;
+            return e;
+          }));
       lastHeaderKey = headerKey;
     } catch (e) {
       console.log(page);
@@ -1080,6 +1257,7 @@ process.exit((() => {
     return 0;
   }
   if (options.runtest) {
+    TestMakeOpBytes();
     TestCanonicalizeOpcode();
     TestCanonicalizeInstr();
     TestExpandMnemonic();

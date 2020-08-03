@@ -57,7 +57,7 @@ class OpV86 {
       }
       $(`.opv86-op-${index}`).css('display', '');
     }
-    //this.updateOpByteDetails(filter);
+    // this.updateOpByteDetails(filter);
   }
   updateTable(data: Result) {
     this.data = data;
@@ -90,18 +90,18 @@ class OpV86 {
         'F3',  // REP*
         'F2',  // BND
         // Group 2
-        '2E', // CS override
-        "36", // SS override
-        "3E", // DS override
-        "26", // ES override
-        "64", // FS override
-        "65", // GS override
-        "2E", // Branch hint (taken)
-        "3E", // Branch hint (not taken)
+        '2E',  // CS override
+        '36',  // SS override
+        '3E',  // DS override
+        '26',  // ES override
+        '64',  // FS override
+        '65',  // GS override
+        '2E',  // Branch hint (taken)
+        '3E',  // Branch hint (not taken)
         // Group 3
-        "66", // Operand-size override
+        '66',  // Operand-size override
         // Group 4
-        "67", // Address-size override
+        '67',  // Address-size override
       ];
       for (const k in opcodeBytes) {
         const opByte = opcodeBytes[k];
@@ -227,15 +227,120 @@ class OpV86 {
   }
 }
 
-$.getJSON(`data/ops.json`, function(data: Result) {
-  const opv86 = new OpV86();
-  $('#data-info')
-      .text(`Parsed at: ${data.date_parsed}, based on: ${data.source_file} (${
-          data.document_id}), ${data.document_version}`);
-  document.getElementById('filter-value').addEventListener('keyup', () => {
-    opv86.updateFilter(
-        (<HTMLInputElement>document.getElementById('filter-value')).value);
+
+(() => {
+  $.getJSON(`data/ops.json`, function(data: Result) {
+    return;
+    const opv86 = new OpV86();
+    $('#data-info')
+        .text(`Parsed at: ${data.date_parsed}, based on: ${data.source_file} (${
+            data.document_id}), ${data.document_version}`);
+    document.getElementById('filter-value').addEventListener('keyup', () => {
+      opv86.updateFilter(
+          (<HTMLInputElement>document.getElementById('filter-value')).value);
+    });
+    opv86.updateTable(data);
+    // opv86.updateFilter('48 c7 c0 01 00 00 00');
   });
-  opv86.updateTable(data);
-  // opv86.updateFilter('48 c7 c0 01 00 00 00');
-});
+})();
+
+function appendOpListHeaders(oplist) {
+  oplist.empty();
+  const oplistRow = $('<div>').addClass('opv86-oplist-container');
+  oplistRow.append($('<div>').addClass('opv86-oplist-header').text('Opcode'));
+  oplistRow.append($('<div>').addClass('opv86-oplist-header').text('Instr'));
+  oplistRow.append($('<div>').addClass('opv86-oplist-header').text('Encoding'));
+  oplistRow.append(
+      $('<div>').addClass('opv86-oplist-header').text('Page in SDM(phys)'));
+  oplistRow.append(
+      $('<div>').addClass('opv86-oplist-header').text('Description'));
+  oplist.append(oplistRow);
+}
+function appendOpListElement(oplist, op: SDMInstr, index: number) {
+  const oplistRow = $('<div>')
+    .addClass('opv86-oplist-container')
+    .addClass(`opv86-oplist-row-${index}`);
+  const sizeAttrTable = {
+    1: 'opv86-opcode-byte',
+    2: 'opv86-opcode-word',
+    4: 'opv86-opcode-dword',
+    6: 'opv86-opcode-p16ofs32',
+    8: 'opv86-opcode-qword',
+  };
+  const opcodeByteElements = op.opcode_bytes.map(b => {
+    const e = $('<div>');
+    e.addClass(`opv86-op-${index}`);
+    e.text(b.components.join(' '));
+    if (sizeAttrTable[b.byte_size_min]) {
+      e.addClass(sizeAttrTable[b.byte_size_min]);
+    } else {
+      e.addClass(sizeAttrTable[1]);
+    }
+    if (b.byte_type) {
+      e.addClass(`opv86-opcode-byte-${b.byte_type}`);
+    }
+    return e;
+  });
+  oplistRow.append($('<div>')
+                       .addClass(`opv86-op-${index}`)
+                       .addClass('opv86-oplist-item-opcode')
+                       .append(opcodeByteElements));
+  oplistRow.append($('<div>')
+                       .addClass(`opv86-op-${index}`)
+                       .addClass('opv86-oplist-item-instr')
+                       .text(op.instr_parsed.join(' ')));
+  oplistRow.append($('<div>')
+                       .addClass(`opv86-op-${index}`)
+                       .addClass('opv86-oplist-item-encoding')
+                       .text(op.op_en));
+  const colPageInSDM = $('<div>')
+                           .addClass(`opv86-op-${index}`)
+                           .addClass('opv86-oplist-item-page');
+  if (op.page !== undefined) {
+    colPageInSDM.append($(
+        `<a target="_blank" href='https://software.intel.com/content/dam/develop/public/us/en/documents/325383-sdm-vol-2abcd.pdf#page=${
+            op.page}'>p.${op.page}</a>`));
+  }
+  oplistRow.append(colPageInSDM);
+  oplistRow.append($('<div>')
+                       .addClass(`opv86-op-${index}`)
+                       .addClass('opv86-oplist-item-description')
+                       .text(op.description));
+  oplist.append(oplistRow);
+}
+
+function isMatchedWithFilter(op: SDMInstr, filter: string) {
+  if (filter.length == 0) return true;
+  if (op.opcode.replace(/ /g, '').toLowerCase().indexOf(filter) != -1)
+    return true;
+  if (op.instr.replace(/ /g, '').toLowerCase().indexOf(filter) != -1)
+    return true;
+  return false;
+}
+function updateFilter(data: SDMInstr[], filter: string) {
+  filter = filter.trim().toLowerCase().replace(/\s+/g, '');
+  for (const index in data) {
+    const op: SDMInstr = data[index];
+    if (!isMatchedWithFilter(op, filter)) {
+      $(`.opv86-oplist-row-${index}`).css('display', 'none');
+      continue;
+    }
+    $(`.opv86-oplist-row-${index}`).css('display', '');
+  }
+}
+
+(() => {
+  const opListContainerDiv = $('#oplist2');
+  $.getJSON(`data/instr_list.json`, function(data: SDMInstr[]) {
+    appendOpListHeaders(opListContainerDiv);
+    console.log(data[0]);
+    for (let i = 0; i < data.length; i++) {
+      appendOpListElement(opListContainerDiv, data[i], i);
+    }
+    document.getElementById('filter-value').addEventListener('keyup', () => {
+      updateFilter(
+          data,
+          (<HTMLInputElement>document.getElementById('filter-value')).value);
+    });
+  });
+})();
