@@ -59,5 +59,6 @@ extract_ops.js : extract_ops.ts
 sdmparser.js : sdmparser.ts sdm_instr.ts
 	tsc -target es2019 --out sdmparser.js sdmparser.ts sdm_instr.ts
 
-install : 
+install :
+	-make
 	cp instr_list.json ../data

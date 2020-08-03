@@ -592,7 +592,7 @@ function makeOpBytes(op_parsed: string[]): SDMInstrOpByte[] {
   const reOpByte = /^[0-9A-F]{2}$/;
   const reModRM = /^\/([0-7]|r)$/;
   for (let i = 0; i < op_parsed.length;) {
-    if (op_parsed[i] === 'NP' ||op_parsed[i] === 'NFx') {
+    if (op_parsed[i] === 'NP' || op_parsed[i] === 'NFx') {
       opcode_bytes.push({
         components: [op_parsed[i++]],
         byte_size_min: 0,
@@ -603,7 +603,7 @@ function makeOpBytes(op_parsed: string[]): SDMInstrOpByte[] {
     if (op_parsed[i].startsWith('VEX')) {
       opcode_bytes.push({
         components: [op_parsed[i++]],
-        byte_type: "vex-prefix",
+        byte_type: 'vex-prefix',
         byte_size_min: 2,
         byte_size_max: 3,
       });
@@ -612,7 +612,7 @@ function makeOpBytes(op_parsed: string[]): SDMInstrOpByte[] {
     if (op_parsed[i].startsWith('EVEX')) {
       opcode_bytes.push({
         components: [op_parsed[i++]],
-        byte_type: "evex-prefix",
+        byte_type: 'evex-prefix',
         byte_size_min: 4,
         byte_size_max: 4,
       });
@@ -621,7 +621,7 @@ function makeOpBytes(op_parsed: string[]): SDMInstrOpByte[] {
     if (op_parsed[i].startsWith('REX')) {
       opcode_bytes.push({
         components: [op_parsed[i++]],
-        byte_type: "rex-prefix",
+        byte_type: 'rex-prefix',
         byte_size_min: 1,
         byte_size_max: 1,
       });
@@ -630,7 +630,7 @@ function makeOpBytes(op_parsed: string[]): SDMInstrOpByte[] {
     if (reOpByte.test(op_parsed[i])) {
       const c = {
         components: [op_parsed[i++]],
-        byte_type: "opcode",
+        byte_type: 'opcode',
         byte_size_min: 1,
         byte_size_max: 1,
       };
@@ -645,7 +645,7 @@ function makeOpBytes(op_parsed: string[]): SDMInstrOpByte[] {
     if (reModRM.test(op_parsed[i])) {
       const c = {
         components: [op_parsed[i++]],
-        byte_type: "modrm",
+        byte_type: 'modrm',
         byte_size_min: 1,
         byte_size_max: 1,
       };
@@ -655,7 +655,7 @@ function makeOpBytes(op_parsed: string[]): SDMInstrOpByte[] {
     if (op_parsed[i] == 'ib' || op_parsed[i] == 'cb') {
       opcode_bytes.push({
         components: [op_parsed[i++]],
-        byte_type: "imm",
+        byte_type: 'imm',
         byte_size_min: 1,
         byte_size_max: 1,
       });
@@ -664,7 +664,7 @@ function makeOpBytes(op_parsed: string[]): SDMInstrOpByte[] {
     if (op_parsed[i] == 'iw' || op_parsed[i] == 'cw') {
       opcode_bytes.push({
         components: [op_parsed[i++]],
-        byte_type: "imm",
+        byte_type: 'imm',
         byte_size_min: 2,
         byte_size_max: 2,
       });
@@ -673,7 +673,7 @@ function makeOpBytes(op_parsed: string[]): SDMInstrOpByte[] {
     if (op_parsed[i] == 'id' || op_parsed[i] == 'cd') {
       opcode_bytes.push({
         components: [op_parsed[i++]],
-        byte_type: "imm",
+        byte_type: 'imm',
         byte_size_min: 4,
         byte_size_max: 4,
       });
@@ -682,7 +682,7 @@ function makeOpBytes(op_parsed: string[]): SDMInstrOpByte[] {
     if (op_parsed[i] == 'cp') {
       opcode_bytes.push({
         components: [op_parsed[i++]],
-        byte_type: "imm",
+        byte_type: 'imm',
         byte_size_min: 6,
         byte_size_max: 6,
       });
@@ -691,7 +691,7 @@ function makeOpBytes(op_parsed: string[]): SDMInstrOpByte[] {
     if (op_parsed[i] == 'io') {
       opcode_bytes.push({
         components: [op_parsed[i++]],
-        byte_type: "imm",
+        byte_type: 'imm',
         byte_size_min: 8,
         byte_size_max: 8,
       });
@@ -705,31 +705,37 @@ function makeOpBytes(op_parsed: string[]): SDMInstrOpByte[] {
 function TestMakeOpBytes() {
   assert.deepEqual(makeOpBytes(['00']), [{
                      components: ['00'],
+                     byte_type: 'opcode',
                      byte_size_min: 1,
                      byte_size_max: 1,
                    }]);
   assert.deepEqual(makeOpBytes(['ib']), [{
                      components: ['ib'],
+                     byte_type: 'imm',
                      byte_size_min: 1,
                      byte_size_max: 1,
                    }]);
   assert.deepEqual(makeOpBytes(['iw']), [{
                      components: ['iw'],
+                     byte_type: 'imm',
                      byte_size_min: 2,
                      byte_size_max: 2,
                    }]);
   assert.deepEqual(makeOpBytes(['id']), [{
                      components: ['id'],
+                     byte_type: 'imm',
                      byte_size_min: 4,
                      byte_size_max: 4,
                    }]);
   assert.deepEqual(makeOpBytes(['io']), [{
                      components: ['io'],
+                     byte_type: 'imm',
                      byte_size_min: 8,
                      byte_size_max: 8,
                    }]);
   assert.deepEqual(makeOpBytes(['00', '+rd']), [{
                      components: ['00', '+rd'],
+                     byte_type: 'opcode',
                      byte_size_min: 1,
                      byte_size_max: 1,
                    }]);
@@ -1047,6 +1053,7 @@ function TestParser() {
         ],
         opcode_bytes: [{
           components: ['37'],
+          byte_type: 'opcode',
           byte_size_min: 1,
           byte_size_max: 1,
         }],
@@ -1093,11 +1100,13 @@ function TestParser() {
         opcode_bytes: [
           {
             components: ['0F'],
+            byte_type: 'opcode',
             byte_size_min: 1,
             byte_size_max: 1,
           },
           {
             components: ['05'],
+            byte_type: 'opcode',
             byte_size_min: 1,
             byte_size_max: 1,
           },
