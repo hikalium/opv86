@@ -19164,6 +19164,59 @@
   "page": 659
  },
  {
+  "opcode": "NP 0F AE E8",
+  "opcode_parsed": [
+   "NP",
+   "0F",
+   "AE",
+   "E8"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "NP"
+    ],
+    "byte_size_min": 0,
+    "byte_size_max": 0
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "AE"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "E8"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "LFENCE",
+  "instr_parsed": [
+   "LFENCE"
+  ],
+  "op_en": "ZO",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "SSE2",
+  "description": "Serializes load operations.",
+  "page": 661
+ },
+ {
   "opcode": "0F 01 /2",
   "opcode_parsed": [
    "0F",
@@ -19841,6 +19894,59 @@
   "valid_in_legacy_mode": true,
   "description": "Load r/m 16 into task register.",
   "page": 679
+ },
+ {
+  "opcode": "NP 0F AE F0",
+  "opcode_parsed": [
+   "NP",
+   "0F",
+   "AE",
+   "F0"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "NP"
+    ],
+    "byte_size_min": 0,
+    "byte_size_max": 0
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "AE"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "F0"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "MFENCE",
+  "instr_parsed": [
+   "MFENCE"
+  ],
+  "op_en": "ZO",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "SSE2",
+  "description": "Serializes load and store operations.",
+  "page": 704
  },
  {
   "opcode": "0F 01 C8",
@@ -27447,6 +27553,52 @@
   "valid_in_legacy_mode": true,
   "description": "Move  data  from m8 closer to the processor using NTA hint.",
   "page": 1088
+ },
+ {
+  "opcode": "0F 0D /1",
+  "opcode_parsed": [
+   "0F",
+   "0D",
+   "/1"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "0D"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/1"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "PREFETCHW m8",
+  "instr_parsed": [
+   "PREFETCHW",
+   "m8"
+  ],
+  "op_en": "A",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "PREFETCHW",
+  "description": "Move data from m8 closer to the processor in anticipation of a write.",
+  "page": 1090
  },
  {
   "opcode": "FF /6",
@@ -39111,6 +39263,78 @@
   "valid_in_legacy_mode": true,
   "description": "Set ZF=1 if segment specified with r/m16 can be written.",
   "page": 1496
+ },
+ {
+  "opcode": "VEX.256.0F.WIG 77",
+  "opcode_parsed": [
+   "VEX.256.0F.WIG",
+   "77"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "VEX.256.0F.WIG"
+    ],
+    "byte_type": "vex-prefix",
+    "byte_size_min": 2,
+    "byte_size_max": 3
+   },
+   {
+    "components": [
+     "77"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "VZEROALL",
+  "instr_parsed": [
+   "VZEROALL"
+  ],
+  "op_en": "ZO",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "AVX",
+  "description": "Zero some of the XMM, YMM and ZMM registers.",
+  "page": 1983
+ },
+ {
+  "opcode": "VEX.128.0F.WIG 77",
+  "opcode_parsed": [
+   "VEX.128.0F.WIG",
+   "77"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "VEX.128.0F.WIG"
+    ],
+    "byte_type": "vex-prefix",
+    "byte_size_min": 2,
+    "byte_size_max": 3
+   },
+   {
+    "components": [
+     "77"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "VZEROUPPER",
+  "instr_parsed": [
+   "VZEROUPPER"
+  ],
+  "op_en": "ZO",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "AVX",
+  "description": "Zero bits in positions 128 and higher of some YMM and ZMM registers.",
+  "page": 1984
  },
  {
   "opcode": "9B",

@@ -823,6 +823,30 @@ const parserMap = {
             1);
         return Parser_OpInstr_OpEn_6432_CPUID_Desc(table);
       },
+  'opcode/#instruction#op/#en#64/32bit#mode#support#cpuid#feature#flag#description':
+      (headers: SDMText[], tokens: SDMText[]): SDMInstr[] => {
+        // LFENCE
+        console.error(headers.filter(e => e !== undefined)
+                          .map(e => `${GetText(e)}@${e.attr.left}`)
+                          .join(', '));
+        const opcodeLeft = headers[0].attr.left;
+        const opEnLeft = headers[2].attr.left;
+        const validIn3264Left = headers[4].attr.left;
+        const cpuidFeatureLeft = headers[7].attr.left;
+        const descriptionLeft = headers[10].attr.left;
+        //
+        const table = MakeTable(
+            tokens,
+            [
+              opcodeLeft,
+              opEnLeft,
+              validIn3264Left,
+              cpuidFeatureLeft,
+              descriptionLeft,
+            ],
+            1);
+        return Parser_OpInstr_OpEn_6432_CPUID_Desc(table);
+      },
   'opcode/#instruction#op/#en#64/32bit#mode#support#cpuid#featureflag#description':
       (headers: SDMText[], tokens: SDMText[]): SDMInstr[] => {
         // CLWB

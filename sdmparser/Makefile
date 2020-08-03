@@ -35,6 +35,7 @@ test : sdmparser.js
 		INT3 IRET UD \
 		LGDT SGDT \
 		CLFLUSH CLFLUSHOPT CLWB \
+		MFENCE LFENCE SFENCE \
 		STI CLI HLT PAUSE \
 		OUT IN \
 		CPUID \
@@ -49,7 +50,7 @@ format :
 commit :
 	make format
 	make test
-	git add .
+	git add ../
 	git diff HEAD --color=always | less -R
 	git commit
 
