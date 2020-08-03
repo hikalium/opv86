@@ -12276,6 +12276,1041 @@
   "page": 542
  },
  {
+  "opcode": "66 0F3A CF /r /ib",
+  "opcode_parsed": [
+   "66",
+   "0F",
+   "3A",
+   "CF",
+   "/r",
+   "/ib"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "66"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "3A"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "CF"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/ib"
+    ],
+    "byte_type": "imm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "GF2P8AFFINEINVQB xmm1, xmm2/m128, imm8",
+  "instr_parsed": [
+   "GF2P8AFFINEINVQB",
+   "xmm1",
+   "xmm2/m128",
+   "imm8"
+  ],
+  "op_en": "A",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "GFNI",
+  "description": "Computes inverse affine transformation in the finite field GF(2^8).",
+  "page": 544
+ },
+ {
+  "opcode": "VEX.128.66.0F3A.W1 CF /r /ib",
+  "opcode_parsed": [
+   "VEX.128.66.0F3A.W1",
+   "CF",
+   "/r",
+   "/ib"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "VEX.128.66.0F3A.W1"
+    ],
+    "byte_type": "vex-prefix",
+    "byte_size_min": 2,
+    "byte_size_max": 3
+   },
+   {
+    "components": [
+     "CF"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/ib"
+    ],
+    "byte_type": "imm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "VGF2P8AFFINEINVQB xmm1, xmm2, xmm3/m128, imm8",
+  "instr_parsed": [
+   "VGF2P8AFFINEINVQB",
+   "xmm1",
+   "xmm2",
+   "xmm3/m128",
+   "imm8"
+  ],
+  "op_en": "B",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "AVX",
+  "description": "Computes inverse affine transformation in the finite field GF(2^8).",
+  "page": 544
+ },
+ {
+  "opcode": "VEX.256.66.0F3A.W1 CF /r /ib",
+  "opcode_parsed": [
+   "VEX.256.66.0F3A.W1",
+   "CF",
+   "/r",
+   "/ib"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "VEX.256.66.0F3A.W1"
+    ],
+    "byte_type": "vex-prefix",
+    "byte_size_min": 2,
+    "byte_size_max": 3
+   },
+   {
+    "components": [
+     "CF"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/ib"
+    ],
+    "byte_type": "imm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "VGF2P8AFFINEINVQB ymm1, ymm2, ymm3/m256, imm8",
+  "instr_parsed": [
+   "VGF2P8AFFINEINVQB",
+   "ymm1",
+   "ymm2",
+   "ymm3/m256",
+   "imm8"
+  ],
+  "op_en": "B",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "AVX",
+  "description": "Computes inverse affine transformation in the finite field GF(2^8).",
+  "page": 544
+ },
+ {
+  "opcode": "EVEX.128.66.0F3A.W1 CF /r /ib",
+  "opcode_parsed": [
+   "EVEX.128.66.0F3A.W1",
+   "CF",
+   "/r",
+   "/ib"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "EVEX.128.66.0F3A.W1"
+    ],
+    "byte_type": "evex-prefix",
+    "byte_size_min": 4,
+    "byte_size_max": 4
+   },
+   {
+    "components": [
+     "CF"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/ib"
+    ],
+    "byte_type": "imm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "VGF2P8AFFINEINVQB xmm1{k1}{z}, xmm2, xmm3/m128/m64bcst, imm8",
+  "instr_parsed": [
+   "VGF2P8AFFINEINVQB",
+   "xmm1{k1}{z}",
+   "xmm2",
+   "xmm3/m128/m64bcst",
+   "imm8"
+  ],
+  "op_en": "C",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "AVX512VL",
+  "description": "Computes inverse affine transformation in the finite field GF(2^8).",
+  "page": 544
+ },
+ {
+  "opcode": "EVEX.256.66.0F3A.W1 CF /r /ib",
+  "opcode_parsed": [
+   "EVEX.256.66.0F3A.W1",
+   "CF",
+   "/r",
+   "/ib"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "EVEX.256.66.0F3A.W1"
+    ],
+    "byte_type": "evex-prefix",
+    "byte_size_min": 4,
+    "byte_size_max": 4
+   },
+   {
+    "components": [
+     "CF"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/ib"
+    ],
+    "byte_type": "imm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "VGF2P8AFFINEINVQB ymm1{k1}{z}, ymm2, ymm3/m256/m64bcst, imm8",
+  "instr_parsed": [
+   "VGF2P8AFFINEINVQB",
+   "ymm1{k1}{z}",
+   "ymm2",
+   "ymm3/m256/m64bcst",
+   "imm8"
+  ],
+  "op_en": "C",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "AVX512VL",
+  "description": "Computes inverse affine transformation in the finite field GF(2^8).",
+  "page": 544
+ },
+ {
+  "opcode": "EVEX.512.66.0F3A.W1 CF /r /ib",
+  "opcode_parsed": [
+   "EVEX.512.66.0F3A.W1",
+   "CF",
+   "/r",
+   "/ib"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "EVEX.512.66.0F3A.W1"
+    ],
+    "byte_type": "evex-prefix",
+    "byte_size_min": 4,
+    "byte_size_max": 4
+   },
+   {
+    "components": [
+     "CF"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/ib"
+    ],
+    "byte_type": "imm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "VGF2P8AFFINEINVQB zmm1{k1}{z}, zmm2, zmm3/m512/m64bcst, imm8",
+  "instr_parsed": [
+   "VGF2P8AFFINEINVQB",
+   "zmm1{k1}{z}",
+   "zmm2",
+   "zmm3/m512/m64bcst",
+   "imm8"
+  ],
+  "op_en": "C",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "AVX512F",
+  "description": "Computes inverse affine transformation in the finite field GF(2^8).",
+  "page": 544
+ },
+ {
+  "opcode": "66 0F3A CE /r /ib",
+  "opcode_parsed": [
+   "66",
+   "0F",
+   "3A",
+   "CE",
+   "/r",
+   "/ib"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "66"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "3A"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "CE"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/ib"
+    ],
+    "byte_type": "imm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "GF2P8AFFINEQB xmm1, xmm2/m128, imm8",
+  "instr_parsed": [
+   "GF2P8AFFINEQB",
+   "xmm1",
+   "xmm2/m128",
+   "imm8"
+  ],
+  "op_en": "A",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "GFNI",
+  "description": "Computes affine transformation in the finite field GF(2^8).",
+  "page": 547
+ },
+ {
+  "opcode": "VEX.128.66.0F3A.W1 CE /r /ib",
+  "opcode_parsed": [
+   "VEX.128.66.0F3A.W1",
+   "CE",
+   "/r",
+   "/ib"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "VEX.128.66.0F3A.W1"
+    ],
+    "byte_type": "vex-prefix",
+    "byte_size_min": 2,
+    "byte_size_max": 3
+   },
+   {
+    "components": [
+     "CE"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/ib"
+    ],
+    "byte_type": "imm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "VGF2P8AFFINEQB xmm1, xmm2, xmm3/m128, imm8",
+  "instr_parsed": [
+   "VGF2P8AFFINEQB",
+   "xmm1",
+   "xmm2",
+   "xmm3/m128",
+   "imm8"
+  ],
+  "op_en": "B",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "AVX",
+  "description": "Computes affine transformation in the finite field GF(2^8).",
+  "page": 547
+ },
+ {
+  "opcode": "VEX.256.66.0F3A.W1 CE /r /ib",
+  "opcode_parsed": [
+   "VEX.256.66.0F3A.W1",
+   "CE",
+   "/r",
+   "/ib"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "VEX.256.66.0F3A.W1"
+    ],
+    "byte_type": "vex-prefix",
+    "byte_size_min": 2,
+    "byte_size_max": 3
+   },
+   {
+    "components": [
+     "CE"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/ib"
+    ],
+    "byte_type": "imm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "VGF2P8AFFINEQB ymm1, ymm2, ymm3/m256, imm8",
+  "instr_parsed": [
+   "VGF2P8AFFINEQB",
+   "ymm1",
+   "ymm2",
+   "ymm3/m256",
+   "imm8"
+  ],
+  "op_en": "B",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "AVX",
+  "description": "Computes affine transformation in the finite field GF(2^8).",
+  "page": 547
+ },
+ {
+  "opcode": "EVEX.128.66.0F3A.W1 CE /r /ib",
+  "opcode_parsed": [
+   "EVEX.128.66.0F3A.W1",
+   "CE",
+   "/r",
+   "/ib"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "EVEX.128.66.0F3A.W1"
+    ],
+    "byte_type": "evex-prefix",
+    "byte_size_min": 4,
+    "byte_size_max": 4
+   },
+   {
+    "components": [
+     "CE"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/ib"
+    ],
+    "byte_type": "imm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "VGF2P8AFFINEQB xmm1{k1}{z}, xmm2, xmm3/m128/m64bcst, imm8",
+  "instr_parsed": [
+   "VGF2P8AFFINEQB",
+   "xmm1{k1}{z}",
+   "xmm2",
+   "xmm3/m128/m64bcst",
+   "imm8"
+  ],
+  "op_en": "C",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "AVX512VL",
+  "description": "Computes affine transformation in the finite field GF(2^8).",
+  "page": 547
+ },
+ {
+  "opcode": "EVEX.256.66.0F3A.W1 CE /r /ib",
+  "opcode_parsed": [
+   "EVEX.256.66.0F3A.W1",
+   "CE",
+   "/r",
+   "/ib"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "EVEX.256.66.0F3A.W1"
+    ],
+    "byte_type": "evex-prefix",
+    "byte_size_min": 4,
+    "byte_size_max": 4
+   },
+   {
+    "components": [
+     "CE"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/ib"
+    ],
+    "byte_type": "imm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "VGF2P8AFFINEQB ymm1{k1}{z}, ymm2, ymm3/m256/m64bcst, imm8",
+  "instr_parsed": [
+   "VGF2P8AFFINEQB",
+   "ymm1{k1}{z}",
+   "ymm2",
+   "ymm3/m256/m64bcst",
+   "imm8"
+  ],
+  "op_en": "C",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "AVX512VL",
+  "description": "Computes affine transformation in the finite field GF(2^8).",
+  "page": 547
+ },
+ {
+  "opcode": "EVEX.512.66.0F3A.W1 CE /r /ib",
+  "opcode_parsed": [
+   "EVEX.512.66.0F3A.W1",
+   "CE",
+   "/r",
+   "/ib"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "EVEX.512.66.0F3A.W1"
+    ],
+    "byte_type": "evex-prefix",
+    "byte_size_min": 4,
+    "byte_size_max": 4
+   },
+   {
+    "components": [
+     "CE"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/ib"
+    ],
+    "byte_type": "imm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "VGF2P8AFFINEQB zmm1{k1}{z}, zmm2, zmm3/m512/m64bcst, imm8",
+  "instr_parsed": [
+   "VGF2P8AFFINEQB",
+   "zmm1{k1}{z}",
+   "zmm2",
+   "zmm3/m512/m64bcst",
+   "imm8"
+  ],
+  "op_en": "C",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "AVX512F",
+  "description": "Computes affine transformation in the finite field GF(2^8).",
+  "page": 547
+ },
+ {
+  "opcode": "66 0F38 CF /r",
+  "opcode_parsed": [
+   "66",
+   "0F",
+   "38",
+   "CF",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "66"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "38"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "CF"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "GF2P8MULB xmm1, xmm2/m128",
+  "instr_parsed": [
+   "GF2P8MULB",
+   "xmm1",
+   "xmm2/m128"
+  ],
+  "op_en": "A",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "GFNI",
+  "description": "Multiplies elements in the finite field GF(2^8).",
+  "page": 549
+ },
+ {
+  "opcode": "VEX.128.66.0F38.W0 CF /r",
+  "opcode_parsed": [
+   "VEX.128.66.0F38.W0",
+   "CF",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "VEX.128.66.0F38.W0"
+    ],
+    "byte_type": "vex-prefix",
+    "byte_size_min": 2,
+    "byte_size_max": 3
+   },
+   {
+    "components": [
+     "CF"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "VGF2P8MULB xmm1, xmm2, xmm3/m128",
+  "instr_parsed": [
+   "VGF2P8MULB",
+   "xmm1",
+   "xmm2",
+   "xmm3/m128"
+  ],
+  "op_en": "B",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "AVX",
+  "description": "Multiplies elements in the finite field GF(2^8).",
+  "page": 549
+ },
+ {
+  "opcode": "VEX.256.66.0F38.W0 CF /r",
+  "opcode_parsed": [
+   "VEX.256.66.0F38.W0",
+   "CF",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "VEX.256.66.0F38.W0"
+    ],
+    "byte_type": "vex-prefix",
+    "byte_size_min": 2,
+    "byte_size_max": 3
+   },
+   {
+    "components": [
+     "CF"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "VGF2P8MULB ymm1, ymm2, ymm3/m256",
+  "instr_parsed": [
+   "VGF2P8MULB",
+   "ymm1",
+   "ymm2",
+   "ymm3/m256"
+  ],
+  "op_en": "B",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "AVX",
+  "description": "Multiplies elements in the finite field GF(2^8).",
+  "page": 549
+ },
+ {
+  "opcode": "EVEX.128.66.0F38.W0 CF /r",
+  "opcode_parsed": [
+   "EVEX.128.66.0F38.W0",
+   "CF",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "EVEX.128.66.0F38.W0"
+    ],
+    "byte_type": "evex-prefix",
+    "byte_size_min": 4,
+    "byte_size_max": 4
+   },
+   {
+    "components": [
+     "CF"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "VGF2P8MULB xmm1{k1}{z}, xmm2, xmm3/m128",
+  "instr_parsed": [
+   "VGF2P8MULB",
+   "xmm1{k1}{z}",
+   "xmm2",
+   "xmm3/m128"
+  ],
+  "op_en": "C",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "AVX512VL",
+  "description": "Multiplies elements in the finite field GF(2^8).",
+  "page": 549
+ },
+ {
+  "opcode": "EVEX.256.66.0F38.W0 CF /r",
+  "opcode_parsed": [
+   "EVEX.256.66.0F38.W0",
+   "CF",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "EVEX.256.66.0F38.W0"
+    ],
+    "byte_type": "evex-prefix",
+    "byte_size_min": 4,
+    "byte_size_max": 4
+   },
+   {
+    "components": [
+     "CF"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "VGF2P8MULB ymm1{k1}{z}, ymm2, ymm3/m256",
+  "instr_parsed": [
+   "VGF2P8MULB",
+   "ymm1{k1}{z}",
+   "ymm2",
+   "ymm3/m256"
+  ],
+  "op_en": "C",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "AVX512VL",
+  "description": "Multiplies elements in the finite field GF(2^8).",
+  "page": 549
+ },
+ {
+  "opcode": "EVEX.512.66.0F38.W0 CF /r",
+  "opcode_parsed": [
+   "EVEX.512.66.0F38.W0",
+   "CF",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "EVEX.512.66.0F38.W0"
+    ],
+    "byte_type": "evex-prefix",
+    "byte_size_min": 4,
+    "byte_size_max": 4
+   },
+   {
+    "components": [
+     "CF"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "VGF2P8MULB zmm1{k1}{z}, zmm2, zmm3/m512",
+  "instr_parsed": [
+   "VGF2P8MULB",
+   "zmm1{k1}{z}",
+   "zmm2",
+   "zmm3/m512"
+  ],
+  "op_en": "C",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "AVX512F",
+  "description": "Multiplies elements in the finite field GF(2^8).",
+  "page": 549
+ },
+ {
   "opcode": "F4",
   "opcode_parsed": [
    "F4"
@@ -26579,6 +27614,483 @@
   "page": 917
  },
  {
+  "opcode": "66 0F 3A 44 /r ib",
+  "opcode_parsed": [
+   "66",
+   "0F",
+   "3A",
+   "44",
+   "/r",
+   "ib"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "66"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "3A"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "44"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "ib"
+    ],
+    "byte_type": "imm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "PCLMULQDQ xmm1, xmm2/m128, imm8",
+  "instr_parsed": [
+   "PCLMULQDQ",
+   "xmm1",
+   "xmm2/m128",
+   "imm8"
+  ],
+  "op_en": "A",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "PCLMULQDQ",
+  "description": "Carry-less multiplication of one quadword of xmm1 by one quadword of xmm2/m128 , stores the 128-bit result in xmm1 . The imme- diate is used to determine which quadwords of xmm1 and xmm2/m128 should be used.",
+  "page": 929
+ },
+ {
+  "opcode": "VEX.128.66.0F3A.WIG 44 /r ib",
+  "opcode_parsed": [
+   "VEX.128.66.0F3A.WIG",
+   "44",
+   "/r",
+   "ib"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "VEX.128.66.0F3A.WIG"
+    ],
+    "byte_type": "vex-prefix",
+    "byte_size_min": 2,
+    "byte_size_max": 3
+   },
+   {
+    "components": [
+     "44"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "ib"
+    ],
+    "byte_type": "imm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "VPCLMULQDQ xmm1, xmm2, xmm3/m128, imm8",
+  "instr_parsed": [
+   "VPCLMULQDQ",
+   "xmm1",
+   "xmm2",
+   "xmm3/m128",
+   "imm8"
+  ],
+  "op_en": "B",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "PCLMULQDQ",
+  "description": "Carry-less multiplication of one quadword of xmm2 by one quadword of xmm3/m128 , stores the 128-bit result in xmm1 . The imme- diate is used to determine which quadwords of xmm2 and xmm3/m128 should be used.",
+  "page": 929
+ },
+ {
+  "opcode": "VEX.256.66.0F3A.WIG 44 /r /ib",
+  "opcode_parsed": [
+   "VEX.256.66.0F3A.WIG",
+   "44",
+   "/r",
+   "/ib"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "VEX.256.66.0F3A.WIG"
+    ],
+    "byte_type": "vex-prefix",
+    "byte_size_min": 2,
+    "byte_size_max": 3
+   },
+   {
+    "components": [
+     "44"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/ib"
+    ],
+    "byte_type": "imm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "VPCLMULQDQ ymm1, ymm2, ymm3/m256, imm8",
+  "instr_parsed": [
+   "VPCLMULQDQ",
+   "ymm1",
+   "ymm2",
+   "ymm3/m256",
+   "imm8"
+  ],
+  "op_en": "C",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "VPCLMULQDQ Carry-less multiplication of one quadword of",
+  "description": "ymm2 by one quadword of ymm3/m256, stores the 128-bit result in ymm1. The imme- diate is used to determine which quadwords of ymm2 and ymm3/m256 should be used.",
+  "page": 929
+ },
+ {
+  "opcode": "EVEX.128.66.0F3A.WIG 44 /r /ib",
+  "opcode_parsed": [
+   "EVEX.128.66.0F3A.WIG",
+   "44",
+   "/r",
+   "/ib"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "EVEX.128.66.0F3A.WIG"
+    ],
+    "byte_type": "evex-prefix",
+    "byte_size_min": 4,
+    "byte_size_max": 4
+   },
+   {
+    "components": [
+     "44"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/ib"
+    ],
+    "byte_type": "imm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "VPCLMULQDQ xmm1, xmm2, xmm3/m128, imm8",
+  "instr_parsed": [
+   "VPCLMULQDQ",
+   "xmm1",
+   "xmm2",
+   "xmm3/m128",
+   "imm8"
+  ],
+  "op_en": "D",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "VPCLMULQDQ",
+  "description": "Carry-less multiplication of one quadword of xmm2 by one quadword of xmm3/m128, stores the 128-bit result in xmm1. The imme- diate is used to determine which quadwords of xmm2 and xmm3/m128 should be used.",
+  "page": 929
+ },
+ {
+  "opcode": "EVEX.256.66.0F3A.WIG 44 /r /ib",
+  "opcode_parsed": [
+   "EVEX.256.66.0F3A.WIG",
+   "44",
+   "/r",
+   "/ib"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "EVEX.256.66.0F3A.WIG"
+    ],
+    "byte_type": "evex-prefix",
+    "byte_size_min": 4,
+    "byte_size_max": 4
+   },
+   {
+    "components": [
+     "44"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/ib"
+    ],
+    "byte_type": "imm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "VPCLMULQDQ ymm1, ymm2, ymm3/m256, imm8",
+  "instr_parsed": [
+   "VPCLMULQDQ",
+   "ymm1",
+   "ymm2",
+   "ymm3/m256",
+   "imm8"
+  ],
+  "op_en": "D",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "VPCLMULQDQ",
+  "description": "Carry-less multiplication of one quadword of ymm2 by one quadword of ymm3/m256, stores the 128-bit result in ymm1. The imme- diate is used to determine which quadwords of ymm2 and ymm3/m256 should be used.",
+  "page": 929
+ },
+ {
+  "opcode": "EVEX.512.66.0F3A.WIG 44 /r /ib",
+  "opcode_parsed": [
+   "EVEX.512.66.0F3A.WIG",
+   "44",
+   "/r",
+   "/ib"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "EVEX.512.66.0F3A.WIG"
+    ],
+    "byte_type": "evex-prefix",
+    "byte_size_min": 4,
+    "byte_size_max": 4
+   },
+   {
+    "components": [
+     "44"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/ib"
+    ],
+    "byte_type": "imm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "VPCLMULQDQ zmm1, zmm2, zmm3/m512, imm8",
+  "instr_parsed": [
+   "VPCLMULQDQ",
+   "zmm1",
+   "zmm2",
+   "zmm3/m512",
+   "imm8"
+  ],
+  "op_en": "D",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "VPCLMULQDQ",
+  "description": "Carry-less multiplication of one quadword of zmm2 by one quadword of zmm3/m512, stores the 128-bit result in zmm1. The imme- diate is used to determine which quadwords of zmm2 and zmm3/m512 should be used.",
+  "page": 929
+ },
+ {
+  "opcode": "66 0F 38 41 /r",
+  "opcode_parsed": [
+   "66",
+   "0F",
+   "38",
+   "41",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "66"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "38"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "41"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "PHMINPOSUW xmm1, xmm2/m128",
+  "instr_parsed": [
+   "PHMINPOSUW",
+   "xmm1",
+   "xmm2/m128"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "SSE4_1",
+  "description": "Find the minimum unsigned word in xmm2/m128 and place its value in the low word of xmm1 and its index in the second- lowest word of xmm1 .",
+  "page": 974
+ },
+ {
+  "opcode": "VEX.128.66.0F38.WIG 41 /r",
+  "opcode_parsed": [
+   "VEX.128.66.0F38.WIG",
+   "41",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "VEX.128.66.0F38.WIG"
+    ],
+    "byte_type": "vex-prefix",
+    "byte_size_min": 2,
+    "byte_size_max": 3
+   },
+   {
+    "components": [
+     "41"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "VPHMINPOSUW xmm1, xmm2/m128",
+  "instr_parsed": [
+   "VPHMINPOSUW",
+   "xmm1",
+   "xmm2/m128"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "AVX",
+  "description": "Find the minimum unsigned word in xmm2/m128 and place its value in the low word of xmm1 and its index in the second- lowest word of xmm1 .",
+  "page": 974
+ },
+ {
   "opcode": "8F /0",
   "opcode_parsed": [
    "8F",
@@ -39263,6 +40775,482 @@
   "valid_in_legacy_mode": true,
   "description": "Set ZF=1 if segment specified with r/m16 can be written.",
   "page": 1496
+ },
+ {
+  "opcode": "EVEX.128.66.0F38.W0 8D /r",
+  "opcode_parsed": [
+   "EVEX.128.66.0F38.W0",
+   "8D",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "EVEX.128.66.0F38.W0"
+    ],
+    "byte_type": "evex-prefix",
+    "byte_size_min": 4,
+    "byte_size_max": 4
+   },
+   {
+    "components": [
+     "8D"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "VPERMB xmm1 {k1}{z}, xmm2, xmm3/m128",
+  "instr_parsed": [
+   "VPERMB",
+   "xmm1 {k1}{z}",
+   "xmm2",
+   "xmm3/m128"
+  ],
+  "op_en": "A",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "AVX512VL",
+  "description": "Permute bytes in xmm3/m128 using byte indexes in xmm2 and store the result in xmm1 using writemask k1.",
+  "page": 1753
+ },
+ {
+  "opcode": "EVEX.256.66.0F38.W0 8D /r",
+  "opcode_parsed": [
+   "EVEX.256.66.0F38.W0",
+   "8D",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "EVEX.256.66.0F38.W0"
+    ],
+    "byte_type": "evex-prefix",
+    "byte_size_min": 4,
+    "byte_size_max": 4
+   },
+   {
+    "components": [
+     "8D"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "VPERMB ymm1 {k1}{z}, ymm2, ymm3/m256",
+  "instr_parsed": [
+   "VPERMB",
+   "ymm1{k1}{z}",
+   "ymm2",
+   "ymm3/m256"
+  ],
+  "op_en": "A",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "AVX512VL",
+  "description": "Permute bytes in ymm3/m256 using byte indexes in ymm2 and store the result in ymm1 using writemask k1.",
+  "page": 1753
+ },
+ {
+  "opcode": "EVEX.512.66.0F38.W0 8D /r",
+  "opcode_parsed": [
+   "EVEX.512.66.0F38.W0",
+   "8D",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "EVEX.512.66.0F38.W0"
+    ],
+    "byte_type": "evex-prefix",
+    "byte_size_min": 4,
+    "byte_size_max": 4
+   },
+   {
+    "components": [
+     "8D"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "VPERMB zmm1 {k1}{z}, zmm2, zmm3/m512",
+  "instr_parsed": [
+   "VPERMB",
+   "zmm1{k1}{z}",
+   "zmm2",
+   "zmm3/m512"
+  ],
+  "op_en": "A",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "AVX512_VBMI",
+  "description": "Permute bytes in zmm3/m512 using byte indexes in zmm2 and store the result in zmm1 using writemask k1.",
+  "page": 1753
+ },
+ {
+  "opcode": "EVEX.128.66.0F38.W0 75 /r",
+  "opcode_parsed": [
+   "EVEX.128.66.0F38.W0",
+   "75",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "EVEX.128.66.0F38.W0"
+    ],
+    "byte_type": "evex-prefix",
+    "byte_size_min": 4,
+    "byte_size_max": 4
+   },
+   {
+    "components": [
+     "75"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "VPERMI2B xmm1 {k1}{z}, xmm2, xmm3/m128",
+  "instr_parsed": [
+   "VPERMI2B",
+   "xmm1 {k1}{z}",
+   "xmm2",
+   "xmm3/m128"
+  ],
+  "op_en": "A",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "AVX512VL",
+  "description": "Permute bytes in xmm3/m128 and xmm2 using byte indexes in xmm1 and store the byte results in xmm1 using writemask k1.",
+  "page": 1758
+ },
+ {
+  "opcode": "EVEX.256.66.0F38.W0 75 /r",
+  "opcode_parsed": [
+   "EVEX.256.66.0F38.W0",
+   "75",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "EVEX.256.66.0F38.W0"
+    ],
+    "byte_type": "evex-prefix",
+    "byte_size_min": 4,
+    "byte_size_max": 4
+   },
+   {
+    "components": [
+     "75"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "VPERMI2B ymm1 {k1}{z}, ymm2, ymm3/m256",
+  "instr_parsed": [
+   "VPERMI2B",
+   "ymm1{k1}{z}",
+   "ymm2",
+   "ymm3/m256"
+  ],
+  "op_en": "A",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "AVX512VL",
+  "description": "Permute bytes in ymm3/m256 and ymm2 using byte indexes in ymm1 and store the byte results in ymm1 using writemask k1.",
+  "page": 1758
+ },
+ {
+  "opcode": "EVEX.512.66.0F38.W0 75 /r",
+  "opcode_parsed": [
+   "EVEX.512.66.0F38.W0",
+   "75",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "EVEX.512.66.0F38.W0"
+    ],
+    "byte_type": "evex-prefix",
+    "byte_size_min": 4,
+    "byte_size_max": 4
+   },
+   {
+    "components": [
+     "75"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "VPERMI2B zmm1 {k1}{z}, zmm2, zmm3/m512",
+  "instr_parsed": [
+   "VPERMI2B",
+   "zmm1{k1}{z}",
+   "zmm2",
+   "zmm3/m512"
+  ],
+  "op_en": "A",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "AVX512_VBMI",
+  "description": "Permute bytes in zmm3/m512 and zmm2 using byte indexes in zmm1 and store the byte results in zmm1 using writemask k1.",
+  "page": 1758
+ },
+ {
+  "opcode": "VEX.128.66.0F38.W0 0E /r",
+  "opcode_parsed": [
+   "VEX.128.66.0F38.W0",
+   "0E",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "VEX.128.66.0F38.W0"
+    ],
+    "byte_type": "vex-prefix",
+    "byte_size_min": 2,
+    "byte_size_max": 3
+   },
+   {
+    "components": [
+     "0E"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "VTESTPS xmm1, xmm2/m128",
+  "instr_parsed": [
+   "VTESTPS",
+   "xmm1",
+   "xmm2/m128"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "AVX",
+  "description": "Set ZF and CF depending on sign bit AND and ANDN of packed single-precision floating-point sources.",
+  "page": 1980
+ },
+ {
+  "opcode": "VEX.256.66.0F38.W0 0E /r",
+  "opcode_parsed": [
+   "VEX.256.66.0F38.W0",
+   "0E",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "VEX.256.66.0F38.W0"
+    ],
+    "byte_type": "vex-prefix",
+    "byte_size_min": 2,
+    "byte_size_max": 3
+   },
+   {
+    "components": [
+     "0E"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "VTESTPS ymm1, ymm2/m256",
+  "instr_parsed": [
+   "VTESTPS",
+   "ymm1",
+   "ymm2/m256"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "AVX",
+  "description": "Set ZF and CF depending on sign bit AND and ANDN of packed single-precision floating-point sources.",
+  "page": 1980
+ },
+ {
+  "opcode": "VEX.128.66.0F38.W0 0F /r",
+  "opcode_parsed": [
+   "VEX.128.66.0F38.W0",
+   "0F",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "VEX.128.66.0F38.W0"
+    ],
+    "byte_type": "vex-prefix",
+    "byte_size_min": 2,
+    "byte_size_max": 3
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "VTESTPD xmm1, xmm2/m128",
+  "instr_parsed": [
+   "VTESTPD",
+   "xmm1",
+   "xmm2/m128"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "AVX",
+  "description": "Set ZF and CF depending on sign bit AND and ANDN of packed double-precision floating-point sources.",
+  "page": 1980
+ },
+ {
+  "opcode": "VEX.256.66.0F38.W0 0F /r",
+  "opcode_parsed": [
+   "VEX.256.66.0F38.W0",
+   "0F",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "VEX.256.66.0F38.W0"
+    ],
+    "byte_type": "vex-prefix",
+    "byte_size_min": 2,
+    "byte_size_max": 3
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "VTESTPD ymm1, ymm2/m256",
+  "instr_parsed": [
+   "VTESTPD",
+   "ymm1",
+   "ymm2/m256"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "AVX",
+  "description": "Set ZF and CF depending on sign bit AND and ANDN of packed double-precision floating-point sources.",
+  "page": 1980
  },
  {
   "opcode": "VEX.256.0F.WIG 77",

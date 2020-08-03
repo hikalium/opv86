@@ -303,7 +303,7 @@ function MakeTable(
     keyColIndex: number): SDMText[][][] {
   // returns table[table row][col][token index]
   const textCols = MakeCols(tokens, colLeftList);
-  console.error(textCols);
+  console.error(JSON.stringify(textCols, null, ' '));
   const keyCol = textCols[keyColIndex];
   const table = [];
   for (let keyTokenIndex = 0; keyTokenIndex < keyCol.length; keyTokenIndex++) {
@@ -380,10 +380,18 @@ function CanonicalizeInstr(s: string): string[] {
     '(R|E)(A|C|D|B)X',
     'Sreg',
     '(ES|CS|SS|DS|FS|GS)',
-    'xmm(1|2|3)',
+    'xmm[0-7]',
+    'ymm([0-9]|1[0-5])',
+    'zmm(1|2)',
     'xmm1 {k1}{z}',
+    '(x|y|z)mm1{k1}{z}',
     'm64 {k1}',
-    'xmm1/m64',
+    'xmm[0-7]/m(64|128)',
+    'ymm([0-9]|1[0-5])/m256',
+    'xmm3/m128/m64bcst',
+    'ymm3/m256/m64bcst',
+    'zmm3/m512/m64bcst',
+    'zmm3/m512',
     'DR0–DR7',
     'CR0–CR7|CR8',
     'moffs(8|16|32|64)',
@@ -441,7 +449,7 @@ function CanonicalizeOpcode(s: string): string[] {
   const canonicalized = [];
   const reREXPrefix = /^(REX(\.R|\.W)?)(\s*\+\s*)?/;
   const reOpByte = /^[0-9A-F]{2}(\s|$|\/|\+)/;
-  const reImm = /^(i(b|w|d|o))/;
+  const reImm = /^((i(b|w|d|o))|\/ib)/;  // /ib for VEX
   const reRemovePunctuator = /\**/g;
   s = s.trim().replace(reRemovePunctuator, '');
   if (s.startsWith('NP')) {
@@ -463,10 +471,25 @@ function CanonicalizeOpcode(s: string): string[] {
       s = s.substr(match[0].length).trim();
     }
   }
-  while (reOpByte.test(s)) {
-    canonicalized.push(s.substr(0, 2));
-    s = s.substr(2).trim();
+  for (;;) {
+    console.error(`s = ${s}`);
+    if (reOpByte.test(s)) {
+      canonicalized.push(s.substr(0, 2));
+      s = s.substr(2).trim();
+      continue;
+    }
+    if (s.startsWith('0F3A') || s.startsWith('0F38')) {
+      // hack for GF2P8AFFINEINVQB and GF2P8MULB
+      console.error('HACK!!!!!!!!!!!!!!');
+      canonicalized.push(s.substr(0, 2));
+      s = s.substr(2).trim();
+      canonicalized.push(s.substr(0, 2));
+      s = s.substr(2).trim();
+      continue;
+    }
+    break;
   }
+
   if (canonicalized[0] === 'F3' || canonicalized[0] == 'F2') {
     // REP/REPE/REPNE
     {
@@ -652,7 +675,7 @@ function makeOpBytes(op_parsed: string[]): SDMInstrOpByte[] {
       opcode_bytes.push(c);
       continue;
     }
-    if (op_parsed[i] == 'ib' || op_parsed[i] == 'cb') {
+    if (op_parsed[i] == 'ib' || op_parsed[i] == 'cb' || op_parsed[i] == '/ib') {
       opcode_bytes.push({
         components: [op_parsed[i++]],
         byte_type: 'imm',
@@ -798,6 +821,30 @@ const parserMap = {
             description: description,
           };
         });
+      },
+  'opcode/#instruction#op/#en#64/32#bitmode#support#cpuidfeature#flag#description':
+      (headers: SDMText[], tokens: SDMText[]): SDMInstr[] => {
+        // MOVSD
+        console.error(headers.filter(e => e !== undefined)
+                          .map(e => `${GetText(e)}@${e.attr.left}`)
+                          .join(', '));
+        const opcodeLeft = headers[0].attr.left;
+        const opEnLeft = headers[2].attr.left;
+        const validIn3264Left = headers[4].attr.left;
+        const cpuidFeatureLeft = headers[7].attr.left;
+        const descriptionLeft = headers[9].attr.left;
+        //
+        const table = MakeTable(
+            tokens,
+            [
+              opcodeLeft,
+              opEnLeft,
+              validIn3264Left,
+              cpuidFeatureLeft,
+              descriptionLeft,
+            ],
+            1);
+        return Parser_OpInstr_OpEn_6432_CPUID_Desc(table);
       },
   'opcode/#instruction#op/en#64/32#bitmode#support#cpuid#feature#flag#description':
       (headers: SDMText[], tokens: SDMText[]): SDMInstr[] => {
@@ -1166,6 +1213,7 @@ const HeaderTexts = {
   'bit Mode': true,
   'Mode': true,
   'Leg Mode': true,
+  'CPUID Feature': true,
   'CPUID': true,
   'Feature': true,
   'Feature Flag': true,

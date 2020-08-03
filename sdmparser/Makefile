@@ -41,6 +41,7 @@ test : sdmparser.js
 		CPUID \
 		SCAS \
 		REP \
+		GF2P8AFFINEINVQB GF2P8AFFINEQB GF2P8MULB \
 		SAHF
 	@echo "All tests passed."
 
