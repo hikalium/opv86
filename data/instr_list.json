@@ -93,7 +93,7 @@
   "valid_in_64bit_mode": false,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Adjust AX before division to number base  imm8. ",
+  "description": "Adjust AX before division to number base imm8.",
   "page": 122
  },
  {
@@ -164,7 +164,7 @@
   "valid_in_64bit_mode": false,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Adjust AX after multiply to number base  imm8. ",
+  "description": "Adjust AX after multiply to number base imm8.",
   "page": 124
  },
  {
@@ -347,7 +347,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Add with carry imm32 sign extended to 64-   bits to RAX.",
+  "description": "Add with carry imm32 sign extended to 64bits to RAX.",
   "page": 128
  },
  {
@@ -393,7 +393,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Add with carry imm8 to r/m8. ",
+  "description": "Add with carry imm8 to r/m8.",
   "page": 128
  },
  {
@@ -448,7 +448,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Add with carry imm8 to r/m8. ",
+  "description": "Add with carry imm8 to r/m8.",
   "page": 128
  },
  {
@@ -494,7 +494,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Add with carry imm16 to r/m16. ",
+  "description": "Add with carry imm16 to r/m16.",
   "page": 128
  },
  {
@@ -540,7 +540,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Add with CF imm32 to r/m32. ",
+  "description": "Add with CF imm32 to r/m32.",
   "page": 128
  },
  {
@@ -595,7 +595,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Add with CF imm32 sign extended to 64-bits to r/m64. ",
+  "description": "Add with CF imm32 sign extended to 64-bits to r/m64.",
   "page": 128
  },
  {
@@ -641,7 +641,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Add with CF sign-extended imm8 to r/m16. ",
+  "description": "Add with CF sign-extended imm8 to r/m16.",
   "page": 128
  },
  {
@@ -687,7 +687,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Add with CF sign-extended imm8 into r/m32. ",
+  "description": "Add with CF sign-extended imm8 into r/m32.",
   "page": 128
  },
  {
@@ -742,7 +742,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Add with CF sign-extended imm8 into r/m64. ",
+  "description": "Add with CF sign-extended imm8 into r/m64.",
   "page": 128
  },
  {
@@ -779,7 +779,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Add with carry byte register to r/m8. ",
+  "description": "Add with carry byte register to r/m8.",
   "page": 128
  },
  {
@@ -825,7 +825,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Add with carry byte register to r/m64. ",
+  "description": "Add with carry byte register to r/m64.",
   "page": 128
  },
  {
@@ -862,7 +862,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Add with carry r16 to r/m16. ",
+  "description": "Add with carry r16 to r/m16.",
   "page": 128
  },
  {
@@ -899,7 +899,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Add with CF r32 to r/m32. ",
+  "description": "Add with CF r32 to r/m32.",
   "page": 128
  },
  {
@@ -945,7 +945,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Add with CF r64 to r/m64. ",
+  "description": "Add with CF r64 to r/m64.",
   "page": 128
  },
  {
@@ -1065,7 +1065,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Add with carry r/m16 to r16. ",
+  "description": "Add with carry r/m16 to r16.",
   "page": 128
  },
  {
@@ -1102,7 +1102,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Add with CF r/m32 to r32. ",
+  "description": "Add with CF r/m32 to r32.",
   "page": 128
  },
  {
@@ -1148,7 +1148,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Add with CF r/m64 to r64. ",
+  "description": "Add with CF r/m64 to r64.",
   "page": 128
  },
  {
@@ -1351,7 +1351,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Add imm8 to r/m8. ",
+  "description": "Add imm8 to r/m8.",
   "page": 133
  },
  {
@@ -1406,7 +1406,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Add sign -extended imm8 to r/m8. ",
+  "description": "Add sign-extended imm8 to r/m8.",
   "page": 133
  },
  {
@@ -1452,7 +1452,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Add imm16 to r/m16. ",
+  "description": "Add imm16 to r/m16.",
   "page": 133
  },
  {
@@ -1553,7 +1553,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Add imm32 sign-extended to 64-bits to  r/m64 .",
+  "description": "Add imm32 sign-extended to 64-bits to r/m64 .",
   "page": 133
  },
  {
@@ -1599,7 +1599,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Add sign -extended imm8 to r/m16. ",
+  "description": "Add sign-extended imm8 to r/m16.",
   "page": 133
  },
  {
@@ -1645,7 +1645,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Add sign -extended imm8 to r/m32. ",
+  "description": "Add sign-extended imm8 to r/m32.",
   "page": 133
  },
  {
@@ -1700,7 +1700,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Add sign -extended imm8 to r/m64. ",
+  "description": "Add sign-extended imm8 to r/m64.",
   "page": 133
  },
  {
@@ -1737,7 +1737,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Add r8 to r/m8. ",
+  "description": "Add r8 to r/m8.",
   "page": 133
  },
  {
@@ -1783,7 +1783,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Add r8 to r/m8. ",
+  "description": "Add r8 to r/m8.",
   "page": 133
  },
  {
@@ -1820,7 +1820,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Add r16 to r/m16. ",
+  "description": "Add r16 to r/m16.",
   "page": 133
  },
  {
@@ -1857,7 +1857,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Add r32 to r/m32. ",
+  "description": "Add r32 to r/m32.",
   "page": 133
  },
  {
@@ -1903,7 +1903,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Add r64 to r/m64. ",
+  "description": "Add r64 to r/m64.",
   "page": 133
  },
  {
@@ -1940,7 +1940,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Add r/m8 to r8. ",
+  "description": "Add r/m8 to r8.",
   "page": 133
  },
  {
@@ -1986,7 +1986,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Add r/m8 to r8. ",
+  "description": "Add r/m8 to r8.",
   "page": 133
  },
  {
@@ -2023,7 +2023,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Add r/m16 to r16. ",
+  "description": "Add r/m16 to r16.",
   "page": 133
  },
  {
@@ -2060,7 +2060,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Add r/m32 to r32. ",
+  "description": "Add r/m32 to r32.",
   "page": 133
  },
  {
@@ -2106,7 +2106,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Add r/m64 to r64. ",
+  "description": "Add r/m64 to r64.",
   "page": 133
  },
  {
@@ -2143,7 +2143,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "AL  AND imm8. ",
+  "description": "AL  AND imm8.",
   "page": 163
  },
  {
@@ -2180,7 +2180,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "AX  AND  i mm16. ",
+  "description": "AX  AND  i mm16.",
   "page": 163
  },
  {
@@ -2217,7 +2217,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "EAX  AND imm32. ",
+  "description": "EAX  AND imm32.",
   "page": 163
  },
  {
@@ -2263,7 +2263,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "RAX  AND imm32 sign-extended to 64-bits. ",
+  "description": "RAX  AND imm32 sign-extended to 64-bits.",
   "page": 163
  },
  {
@@ -2309,7 +2309,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": " r/m8 AND imm8. ",
+  "description": "r/m8 AND imm8.",
   "page": 163
  },
  {
@@ -2364,7 +2364,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": " r/m8 AND imm8. ",
+  "description": "r/m8 AND imm8.",
   "page": 163
  },
  {
@@ -2410,7 +2410,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": " r/m16 AND imm16. ",
+  "description": "r/m16 AND imm16.",
   "page": 163
  },
  {
@@ -2456,7 +2456,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": " r/m32 AND imm32. ",
+  "description": "r/m32 AND imm32.",
   "page": 163
  },
  {
@@ -2511,7 +2511,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": " r/m64 AND imm32 sign extended to 64-bits. ",
+  "description": "r/m64 AND imm32 sign extended to 64-bits.",
   "page": 163
  },
  {
@@ -2557,7 +2557,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": " r/m16 AND imm8 (sign-extended). ",
+  "description": "r/m16 AND imm8 (sign-extended).",
   "page": 163
  },
  {
@@ -2603,7 +2603,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": " r/m32 AND imm8 (sign-extended). ",
+  "description": "r/m32 AND imm8 (sign-extended).",
   "page": 163
  },
  {
@@ -2658,7 +2658,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": " r/m64 AND imm8 (sign-extended). ",
+  "description": "r/m64 AND imm8 (sign-extended).",
   "page": 163
  },
  {
@@ -2695,7 +2695,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": " r/m8 AND r8. ",
+  "description": "r/m8 AND r8.",
   "page": 163
  },
  {
@@ -2741,7 +2741,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": " r/m64 AND r8 (sign-extended). ",
+  "description": "r/m64 AND r8 (sign-extended).",
   "page": 163
  },
  {
@@ -2778,7 +2778,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": " r/m16 AND r16. ",
+  "description": "r/m16 AND r16.",
   "page": 163
  },
  {
@@ -2815,7 +2815,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": " r/m32 AND r32. ",
+  "description": "r/m32 AND r32.",
   "page": 163
  },
  {
@@ -2861,7 +2861,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": " r/m64 AND r32. ",
+  "description": "r/m64 AND r32.",
   "page": 163
  },
  {
@@ -2898,7 +2898,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": " r8 AND r/m8. ",
+  "description": "r8 AND r/m8.",
   "page": 163
  },
  {
@@ -2944,7 +2944,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": " r/m64 AND r8 (sign-extended). ",
+  "description": "r/m64 AND r8 (sign-extended).",
   "page": 163
  },
  {
@@ -2981,7 +2981,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": " r16 AND r/m16. ",
+  "description": "r16 AND r/m16.",
   "page": 163
  },
  {
@@ -3018,7 +3018,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": " r32 AND r/m32. ",
+  "description": "r32 AND r/m32.",
   "page": 163
  },
  {
@@ -3064,7 +3064,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": " r64 AND r/m64. ",
+  "description": "r64 AND r/m64.",
   "page": 163
  },
  {
@@ -3110,7 +3110,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Bit scan forward on r/m16. ",
+  "description": "Bit scan forward on r/m16.",
   "page": 210
  },
  {
@@ -3156,7 +3156,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Bit scan forward on r/m32. ",
+  "description": "Bit scan forward on r/m32.",
   "page": 210
  },
  {
@@ -3211,7 +3211,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Bit scan forward on r/m64. ",
+  "description": "Bit scan forward on r/m64.",
   "page": 210
  },
  {
@@ -3257,7 +3257,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Bit scan reverse on r/m16. ",
+  "description": "Bit scan reverse on r/m16.",
   "page": 212
  },
  {
@@ -3303,7 +3303,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Bit scan reverse on r/m32. ",
+  "description": "Bit scan reverse on r/m32.",
   "page": 212
  },
  {
@@ -3358,7 +3358,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Bit scan reverse on r/m64. ",
+  "description": "Bit scan reverse on r/m64.",
   "page": 212
  },
  {
@@ -4514,7 +4514,7 @@
   "valid_in_64bit_mode": false,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Call near, absolute indirect, address given in r/m16. ",
+  "description": "Call near, absolute indirect, address given in r/m16.",
   "page": 224
  },
  {
@@ -4550,7 +4550,7 @@
   "valid_in_64bit_mode": false,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Call near, absolute indirect, address given in r/m32. ",
+  "description": "Call near, absolute indirect, address given in r/m32.",
   "page": 224
  },
  {
@@ -4694,7 +4694,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Call far, absolute indirect address given in m16:16.  In 32-bit mode: if selector points to a gate, then RIP = 32-bit zero extended displacement taken from gate; else RIP = zero extended 16-bit offset from far pointer referenced in the instruction.",
+  "description": "Call far, absolute indirect address given in m16:16. In 32-bit mode: if selector points to a gate, then RIP = 32-bit zero extended displacement taken from gate; else RIP = zero extended 16-bit offset from far pointer referenced in the instruction.",
   "page": 224
  },
  {
@@ -4968,7 +4968,7 @@
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": false,
   "cpuid_feature_flag": "CLDEMOTE",
-  "description": "Hint to hardware to move the cache line containing m8 to a more distant level of the cache without writing back to mem- ory. 1",
+  "description": "Hint to hardware to move the cache line containing m8 to a more distant level of the cache without writing back to memory. 1",
   "page": 245
  },
  {
@@ -5428,7 +5428,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Compare imm8 with r/m8. ",
+  "description": "Compare imm8 with r/m8.",
   "page": 263
  },
  {
@@ -5483,7 +5483,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Compare imm8 with r/m8. ",
+  "description": "Compare imm8 with r/m8.",
   "page": 263
  },
  {
@@ -5529,7 +5529,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Compare imm16 with r/m16. ",
+  "description": "Compare imm16 with r/m16.",
   "page": 263
  },
  {
@@ -5575,7 +5575,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Compare imm32 with r/m32. ",
+  "description": "Compare imm32 with r/m32.",
   "page": 263
  },
  {
@@ -5630,7 +5630,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Compare imm32 sign-extended to 64-bits  with r/m64. ",
+  "description": "Compare imm32 sign-extended to 64-bits with r/m64.",
   "page": 263
  },
  {
@@ -5676,7 +5676,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Compare imm8 with r/m16. ",
+  "description": "Compare imm8 with r/m16.",
   "page": 263
  },
  {
@@ -5722,7 +5722,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Compare imm8 with r/m32. ",
+  "description": "Compare imm8 with r/m32.",
   "page": 263
  },
  {
@@ -5777,7 +5777,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Compare imm8 with r/m64. ",
+  "description": "Compare imm8 with r/m64.",
   "page": 263
  },
  {
@@ -5814,7 +5814,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Compare r8 with r/m8. ",
+  "description": "Compare r8 with r/m8.",
   "page": 263
  },
  {
@@ -5860,7 +5860,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Compare r8 with r/m8. ",
+  "description": "Compare r8 with r/m8.",
   "page": 263
  },
  {
@@ -5897,7 +5897,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Compare r16 with r/m16. ",
+  "description": "Compare r16 with r/m16.",
   "page": 263
  },
  {
@@ -5934,7 +5934,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Compare r32 with r/m32. ",
+  "description": "Compare r32 with r/m32.",
   "page": 263
  },
  {
@@ -5980,7 +5980,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Compare r64 with r/m64. ",
+  "description": "Compare r64 with r/m64.",
   "page": 263
  },
  {
@@ -6017,7 +6017,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Compare r/m8 with r8. ",
+  "description": "Compare r/m8 with r8.",
   "page": 263
  },
  {
@@ -6063,7 +6063,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Compare r/m8 with  r8. ",
+  "description": "Compare r/m8 with  r8.",
   "page": 263
  },
  {
@@ -6100,7 +6100,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Compare r/m16 with r16. ",
+  "description": "Compare r/m16 with r16.",
   "page": 263
  },
  {
@@ -6137,7 +6137,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Compare r/m32 with r32. ",
+  "description": "Compare r/m32 with r32.",
   "page": 263
  },
  {
@@ -6183,7 +6183,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Compare r/m64 with r64. ",
+  "description": "Compare r/m64 with r64.",
   "page": 263
  },
  {
@@ -7294,7 +7294,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Unsigned divide AX by r/m8 , with result stored in AL:= Quotient, AH:= Remainder.",
+  "description": "Unsigned divide AX by r/m8 , with result stored in AL  := Quotient, AH  := Remainder.",
   "page": 400
  },
  {
@@ -7339,7 +7339,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Unsigned divide AX by r/m8 , with result stored in AL:= Quotient, AH:= Remainder.",
+  "description": "Unsigned divide AX by r/m8 , with result stored in AL  := Quotient, AH  := Remainder.",
   "page": 400
  },
  {
@@ -7375,7 +7375,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Unsigned divide DX:AX by r/m16 , with result stored in AX:= Quotient, DX:= Remainder.",
+  "description": "Unsigned divide DX:AX by r/m16 , with result stored in AX  := Quotient, DX  := Remainder.",
   "page": 400
  },
  {
@@ -7411,7 +7411,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Unsigned divide EDX:EAX by r/m32 , with result stored in EAX:= Quotient, EDX:= Remainder.",
+  "description": "Unsigned divide EDX:EAX by r/m32 , with result stored in EAX  := Quotient, EDX  := Remainder.",
   "page": 400
  },
  {
@@ -7456,7 +7456,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Unsigned divide RDX:RAX by r/m64 , with result stored in RAX:= Quotient, RDX:= Remainder.",
+  "description": "Unsigned divide RDX:RAX by r/m64 , with result stored in RAX  := Quotient, RDX  := Remainder.",
   "page": 400
  },
  {
@@ -7671,7 +7671,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": " Replace ST(0) with (2 – 1). ST(0)",
+  "description": "Replace ST(0) with (2 ST(0)  – 1).",
   "page": 426
  },
  {
@@ -9994,7 +9994,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Push log 10 onto the FPU register stack. 2",
+  "description": "Push log 2 10 onto the FPU register stack.",
   "page": 472
  },
  {
@@ -10028,7 +10028,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Push log e onto the FPU register stack. 2",
+  "description": "Push log 2 e onto the FPU register stack.",
   "page": 472
  },
  {
@@ -10062,7 +10062,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Push onto the FPU register stack. π",
+  "description": "Push π onto the FPU register stack.",
   "page": 472
  },
  {
@@ -10096,7 +10096,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Push log 2 onto the FPU register stack. 10",
+  "description": "Push log 10 2 onto the FPU register stack.",
   "page": 472
  },
  {
@@ -10130,7 +10130,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Push log 2 onto the FPU register stack. e",
+  "description": "Push log e 2 onto the FPU register stack.",
   "page": 472
  },
  {
@@ -10555,7 +10555,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Replace ST(1) with arctan(ST(1) ST(0)) and pop the register stack. /",
+  "description": "Replace ST(1) with arctan(ST(1) / ST(0)) and pop the register stack.",
   "page": 482
  },
  {
@@ -11747,7 +11747,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Subtract ST(i) from ST(0) and store result in ST(i). ",
+  "description": "Subtract ST(i) from ST(0)  and store result in ST(i).",
   "page": 515
  },
  {
@@ -12238,7 +12238,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Replace ST(1) with (ST(1) log ST(0)) and pop the ∗ 2 register stack.",
+  "description": "Replace ST(1) with (ST(1) ∗ log ST(0)) and pop the 2 register stack.",
   "page": 540
  },
  {
@@ -12272,7 +12272,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Replace ST(1) with ST(1) log (ST(0) + 1.0) and pop the ∗ 2 register stack.",
+  "description": "Replace ST(1) with ST(1) ∗ log (ST(0) + 1.0) and pop the 2 register stack.",
   "page": 542
  },
  {
@@ -13369,7 +13369,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Signed divide AX by r/m 8, with result stored in: AL:= Quotient, AH:= Remainder.",
+  "description": "Signed divide AX by r/m 8, with result stored in: AL  := Quotient, AH  := Remainder.",
   "page": 564
  },
  {
@@ -13414,7 +13414,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Signed divide AX by r/m 8, with result stored in AL:= Quotient, AH:= Remainder.",
+  "description": "Signed divide AX by r/m 8, with result stored in AL  := Quotient, AH  := Remainder.",
   "page": 564
  },
  {
@@ -13450,7 +13450,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Signed divide DX:AX by r/m16 , with result stored in AX:= Quotient, DX:= Remainder.",
+  "description": "Signed divide DX:AX by r/m16 , with result stored in AX  := Quotient, DX  := Remainder.",
   "page": 564
  },
  {
@@ -13486,7 +13486,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Signed divide EDX:EAX by r/m32 , with result stored in EAX:= Quotient, EDX:= Remainder.",
+  "description": "Signed divide EDX:EAX by r/m32 , with result stored in EAX  := Quotient, EDX  := Remainder.",
   "page": 564
  },
  {
@@ -13531,7 +13531,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Signed divide RDX:RAX by r/m64 , with result stored in RAX:= Quotient, RDX:= Remainder.",
+  "description": "Signed divide RDX:RAX by r/m64 , with result stored in RAX  := Quotient, RDX  := Remainder.",
   "page": 564
  },
  {
@@ -13567,7 +13567,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "AX:= AL∗ r/m byte.",
+  "description": "AX:= AL ∗  r/m byte.",
   "page": 567
  },
  {
@@ -13603,7 +13603,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "DX:AX := AX∗ r/m word.",
+  "description": "DX:AX := AX ∗  r/m word.",
   "page": 567
  },
  {
@@ -13639,7 +13639,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "EDX:EAX  :=  EAX∗ r/m 32.",
+  "description": "EDX:EAX  :=  EAX ∗  r/m 32.",
   "page": 567
  },
  {
@@ -13684,7 +13684,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "RDX:RAX := RAX∗ r/m 64.",
+  "description": "RDX:RAX := RAX ∗  r/m 64.",
   "page": 567
  },
  {
@@ -13730,7 +13730,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "word register := word register∗ r/m 16.",
+  "description": "word register := word register ∗  r/m 16.",
   "page": 567
  },
  {
@@ -13776,7 +13776,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "doubleword register := doubleword register∗  r/m32. ",
+  "description": "doubleword register := doubleword register ∗  r/m32.",
   "page": 567
  },
  {
@@ -13831,7 +13831,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Quadword register := Quadword register∗  r/m64 .",
+  "description": "Quadword register := Quadword register ∗  r/m64 .",
   "page": 567
  },
  {
@@ -13878,7 +13878,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "word register := r/m16 ∗sign-extended immediate byte.",
+  "description": "word register := r/m16  ∗ sign-extended immediate byte.",
   "page": 567
  },
  {
@@ -13925,7 +13925,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "doubleword register := r/m32 ∗sign- extended immediate byte.",
+  "description": "doubleword register := r/m32  ∗ signextended immediate byte.",
   "page": 567
  },
  {
@@ -13981,7 +13981,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Quadword register := r/m64 ∗sign-extended immediate byte.",
+  "description": "Quadword register := r/m64  ∗ sign-extended immediate byte.",
   "page": 567
  },
  {
@@ -14028,7 +14028,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "word register := r/m16 ∗immediate word.",
+  "description": "word register := r/m16  ∗ immediate word.",
   "page": 567
  },
  {
@@ -14075,7 +14075,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "doubleword register := r/m32 ∗immediate doubleword.",
+  "description": "doubleword register := r/m32  ∗ immediate doubleword.",
   "page": 567
  },
  {
@@ -14131,7 +14131,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Quadword register := r/m64 ∗immediate doubleword.",
+  "description": "Quadword register := r/m64  ∗ immediate doubleword.",
   "page": 567
  },
  {
@@ -14638,7 +14638,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Input word from I/O port specified in DX into memory location specified in ES:(E)DI or RDI.1",
+  "description": "Input word from I/O port specified in DX into memory location specified in ES:(E)DI or RDI. 1",
   "page": 577
  },
  {
@@ -14666,7 +14666,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Input doubleword from I/O port specified in DX into memory location specified in ES:(E)DI or RDI.1",
+  "description": "Input doubleword from I/O port specified in DX into memory location specified in ES:(E)DI or RDI. 1",
   "page": 577
  },
  {
@@ -14692,7 +14692,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Input byte from I/O port specified in DX into memory location specified with ES:(E)DI or RDI.1",
+  "description": "Input byte from I/O port specified in DX into memory location specified with ES:(E)DI or RDI. 1",
   "page": 577
  },
  {
@@ -14718,7 +14718,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Input word from I/O port specified in DX into memory location specified in ES:(E)DI or RDI.1",
+  "description": "Input word from I/O port specified in DX into memory location specified in ES:(E)DI or RDI. 1",
   "page": 577
  },
  {
@@ -14744,7 +14744,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Input doubleword from I/O port specified in DX into memory location specified in ES:(E)DI or RDI.1",
+  "description": "Input doubleword from I/O port specified in DX into memory location specified in ES:(E)DI or RDI. 1",
   "page": 577
  },
  {
@@ -14938,7 +14938,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Invalidate TLB entries for page containing m. ",
+  "description": "Invalidate TLB entries for page containing m.",
   "page": 600
  },
  {
@@ -15457,7 +15457,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Jump short if less (SF≠OF).",
+  "description": "Jump short if less (SF ≠ OF).",
   "page": 614
  },
  {
@@ -15493,7 +15493,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Jump short if less or equal (ZF=1 or SF≠OF).",
+  "description": "Jump short if less or equal (ZF=1 or SF ≠ OF).",
   "page": 614
  },
  {
@@ -15745,7 +15745,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Jump short if not greater (ZF=1 or SF≠OF).",
+  "description": "Jump short if not greater (ZF=1 or SF ≠ OF).",
   "page": 614
  },
  {
@@ -15781,7 +15781,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Jump short if not greater or equal (SF≠OF).",
+  "description": "Jump short if not greater or equal (SF ≠ OF).",
   "page": 614
  },
  {
@@ -16213,7 +16213,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Jump short if zero (ZF=1).",
+  "description": "Jump short if zero (ZF = 1).",
   "page": 614
  },
  {
@@ -17068,7 +17068,7 @@
   "valid_in_64bit_mode": false,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Jump near if less (SF≠OF). Not supported in 64-bit mode.",
+  "description": "Jump near if less (SF ≠ OF). Not supported in 64-bit mode.",
   "page": 615
  },
  {
@@ -17113,7 +17113,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Jump near if less (SF≠OF).",
+  "description": "Jump near if less (SF ≠ OF).",
   "page": 615
  },
  {
@@ -17158,7 +17158,7 @@
   "valid_in_64bit_mode": false,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Jump near if less or equal (ZF=1 or SF≠OF). Not supported in 64-bit mode.",
+  "description": "Jump near if less or equal (ZF=1 or SF ≠ OF). Not supported in 64-bit mode.",
   "page": 615
  },
  {
@@ -17203,7 +17203,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Jump near if less or equal (ZF=1 or SF≠OF).",
+  "description": "Jump near if less or equal (ZF=1 or SF ≠ OF).",
   "page": 615
  },
  {
@@ -17788,7 +17788,7 @@
   "valid_in_64bit_mode": false,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Jump near if not greater (ZF=1 or SF≠OF). Not supported in 64-bit mode.",
+  "description": "Jump near if not greater (ZF=1 or SF ≠ OF). Not supported in 64-bit mode.",
   "page": 616
  },
  {
@@ -17833,7 +17833,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Jump near if not greater (ZF=1 or SF≠OF).",
+  "description": "Jump near if not greater (ZF=1 or SF ≠ OF).",
   "page": 616
  },
  {
@@ -17878,7 +17878,7 @@
   "valid_in_64bit_mode": false,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Jump near if not greater or equal (SF≠OF). Not supported in 64-bit mode.",
+  "description": "Jump near if not greater or equal (SF ≠ OF). Not supported in 64-bit mode.",
   "page": 616
  },
  {
@@ -17923,7 +17923,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Jump near if not greater or equal (SF≠OF).",
+  "description": "Jump near if not greater or equal (SF ≠ OF).",
   "page": 616
  },
  {
@@ -18868,7 +18868,7 @@
   "valid_in_64bit_mode": false,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Jump near if sign (SF=1). Not supported in 64- bit mode.",
+  "description": "Jump near if sign (SF=1). Not supported in 64bit mode.",
   "page": 616
  },
  {
@@ -19147,7 +19147,7 @@
   "valid_in_64bit_mode": false,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Jump near, absolute indirect, address = zero- extended r/m16. Not supported in 64-bit mode.",
+  "description": "Jump near, absolute indirect, address = zeroextended r/m16. Not supported in 64-bit mode.",
   "page": 619
  },
  {
@@ -19183,7 +19183,7 @@
   "valid_in_64bit_mode": false,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Jump near, absolute indirect, address given in  r/m32. Not supported in 64-bit mode.",
+  "description": "Jump near, absolute indirect, address given in r/m32. Not supported in 64-bit mode.",
   "page": 619
  },
  {
@@ -19327,7 +19327,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Jump far, absolute indirect, address given in  m16:16 ",
+  "description": "Jump far, absolute indirect, address given in m16:16",
   "page": 619
  },
  {
@@ -19363,7 +19363,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Jump far, absolute indirect, address given in  m16:32. ",
+  "description": "Jump far, absolute indirect, address given in m16:32.",
   "page": 619
  },
  {
@@ -19408,7 +19408,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Jump far, absolute indirect, address given in  m16:64 .",
+  "description": "Jump far, absolute indirect, address given in m16:64 .",
   "page": 619
  },
  {
@@ -20034,7 +20034,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Store effective address for m in register r16. ",
+  "description": "Store effective address for m in register r16.",
   "page": 657
  },
  {
@@ -20071,7 +20071,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Store effective address for m in register r32. ",
+  "description": "Store effective address for m in register r32.",
   "page": 657
  },
  {
@@ -20117,7 +20117,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Store effective address for m in register r64. ",
+  "description": "Store effective address for m in register r64.",
   "page": 657
  },
  {
@@ -20810,7 +20810,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Decrement count; jump short if count≠0.",
+  "description": "Decrement count; jump short if count ≠ 0.",
   "page": 674
  },
  {
@@ -20846,7 +20846,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Decrement count; jump short if count≠0 and ZF = 1.",
+  "description": "Decrement count; jump short if count ≠ 0 and ZF = 1.",
   "page": 674
  },
  {
@@ -20882,7 +20882,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Decrement count; jump short if count≠0 and ZF = 0.",
+  "description": "Decrement count; jump short if count ≠ 0 and ZF = 0.",
   "page": 674
  },
  {
@@ -21024,7 +21024,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Sets up a linear address range to be monitored by hardware and activates the monitor. The address range should be a write- back memory caching type. The address is DS:RAX/EAX/AX.",
+  "description": "Sets up a linear address range to be monitored by hardware and activates the monitor. The address range should be a writeback memory caching type. The address is DS:RAX/EAX/AX.",
   "page": 715
  },
  {
@@ -21061,7 +21061,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Move r8 to r/m8. ",
+  "description": "Move r8 to r/m8.",
   "page": 717
  },
  {
@@ -21107,7 +21107,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Move r8 to r/m8. ",
+  "description": "Move r8 to r/m8.",
   "page": 717
  },
  {
@@ -21144,7 +21144,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Move r16 to r/m16. ",
+  "description": "Move r16 to r/m16.",
   "page": 717
  },
  {
@@ -21181,7 +21181,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Move r32 to r/m32. ",
+  "description": "Move r32 to r/m32.",
   "page": 717
  },
  {
@@ -21227,7 +21227,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Move r64 to r/m64. ",
+  "description": "Move r64 to r/m64.",
   "page": 717
  },
  {
@@ -21264,7 +21264,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Move r/m8 to r8. ",
+  "description": "Move r/m8 to r8.",
   "page": 717
  },
  {
@@ -21310,7 +21310,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Move r/m8 to r8. ",
+  "description": "Move r/m8 to r8.",
   "page": 717
  },
  {
@@ -21347,7 +21347,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Move r/m16 to r16. ",
+  "description": "Move r/m16 to r16.",
   "page": 717
  },
  {
@@ -21384,7 +21384,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Move r/m32 to r32. ",
+  "description": "Move r/m32 to r32.",
   "page": 717
  },
  {
@@ -21430,7 +21430,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Move r/m64 to r64. ",
+  "description": "Move r/m64 to r64.",
   "page": 717
  },
  {
@@ -21467,7 +21467,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Move segment register to r/m16. ",
+  "description": "Move segment register to r/m16.",
   "page": 717
  },
  {
@@ -21504,7 +21504,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Move zero extended 16-bit segment register to r16/r32/m16. ",
+  "description": "Move zero extended 16-bit segment register to r16/r32/m16.",
   "page": 717
  },
  {
@@ -21550,7 +21550,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Move zero extended 16-bit segment register to r64/m16. ",
+  "description": "Move zero extended 16-bit segment register to r64/m16.",
   "page": 717
  },
  {
@@ -21698,7 +21698,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Move  byte  at( offset ) to AL.",
+  "description": "Move  byte  at  ( offset ) to AL.",
   "page": 717
  },
  {
@@ -21988,7 +21988,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Move imm8 to r8. ",
+  "description": "Move imm8 to r8.",
   "page": 717
  },
  {
@@ -22036,7 +22036,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Move imm8 to r8. ",
+  "description": "Move imm8 to r8.",
   "page": 717
  },
  {
@@ -22075,7 +22075,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Move imm16 to r16. ",
+  "description": "Move imm16 to r16.",
   "page": 717
  },
  {
@@ -22114,7 +22114,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Move imm32 to r32. ",
+  "description": "Move imm32 to r32.",
   "page": 717
  },
  {
@@ -22162,7 +22162,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Move imm64 to r64. ",
+  "description": "Move imm64 to r64.",
   "page": 717
  },
  {
@@ -22208,7 +22208,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Move imm8 to r/m8. ",
+  "description": "Move imm8 to r/m8.",
   "page": 717
  },
  {
@@ -22263,7 +22263,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Move imm8 to r/m8. ",
+  "description": "Move imm8 to r/m8.",
   "page": 717
  },
  {
@@ -22309,7 +22309,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Move imm16 to r/m16. ",
+  "description": "Move imm16 to r/m16.",
   "page": 717
  },
  {
@@ -22355,7 +22355,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Move imm32 to r/m32. ",
+  "description": "Move imm32 to r/m32.",
   "page": 717
  },
  {
@@ -22410,7 +22410,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Move imm32 sign extended to 64-bits to  r/m64. ",
+  "description": "Move imm32 sign extended to 64-bits to r/m64.",
   "page": 717
  },
  {
@@ -22557,7 +22557,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "1 Move extended CR8 to r64 .",
+  "description": "Move extended CR8 to r64 . 1",
   "page": 722
  },
  {
@@ -22704,7 +22704,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "1 Move r64 to extended CR8.",
+  "description": "Move r64 to extended CR8. 1",
   "page": 722
  },
  {
@@ -24958,7 +24958,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Move byte to doubleword with sign- extension.",
+  "description": "Move byte to doubleword with signextension.",
   "page": 812
  },
  {
@@ -25059,7 +25059,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Move word to doubleword, with sign- extension.",
+  "description": "Move word to doubleword, with signextension.",
   "page": 812
  },
  {
@@ -25188,7 +25188,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Move doubleword to doubleword with sign- extension.",
+  "description": "Move doubleword to doubleword with signextension.",
   "page": 812
  },
  {
@@ -25234,7 +25234,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Move doubleword to quadword with sign- extension.",
+  "description": "Move doubleword to quadword with signextension.",
   "page": 812
  },
  {
@@ -25518,7 +25518,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Unsigned multiply (AX := AL∗ r/m8 ).",
+  "description": "Unsigned multiply (AX := AL ∗  r/m8 ).",
   "page": 832
  },
  {
@@ -25563,7 +25563,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Unsigned multiply (AX := AL∗ r/m8 ).",
+  "description": "Unsigned multiply (AX := AL ∗  r/m8 ).",
   "page": 832
  },
  {
@@ -25599,7 +25599,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Unsigned multiply (DX:AX := AX∗ r/m16 ).",
+  "description": "Unsigned multiply (DX:AX := AX ∗  r/m16 ).",
   "page": 832
  },
  {
@@ -25635,7 +25635,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Unsigned multiply (EDX:EAX := EAX∗ r/m32 ).",
+  "description": "Unsigned multiply (EDX:EAX := EAX ∗  r/m32 ).",
   "page": 832
  },
  {
@@ -25680,7 +25680,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Unsignedmultiply (RDX:RAX := RAX∗ r/m64). ",
+  "description": "Unsigned multiply (RDX:RAX := RAX ∗  r/m64).",
   "page": 832
  },
  {
@@ -25760,7 +25760,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Two's complement negate r/m8. ",
+  "description": "Two's complement negate r/m8.",
   "page": 849
  },
  {
@@ -25805,7 +25805,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Two's complement negate r/m8. ",
+  "description": "Two's complement negate r/m8.",
   "page": 849
  },
  {
@@ -25841,7 +25841,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Two's complement negate r/m16. ",
+  "description": "Two's complement negate r/m16.",
   "page": 849
  },
  {
@@ -25877,7 +25877,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Two's complement negate r/m32. ",
+  "description": "Two's complement negate r/m32.",
   "page": 849
  },
  {
@@ -25922,7 +25922,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Two's complement negate r/m64. ",
+  "description": "Two's complement negate r/m64.",
   "page": 849
  },
  {
@@ -26098,7 +26098,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Reverse  each  bit  of r/m8. ",
+  "description": "Reverse  each  bit  of r/m8.",
   "page": 852
  },
  {
@@ -26143,7 +26143,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Reverse  each  bit  of r/m8. ",
+  "description": "Reverse  each  bit  of r/m8.",
   "page": 852
  },
  {
@@ -26179,7 +26179,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Reverse  each  bit  of r/m16. ",
+  "description": "Reverse  each  bit  of r/m16.",
   "page": 852
  },
  {
@@ -26215,7 +26215,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Reverse  each  bit  of r/m32. ",
+  "description": "Reverse  each  bit  of r/m32.",
   "page": 852
  },
  {
@@ -26260,7 +26260,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Reverse  each  bit  of r/m64. ",
+  "description": "Reverse  each  bit  of r/m64.",
   "page": 852
  },
  {
@@ -26297,7 +26297,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "AL  OR imm8. ",
+  "description": "AL  OR imm8.",
   "page": 854
  },
  {
@@ -26334,7 +26334,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "AX  OR imm16. ",
+  "description": "AX  OR imm16.",
   "page": 854
  },
  {
@@ -26371,7 +26371,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "EAX  OR imm32. ",
+  "description": "EAX  OR imm32.",
   "page": 854
  },
  {
@@ -26417,7 +26417,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "RAX  OR imm32 (sign-extended). ",
+  "description": "RAX  OR imm32 (sign-extended).",
   "page": 854
  },
  {
@@ -26463,7 +26463,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": " r/m8 OR imm8. ",
+  "description": "r/m8 OR imm8.",
   "page": 854
  },
  {
@@ -26518,7 +26518,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": " r/m8 OR imm8. ",
+  "description": "r/m8 OR imm8.",
   "page": 854
  },
  {
@@ -26564,7 +26564,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": " r/m16 OR imm16. ",
+  "description": " r/m16 OR imm16.",
   "page": 854
  },
  {
@@ -26610,7 +26610,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": " r/m32 OR imm32. ",
+  "description": " r/m32 OR imm32.",
   "page": 854
  },
  {
@@ -26665,7 +26665,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": " r/m64 OR imm32 (sign-extended). ",
+  "description": " r/m64 OR imm32 (sign-extended).",
   "page": 854
  },
  {
@@ -26711,7 +26711,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": " r/m16 OR imm8 (sign-extended). ",
+  "description": "r/m16 OR imm8 (sign-extended).",
   "page": 854
  },
  {
@@ -26757,7 +26757,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": " r/m32 OR imm8 (sign-extended). ",
+  "description": "r/m32 OR imm8 (sign-extended).",
   "page": 854
  },
  {
@@ -26812,7 +26812,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": " r/m64 OR imm8 (sign-extended). ",
+  "description": "r/m64 OR imm8 (sign-extended).",
   "page": 854
  },
  {
@@ -26849,7 +26849,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": " r/m8 OR r8. ",
+  "description": "r/m8 OR r8.",
   "page": 854
  },
  {
@@ -26895,7 +26895,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": " r/m8 OR r8. ",
+  "description": "r/m8 OR r8.",
   "page": 854
  },
  {
@@ -26932,7 +26932,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": " r/m16 OR r16. ",
+  "description": "r/m16 OR r16.",
   "page": 854
  },
  {
@@ -26969,7 +26969,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": " r/m32 OR r32. ",
+  "description": "r/m32 OR r32.",
   "page": 854
  },
  {
@@ -27015,7 +27015,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": " r/m64 OR r64. ",
+  "description": "r/m64 OR r64.",
   "page": 854
  },
  {
@@ -27052,7 +27052,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": " r8 OR r/m8. ",
+  "description": "r8 OR r/m8.",
   "page": 854
  },
  {
@@ -27098,7 +27098,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": " r8 OR r/m8. ",
+  "description": "r8 OR r/m8.",
   "page": 854
  },
  {
@@ -27135,7 +27135,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": " r16 OR r/m16. ",
+  "description": "r16 OR r/m16.",
   "page": 854
  },
  {
@@ -27172,7 +27172,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": " r32 OR r/m32. ",
+  "description": "r32 OR r/m32.",
   "page": 854
  },
  {
@@ -27218,7 +27218,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": " r64 OR r/m64. ",
+  "description": "r64 OR r/m64.",
   "page": 854
  },
  {
@@ -27329,7 +27329,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Output doubleword in EAX to I/O port address  imm8 .",
+  "description": "Output doubleword in EAX to I/O port address imm8 .",
   "page": 862
  },
  {
@@ -27685,7 +27685,7 @@
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": false,
   "cpuid_feature_flag": "PCLMULQDQ",
-  "description": "Carry-less multiplication of one quadword of xmm1 by one quadword of xmm2/m128 , stores the 128-bit result in xmm1 . The imme- diate is used to determine which quadwords of xmm1 and xmm2/m128 should be used.",
+  "description": "Carry-less multiplication of one quadword of xmm1 by one quadword of xmm2/m128 , stores the 128-bit result in xmm1 . The immediate is used to determine which quadwords of xmm1 and xmm2/m128 should be used.",
   "page": 929
  },
  {
@@ -27743,7 +27743,7 @@
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": false,
   "cpuid_feature_flag": "PCLMULQDQ",
-  "description": "Carry-less multiplication of one quadword of xmm2 by one quadword of xmm3/m128 , stores the 128-bit result in xmm1 . The imme- diate is used to determine which quadwords of xmm2 and xmm3/m128 should be used.",
+  "description": "Carry-less multiplication of one quadword of xmm2 by one quadword of xmm3/m128 , stores the 128-bit result in xmm1 . The immediate is used to determine which quadwords of xmm2 and xmm3/m128 should be used.",
   "page": 929
  },
  {
@@ -27801,7 +27801,7 @@
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": false,
   "cpuid_feature_flag": "VPCLMULQDQ Carry-less multiplication of one quadword of",
-  "description": "ymm2 by one quadword of ymm3/m256, stores the 128-bit result in ymm1. The imme- diate is used to determine which quadwords of ymm2 and ymm3/m256 should be used.",
+  "description": "ymm2 by one quadword of ymm3/m256, stores the 128-bit result in ymm1. The immediate is used to determine which quadwords of ymm2 and ymm3/m256 should be used.",
   "page": 929
  },
  {
@@ -27859,7 +27859,7 @@
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": false,
   "cpuid_feature_flag": "VPCLMULQDQ",
-  "description": "Carry-less multiplication of one quadword of xmm2 by one quadword of xmm3/m128, stores the 128-bit result in xmm1. The imme- diate is used to determine which quadwords of xmm2 and xmm3/m128 should be used.",
+  "description": "Carry-less multiplication of one quadword of xmm2 by one quadword of xmm3/m128, stores the 128-bit result in xmm1. The immediate is used to determine which quadwords of xmm2 and xmm3/m128 should be used.",
   "page": 929
  },
  {
@@ -27917,7 +27917,7 @@
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": false,
   "cpuid_feature_flag": "VPCLMULQDQ",
-  "description": "Carry-less multiplication of one quadword of ymm2 by one quadword of ymm3/m256, stores the 128-bit result in ymm1. The imme- diate is used to determine which quadwords of ymm2 and ymm3/m256 should be used.",
+  "description": "Carry-less multiplication of one quadword of ymm2 by one quadword of ymm3/m256, stores the 128-bit result in ymm1. The immediate is used to determine which quadwords of ymm2 and ymm3/m256 should be used.",
   "page": 929
  },
  {
@@ -27975,7 +27975,7 @@
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": false,
   "cpuid_feature_flag": "VPCLMULQDQ",
-  "description": "Carry-less multiplication of one quadword of zmm2 by one quadword of zmm3/m512, stores the 128-bit result in zmm1. The imme- diate is used to determine which quadwords of zmm2 and zmm3/m512 should be used.",
+  "description": "Carry-less multiplication of one quadword of zmm2 by one quadword of zmm3/m512, stores the 128-bit result in zmm1. The immediate is used to determine which quadwords of zmm2 and zmm3/m512 should be used.",
   "page": 929
  },
  {
@@ -28040,7 +28040,7 @@
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": false,
   "cpuid_feature_flag": "SSE4_1",
-  "description": "Find the minimum unsigned word in xmm2/m128 and place its value in the low word of xmm1 and its index in the second- lowest word of xmm1 .",
+  "description": "Find the minimum unsigned word in xmm2/m128 and place its value in the low word of xmm1 and its index in the secondlowest word of xmm1 .",
   "page": 974
  },
  {
@@ -28087,7 +28087,7 @@
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": false,
   "cpuid_feature_flag": "AVX",
-  "description": "Find the minimum unsigned word in xmm2/m128 and place its value in the low word of xmm1 and its index in the second- lowest word of xmm1 .",
+  "description": "Find the minimum unsigned word in xmm2/m128 and place its value in the low word of xmm1 and its index in the secondlowest word of xmm1 .",
   "page": 974
  },
  {
@@ -28686,7 +28686,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "POPCNT on r/m16 ",
+  "description": "POPCNT on r/m16",
   "page": 1079
  },
  {
@@ -28741,7 +28741,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "POPCNT on r/m32 ",
+  "description": "POPCNT on r/m32",
   "page": 1079
  },
  {
@@ -28805,7 +28805,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "POPCNT on r/m64 ",
+  "description": "POPCNT on r/m64",
   "page": 1079
  },
  {
@@ -29145,7 +29145,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Push r/m16. ",
+  "description": "Push r/m16.",
   "page": 1195
  },
  {
@@ -29181,7 +29181,7 @@
   "valid_in_64bit_mode": false,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Push r/m32. ",
+  "description": "Push r/m32.",
   "page": 1195
  },
  {
@@ -29246,7 +29246,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Push r16. ",
+  "description": "Push r16.",
   "page": 1195
  },
  {
@@ -29275,7 +29275,7 @@
   "valid_in_64bit_mode": false,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Push r32. ",
+  "description": "Push r32.",
   "page": 1195
  },
  {
@@ -29304,7 +29304,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Push r64. ",
+  "description": "Push r64.",
   "page": 1195
  },
  {
@@ -29340,7 +29340,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Push imm8. ",
+  "description": "Push imm8.",
   "page": 1195
  },
  {
@@ -29376,7 +29376,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Push imm16. ",
+  "description": "Push imm16.",
   "page": 1195
  },
  {
@@ -29412,7 +29412,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Push imm32. ",
+  "description": "Push imm32.",
   "page": 1195
  },
  {
@@ -31332,7 +31332,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Findmatchingbytesin ES:[(E)DI] and DS:[(E)SI].",
+  "description": "Find matching bytes in ES:[(E)DI] and DS:[(E)SI].",
   "page": 1234
  },
  {
@@ -31731,7 +31731,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Nearreturn to calling procedure.",
+  "description": "Near return to calling procedure.",
   "page": 1237
  },
  {
@@ -31793,7 +31793,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Near return to calling procedure and pop  imm16 bytes from stack.",
+  "description": "Near return to calling procedure and pop imm16 bytes from stack.",
   "page": 1237
  },
  {
@@ -32756,7 +32756,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Signeddivide* r/m8 by 2, imm8 time.",
+  "description": "Signed divide* r/m8 by 2, imm8 time.",
   "page": 1272
  },
  {
@@ -32848,7 +32848,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Signeddivide* r/m16 by 2, once.",
+  "description": "Signed divide* r/m16 by 2, once.",
   "page": 1272
  },
  {
@@ -32931,7 +32931,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Signeddivide* r/m16 by 2, imm8 times.",
+  "description": "Signed divide*  r/m16 by 2, imm8 times.",
   "page": 1272
  },
  {
@@ -33051,7 +33051,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Signed divide* r/m32 by 2, CL times.",
+  "description": "Signed divide*  r/m32 by 2, CL times.",
   "page": 1272
  },
  {
@@ -33097,7 +33097,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Signed divide* r/m64 by 2, CL times.",
+  "description": "Signed divide*  r/m64 by 2, CL times.",
   "page": 1272
  },
  {
@@ -33143,7 +33143,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Signeddivide* r/m32 by 2, imm8 times.",
+  "description": "Signed divide*  r/m32 by 2, imm8 times.",
   "page": 1272
  },
  {
@@ -33198,7 +33198,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Signed divide* r/m64 by 2, imm8 times",
+  "description": "Signed divide*  r/m64 by 2, imm8 times",
   "page": 1272
  },
  {
@@ -33889,7 +33889,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Unsigneddivide r/m8 by 2, once.",
+  "description": "Unsigned divide r/m8 by 2, once.",
   "page": 1273
  },
  {
@@ -34064,7 +34064,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Unsigneddivide r/m8 by 2, imm8 times.",
+  "description": "Unsigned divide r/m8 by 2, imm8 times.",
   "page": 1273
  },
  {
@@ -34239,7 +34239,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Unsigneddivide r/m16 by 2, imm8 times.",
+  "description": "Unsigned divide r/m16 by 2, imm8 times.",
   "page": 1273
  },
  {
@@ -34451,7 +34451,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Unsigneddivide r/m32 by 2, imm8 times.",
+  "description": "Unsigned divide r/m32 by 2, imm8 times.",
   "page": 1273
  },
  {
@@ -34506,7 +34506,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Unsigneddivide r/m64 by 2, imm8 times.",
+  "description": "Unsigned divide r/m64 by 2, imm8 times.",
   "page": 1273
  },
  {
@@ -34663,7 +34663,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Subtract with borrow sign-extended imm.32   to 64-bits from RAX.",
+  "description": "Subtract with borrow sign-extended imm.32 to 64-bits from RAX.",
   "page": 1281
  },
  {
@@ -34709,7 +34709,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Subtract with borrow imm8 from r/m8. ",
+  "description": "Subtract with borrow imm8 from r/m8.",
   "page": 1281
  },
  {
@@ -34764,7 +34764,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Subtract with borrow imm8 from r/m8. ",
+  "description": "Subtract with borrow imm8 from r/m8.",
   "page": 1281
  },
  {
@@ -34810,7 +34810,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Subtract with borrow imm16 from r/m16. ",
+  "description": "Subtract with borrow imm16 from r/m16.",
   "page": 1281
  },
  {
@@ -34856,7 +34856,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Subtract with borrow imm32 from r/m32. ",
+  "description": "Subtract with borrow imm32 from r/m32.",
   "page": 1281
  },
  {
@@ -34911,7 +34911,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Subtract with borrow sign-extended imm32 to   64-bits from r/m64. ",
+  "description": "Subtract with borrow sign-extended imm32 to 64-bits from r/m64.",
   "page": 1281
  },
  {
@@ -34957,7 +34957,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Subtract with borrow sign-extended imm8  from r/m16. ",
+  "description": "Subtract with borrow sign-extended imm8  from r/m16.",
   "page": 1281
  },
  {
@@ -35003,7 +35003,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Subtract with borrow sign-extended imm8  from r/m32. ",
+  "description": "Subtract with borrow sign-extended imm8  from r/m32.",
   "page": 1281
  },
  {
@@ -35058,7 +35058,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Subtract with borrow sign-extended imm8  from r/m64. ",
+  "description": "Subtract with borrow sign-extended imm8  from r/m64.",
   "page": 1281
  },
  {
@@ -35095,7 +35095,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Subtract with borrow r8 from r/m8. ",
+  "description": "Subtract with borrow r8 from r/m8.",
   "page": 1281
  },
  {
@@ -35141,7 +35141,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Subtract with borrow r8 from r/m8. ",
+  "description": "Subtract with borrow r8 from r/m8.",
   "page": 1281
  },
  {
@@ -35178,7 +35178,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Subtract with borrow r16 from r/m16. ",
+  "description": "Subtract with borrow r16 from r/m16.",
   "page": 1281
  },
  {
@@ -35215,7 +35215,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Subtract with borrow r32 from r/m32. ",
+  "description": "Subtract with borrow r32 from r/m32.",
   "page": 1281
  },
  {
@@ -35261,7 +35261,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Subtract with borrow r64 from r/m64. ",
+  "description": "Subtract with borrow r64 from r/m64.",
   "page": 1281
  },
  {
@@ -35298,7 +35298,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Subtract with borrow r/m8 from r8. ",
+  "description": "Subtract with borrow r/m8 from r8.",
   "page": 1281
  },
  {
@@ -35344,7 +35344,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Subtract with borrow r/m8 from r8. ",
+  "description": "Subtract with borrow r/m8 from r8.",
   "page": 1281
  },
  {
@@ -35381,7 +35381,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Subtract with borrow r/m16 from r16. ",
+  "description": "Subtract with borrow r/m16 from r16.",
   "page": 1281
  },
  {
@@ -35418,7 +35418,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Subtract with borrow r/m32 from r32. ",
+  "description": "Subtract with borrow r/m32 from r32.",
   "page": 1281
  },
  {
@@ -35464,7 +35464,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Subtract with borrow r/m64 from r64. ",
+  "description": "Subtract with borrow r/m64 from r64.",
   "page": 1281
  },
  {
@@ -36378,7 +36378,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Set byte if less (SF≠OF).",
+  "description": "Set byte if less (SF ≠ OF).",
   "page": 1288
  },
  {
@@ -36423,7 +36423,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Set byte if less (SF≠OF).",
+  "description": "Set byte if less (SF ≠ OF).",
   "page": 1288
  },
  {
@@ -36459,7 +36459,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Set byte if less or equal (ZF=1 or SF≠OF).",
+  "description": "Set byte if less or equal (ZF=1 or SF ≠ OF).",
   "page": 1288
  },
  {
@@ -36504,7 +36504,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Set byte if less or equal (ZF=1 or SF≠OF).",
+  "description": "Set byte if less or equal (ZF=1 or SF ≠ OF).",
   "page": 1288
  },
  {
@@ -37026,7 +37026,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Set byte if not greater (ZF=1 or SF≠OF)",
+  "description": "Set byte if not greater (ZF=1 or SF ≠ OF)",
   "page": 1288
  },
  {
@@ -37071,7 +37071,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Set byte if not greater (ZF=1 or SF≠OF).",
+  "description": "Set byte if not greater (ZF=1 or SF ≠ OF).",
   "page": 1288
  },
  {
@@ -37107,7 +37107,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Set byte if not greater or equal (SF≠OF).",
+  "description": "Set byte if not greater or equal (SF ≠ OF).",
   "page": 1288
  },
  {
@@ -37152,7 +37152,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Set byte if not greater or equal (SF≠OF).",
+  "description": "Set byte if not greater or equal (SF ≠ OF).",
   "page": 1288
  },
  {
@@ -38221,7 +38221,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Store GDTR to m. ",
+  "description": "Store GDTR to m.",
   "page": 1294
  },
  {
@@ -38266,7 +38266,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Store IDTR to m. ",
+  "description": "Store IDTR to m.",
   "page": 1320
  },
  {
@@ -38365,7 +38365,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Stores segment selector from LDTR in  r64/m16 .",
+  "description": "Stores segment selector from LDTR in r64/m16 .",
   "page": 1322
  },
  {
@@ -38921,7 +38921,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Subtract imm8 from r/m8. ",
+  "description": "Subtract imm8 from r/m8.",
   "page": 1348
  },
  {
@@ -38976,7 +38976,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Subtract imm8 from r/m8. ",
+  "description": "Subtract imm8 from r/m8.",
   "page": 1348
  },
  {
@@ -39022,7 +39022,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Subtract imm16 from r/m16. ",
+  "description": "Subtract imm16 from r/m16.",
   "page": 1348
  },
  {
@@ -39068,7 +39068,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Subtract imm32 from r/m32. ",
+  "description": "Subtract imm32 from r/m32.",
   "page": 1348
  },
  {
@@ -39123,7 +39123,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Subtract imm32 sign-extended to 64-bits from r/m64. ",
+  "description": "Subtract imm32 sign-extended to 64-bits from r/m64.",
   "page": 1348
  },
  {
@@ -39169,7 +39169,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Subtractsign-extended imm8 from r/m16. ",
+  "description": "Subtract sign-extended imm8 from r/m16.",
   "page": 1348
  },
  {
@@ -39215,7 +39215,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Subtractsign-extended imm8 from r/m32. ",
+  "description": "Subtract sign-extended imm8 from r/m32.",
   "page": 1348
  },
  {
@@ -39270,7 +39270,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Subtractsign-extended imm8 from r/m64. ",
+  "description": "Subtract sign-extended imm8 from r/m64.",
   "page": 1348
  },
  {
@@ -39307,7 +39307,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Subtract r8 from r/m8. ",
+  "description": "Subtract r8 from r/m8.",
   "page": 1348
  },
  {
@@ -39353,7 +39353,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Subtract r8 from r/m8. ",
+  "description": "Subtract r8 from r/m8.",
   "page": 1348
  },
  {
@@ -39390,7 +39390,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Subtract r16 from r/m16. ",
+  "description": "Subtract r16 from r/m16.",
   "page": 1348
  },
  {
@@ -39427,7 +39427,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Subtract r32 from r/m32. ",
+  "description": "Subtract r32 from r/m32.",
   "page": 1348
  },
  {
@@ -39473,7 +39473,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Subtract r64 from r/m64. ",
+  "description": "Subtract r64 from r/m64.",
   "page": 1348
  },
  {
@@ -39510,7 +39510,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Subtract r/m8 from r8. ",
+  "description": "Subtract r/m8 from r8.",
   "page": 1348
  },
  {
@@ -39556,7 +39556,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Subtract r/m8 from r8. ",
+  "description": "Subtract r/m8 from r8.",
   "page": 1348
  },
  {
@@ -39593,7 +39593,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Subtract r/m16 from r16. ",
+  "description": "Subtract r/m16 from r16.",
   "page": 1348
  },
  {
@@ -39630,7 +39630,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Subtract r/m32 from r32. ",
+  "description": "Subtract r/m32 from r32.",
   "page": 1348
  },
  {
@@ -39676,7 +39676,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Subtract r/m64 from r64. ",
+  "description": "Subtract r/m64 from r64.",
   "page": 1348
  },
  {
@@ -40353,7 +40353,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "AND imm32 sign-extended to 64-bits with  r/m64 ; set SF, ZF, PF according to result.",
+  "description": "AND imm32 sign-extended to 64-bits with r/m64 ; set SF, ZF, PF according to result.",
   "page": 1374
  },
  {
@@ -41751,7 +41751,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Exchange AX with r16. ",
+  "description": "Exchange AX with r16.",
   "page": 2009
  },
  {
@@ -41850,7 +41850,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Exchange EAX with r32. ",
+  "description": "Exchange EAX with r32.",
   "page": 2009
  },
  {
@@ -41889,7 +41889,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Exchange RAX with r64. ",
+  "description": "Exchange RAX with r64.",
   "page": 2009
  },
  {
@@ -41926,7 +41926,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Exchange r8 (byte register) with byte from  r/m8. ",
+  "description": "Exchange r8 (byte register) with byte from r/m8.",
   "page": 2009
  },
  {
@@ -41972,7 +41972,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Exchange r8 (byte register) with byte from  r/m8. ",
+  "description": "Exchange r8 (byte register) with byte from r/m8.",
   "page": 2009
  },
  {
@@ -42092,7 +42092,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Exchange r16 with word from r/m16. ",
+  "description": "Exchange r16 with word from r/m16.",
   "page": 2009
  },
  {
@@ -42129,7 +42129,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Exchange word from r/m16 with r16. ",
+  "description": "Exchange word from r/m16 with r16.",
   "page": 2009
  },
  {
@@ -42166,7 +42166,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Exchange r32 with doubleword from r/m32. ",
+  "description": "Exchange r32 with doubleword from r/m32.",
   "page": 2009
  },
  {
@@ -42212,7 +42212,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Exchange r64 with quadword from r/m64. ",
+  "description": "Exchange r64 with quadword from r/m64.",
   "page": 2009
  },
  {
@@ -42249,7 +42249,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Exchange doubleword from r/m32 with r32. ",
+  "description": "Exchange doubleword from r/m32 with r32.",
   "page": 2009
  },
  {
@@ -42295,7 +42295,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Exchange quadword from r/m64 with r64. ",
+  "description": "Exchange quadword from r/m64 with r64.",
   "page": 2009
  },
  {
@@ -42472,7 +42472,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "AL  XOR imm8. ",
+  "description": "AL  XOR imm8.",
   "page": 2017
  },
  {
@@ -42509,7 +42509,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "AX  XOR imm16. ",
+  "description": "AX  XOR imm16.",
   "page": 2017
  },
  {
@@ -42546,7 +42546,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "EAX XOR imm32. ",
+  "description": "EAX XOR imm32.",
   "page": 2017
  },
  {
@@ -42592,7 +42592,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "RAX  XOR imm32 (sign-extended). ",
+  "description": "RAX  XOR imm32 (sign-extended).",
   "page": 2017
  },
  {
@@ -42638,7 +42638,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": " r/m8 XOR imm8. ",
+  "description": "r/m8 XOR imm8.",
   "page": 2017
  },
  {
@@ -42693,7 +42693,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": " r/m8 XOR imm8. ",
+  "description": "r/m8 XOR imm8.",
   "page": 2017
  },
  {
@@ -42739,7 +42739,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": " r/m16 XOR imm16. ",
+  "description": "r/m16 XOR imm16.",
   "page": 2017
  },
  {
@@ -42785,7 +42785,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": " r/m32 XOR imm32. ",
+  "description": "r/m32 XOR imm32.",
   "page": 2017
  },
  {
@@ -42840,7 +42840,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": " r/m64 XOR imm32 (sign-extended). ",
+  "description": "r/m64 XOR imm32 (sign-extended).",
   "page": 2017
  },
  {
@@ -42886,7 +42886,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": " r/m16 XOR imm8 (sign-extended). ",
+  "description": "r/m16 XOR imm8 (sign-extended).",
   "page": 2017
  },
  {
@@ -42932,7 +42932,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": " r/m32 XOR imm8 (sign-extended). ",
+  "description": "r/m32 XOR imm8 (sign-extended).",
   "page": 2017
  },
  {
@@ -42987,7 +42987,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": " r/m64 XOR imm8 (sign-extended). ",
+  "description": "r/m64 XOR imm8 (sign-extended).",
   "page": 2017
  },
  {
@@ -43024,7 +43024,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": " r/m8 XOR r8. ",
+  "description": "r/m8 XOR r8.",
   "page": 2017
  },
  {
@@ -43070,7 +43070,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": " r/m8 XOR r8. ",
+  "description": "r/m8 XOR r8.",
   "page": 2017
  },
  {
@@ -43107,7 +43107,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": " r/m16 XOR r16. ",
+  "description": "r/m16 XOR r16.",
   "page": 2017
  },
  {
@@ -43144,7 +43144,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": " r/m32 XOR r32. ",
+  "description": "r/m32 XOR r32.",
   "page": 2017
  },
  {
@@ -43190,7 +43190,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": " r/m64 XOR r64. ",
+  "description": "r/m64 XOR r64.",
   "page": 2017
  },
  {
@@ -43227,7 +43227,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": " r8 XOR r/m8. ",
+  "description": "r8 XOR r/m8.",
   "page": 2017
  },
  {
@@ -43273,7 +43273,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": " r8 XOR r/m8. ",
+  "description": "r8 XOR r/m8.",
   "page": 2017
  },
  {
@@ -43310,7 +43310,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": " r16 XOR r/m16. ",
+  "description": "r16 XOR r/m16.",
   "page": 2017
  },
  {
@@ -43347,7 +43347,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": " r32 XOR r/m32. ",
+  "description": "r32 XOR r/m32.",
   "page": 2017
  },
  {
@@ -43393,7 +43393,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": " r64 XOR r/m64. ",
+  "description": "r64 XOR r/m64.",
   "page": 2017
  },
  {

@@ -266,12 +266,6 @@ function MakeRows(tokens: SDMText[]): SDMText[][] {
       return lhs.attr.left - rhs.attr.left;
     });
   }
-  console.error('rows:');
-  console.error(
-      textRows
-          .map(e => e.map(e => `${GetText(e)}@${e.attr.left}`).join('\', \''))
-          .join('\n'));
-  console.error('rows end');
   return textRows;
 }
 function MakeCols(tokens: SDMText[], colLeftList: number[]): SDMText[][] {
@@ -581,7 +575,7 @@ function Parser_OpInstr_OpEn_6432_CPUID_Desc(table: SDMText[][][]) {
     const op_en = GetText(tr[1][0]);
     let valid_in_3264_str = GetText(tr[2][0]);
     let cpuid_str = GetText(tr[3][0]);
-    const description = tr[4].map(t => GetText(t).trim()).join(' ');
+    const description = CanonicalizeDescription(tr[4]);
     console.log({
       opcode: opcode,
       opcode_parsed: CanonicalizeOpcode(opcode),
@@ -764,6 +758,50 @@ function TestMakeOpBytes() {
                    }]);
 }
 
+function CanonicalizeDescription(descText: SDMText[]): string {
+  const rows = MakeRows(descText).map(r => r.map(t => GetText(t).trim()));
+  return rows.flat().join(' ').split('- ').join('').split(' -').join('-');
+}
+function TestCanonicalizeDescription() {
+  assert.deepEqual(
+      // Check parsing splitted description in the sameline
+      // https://github.com/hikalium/opv86/issues/2
+      CanonicalizeDescription([
+        {'text': 'Near', 'attr': {'top': 160, 'left': 567}},
+        {
+          'text': 'return to calling procedure.',
+          'attr': {'top': 160, 'left': 598}
+        },
+      ]),
+      'Near return to calling procedure.');
+  assert.deepEqual(
+      // Check parsing splitted description in the sameline
+      // https://github.com/hikalium/opv86/issues/2
+      CanonicalizeDescription([
+        {'text': ' Near ', 'attr': {'top': 160, 'left': 567}},
+        {
+          'text': ' return to calling procedure. ',
+          'attr': {'top': 160, 'left': 598}
+        },
+      ]),
+      'Near return to calling procedure.');
+  assert.deepEqual(
+      CanonicalizeDescription([
+        {
+          'text': 'Hint to hardware to move the cache line containing m8 to a',
+          'attr': {'top': 184, 'left': 478}
+        },
+        {
+          'text':
+              'more distant level of the cache without writing back to mem-',
+          'attr': {'top': 200, 'left': 478}
+        },
+        {'text': 'ory.', 'attr': {'top': 217, 'left': 478}},
+      ]),
+      'Hint to hardware to move the cache line containing m8 to a' +
+          ' more distant level of the cache without writing back to memory.');
+}
+
 const parserMap = {
   'opcode#instruction#mode#64-bit#compat/#legmode#description': (
       headers: SDMText[], tokens: SDMText[]): SDMInstr[] => {
@@ -798,7 +836,7 @@ const parserMap = {
           const instr = tr[1].flat().map(t => GetText(t).trim()).join(' ');
           let valid_in_64_str = GetText(tr[2][0]);
           let valid_in_compat_leg_str = GetText(tr[3][0]);
-          const description = tr[4].map(t => GetText(t).trim()).join(' ');
+          const description = CanonicalizeDescription(tr[4]);
           console.log({
             opcode: opcode,
             opcode_parsed: CanonicalizeOpcode(opcode),
@@ -958,7 +996,7 @@ const parserMap = {
             valid_in_64_str = GetText(tr[2][0]);
             compat_leg_str = GetText(tr[3][0]);
           }
-          const description = tr[4].map(t => GetText(t).trim()).join(' ');
+          const description = CanonicalizeDescription(tr[4]);
           const opcode_parsed = CanonicalizeOpcode(opcode);
           console.log({
             opcode: opcode,
@@ -988,9 +1026,6 @@ const parserMap = {
       },
   'opcode#instruction#op/#en#64-bit#mode#compat/#legmode#description':
       (headers: SDMText[], tokens: SDMText[]): SDMInstr[] => {
-        console.error(headers.filter(e => e !== undefined)
-                          .map(e => `${GetText(e)}@${e.attr.left}`)
-                          .join(', '));
         const instrList: SDMInstr[] = [];
         const textRows = MakeRows(tokens);
         //
@@ -1043,7 +1078,7 @@ const parserMap = {
               compat_leg_str = s.next().text;
             }
           }
-          let description = '';
+          const descriptionComponents = [];
           while (true) {
             if (!s.hasNext()) {
               if (k + 1 >= textRows.length) {
@@ -1056,12 +1091,11 @@ const parserMap = {
                 // Not a description line.
                 break;
               }
-              // insert space between line feeds
-              description += ' ';
               k++;
             }
-            description += GetText(s.next());
+            descriptionComponents.push(s.next());
           }
+          const description = CanonicalizeDescription(descriptionComponents);
           console.log({
             opcode: opcodeStr,
             instr: instr,
@@ -1094,6 +1128,55 @@ function TestParser() {
   parser =
       parserMap['opcode#instruction#op/#en#64-bit#mode#compat/#legmode#description'];
   assert(parser);
+  assert.deepEqual(
+      // Check parsing splitted description in the sameline
+      // https://github.com/hikalium/opv86/issues/2
+      parser(
+          [
+            {'text': 'Opcode*', 'attr': {'top': 123, 'left': 76}},
+            {'text': 'Instruction', 'attr': {'top': 123, 'left': 222}},
+            {'text': 'Op/', 'attr': {'top': 123, 'left': 388}},
+            {'text': 'En', 'attr': {'top': 137, 'left': 388}},
+            {'text': '64-Bit', 'attr': {'top': 123, 'left': 425}},
+            {'text': 'Mode', 'attr': {'top': 137, 'left': 425}},
+            {'text': 'Compat/', 'attr': {'top': 123, 'left': 497}},
+            {'text': 'Leg Mode', 'attr': {'top': 137, 'left': 497}},
+            {'text': 'Description', 'attr': {'top': 123, 'left': 567}}
+          ],
+          [
+            {'text': 'C3', 'attr': {'top': 160, 'left': 76}},
+            {'text': 'RET', 'attr': {'top': 160, 'left': 222}},
+            {'text': 'ZO', 'attr': {'top': 160, 'left': 388}},
+            {'text': 'Valid Valid', 'attr': {'top': 160, 'left': 425}},
+            {'text': 'Near', 'attr': {'top': 160, 'left': 567}},
+            {
+              'text': 'return to calling procedure.',
+              'attr': {'top': 160, 'left': 598}
+            },
+          ]),
+      [{
+        opcode: 'C3',
+        opcode_parsed: [
+          'C3',
+        ],
+        opcode_bytes: [
+          {
+            components: ['C3'],
+            byte_type: 'opcode',
+            byte_size_min: 1,
+            byte_size_max: 1,
+          },
+        ],
+        instr: 'RET',
+        instr_parsed: [
+          'RET',
+        ],
+        op_en: 'ZO',
+        valid_in_64bit_mode: true,
+        valid_in_compatibility_mode: true,
+        valid_in_legacy_mode: true,
+        description: 'Near return to calling procedure.'
+      }]);
   assert.deepEqual(
       parser(
           [
@@ -1289,8 +1372,12 @@ function ParseInstr(pages: SDMPage[], startPage: number): SDMInstr[] {
         count++;
       }
       console.error(`Using parser ${headerKey}`);
-      instrs = instrs.concat(
-          parserMap[headerKey](tableHeader, s.getFollowing(count)).map(e => {
+      const tokens = s.getFollowing(count);
+      console.error(
+          JSON.stringify(tableHeader, null, ''),
+          JSON.stringify(tokens, null, ''));
+      instrs =
+          instrs.concat(parserMap[headerKey](tableHeader, tokens).map(e => {
             e.page = p;
             return e;
           }));
@@ -1338,6 +1425,7 @@ process.exit((() => {
     return 0;
   }
   if (options.runtest) {
+    TestCanonicalizeDescription();
     TestMakeOpBytes();
     TestCanonicalizeOpcode();
     TestCanonicalizeInstr();
