@@ -68,8 +68,9 @@ class OpV86 {
     oplist.append($('<div>').addClass('opv86-oplist-header').text('Encoding'));
     oplist.append(
         $('<div>').addClass('opv86-oplist-header').text('Page in SDM(phys)'));
-    oplist.append(
-        $('<div>').addClass('opv86-oplist-header-description').text('Description'));
+    oplist.append($('<div>')
+                      .addClass('opv86-oplist-header-description')
+                      .text('Description'));
     const opRowList: {op: any; elements: HTMLDivElement[]} = <any>[];
     for (const index in data.ops) {
       const op = data.ops[index];
@@ -249,16 +250,33 @@ function appendOpListHeaders(oplist) {
   const oplistRow = $('<div>').addClass('opv86-oplist-container');
   oplistRow.append($('<div>').addClass('opv86-oplist-header').text('Opcode'));
   oplistRow.append($('<div>').addClass('opv86-oplist-header').text('Instr'));
-  oplistRow.append(
-      $('<div>').addClass('opv86-oplist-header-page').text('Page in SDM(phys)'));
-  oplistRow.append(
-      $('<div>').addClass('opv86-oplist-header-description').text('Description'));
+  oplistRow.append($('<div>')
+                       .addClass('opv86-oplist-header-description')
+                       .text('Description'));
   oplist.append(oplistRow);
 }
 function appendOpListElement(oplist, op: SDMInstr, index: number) {
   const oplistRow = $('<div>')
-    .addClass('opv86-oplist-container')
-    .addClass(`opv86-oplist-row-${index}`);
+                        .addClass('opv86-oplist-container')
+                        .addClass(`opv86-oplist-row-${index}`);
+  oplistRow.click(() => {
+    console.log(`clicked! ${index}`);
+    $('.opv86-description-panel').remove();
+    const opDescription = $('<div>')
+                              .addClass('opv86-description-panel');
+    opDescription.append($('<h3>').text(op.instr))
+    opDescription.append($('<p>').text(op.description))
+    if (op.op_en) {
+      opDescription.append($('<h4>').text('Encoding'))
+      opDescription.append($('<p>').text(op.op_en))
+    }
+    opDescription.insertAfter(oplistRow);
+    if (op.page !== undefined) {
+      opDescription.append($(
+          `<a target="_blank" href='https://software.intel.com/content/dam/develop/public/us/en/documents/325383-sdm-vol-2abcd.pdf#page=${
+              op.page}'>From p.${op.page} of Intel SDM</a>`));
+    }
+  });
   const sizeAttrTable = {
     1: 'opv86-opcode-byte',
     2: 'opv86-opcode-word',
@@ -288,15 +306,6 @@ function appendOpListElement(oplist, op: SDMInstr, index: number) {
                        .addClass(`opv86-op-${index}`)
                        .addClass('opv86-oplist-item-instr')
                        .text(op.instr_parsed.join(' ')));
-  const colPageInSDM = $('<div>')
-                           .addClass(`opv86-op-${index}`)
-                           .addClass('opv86-oplist-item-page');
-  if (op.page !== undefined) {
-    colPageInSDM.append($(
-        `<a target="_blank" href='https://software.intel.com/content/dam/develop/public/us/en/documents/325383-sdm-vol-2abcd.pdf#page=${
-            op.page}'>p.${op.page}</a>`));
-  }
-  oplistRow.append(colPageInSDM);
   oplistRow.append($('<div>')
                        .addClass(`opv86-op-${index}`)
                        .addClass('opv86-oplist-item-description')
@@ -313,6 +322,7 @@ function isMatchedWithFilter(op: SDMInstr, filter: string) {
   return false;
 }
 function updateFilter(data: SDMInstr[], filter: string) {
+  $('.opv86-description-panel').remove();
   filter = filter.trim().toLowerCase().replace(/\s+/g, '');
   for (const index in data) {
     const op: SDMInstr = data[index];

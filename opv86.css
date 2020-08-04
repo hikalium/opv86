@@ -20,6 +20,21 @@ a {
   color: #1d68cd;
   text-decoration: none;
 }
+p {
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+h3 {
+  padding-left: 4px;
+  border-left: 4px solid black;
+  border-bottom: 1px solid black;
+}
+h4 {
+  padding-left: 4px;
+  border-left: 4px solid #c6c6c6;
+  margin-top: 16px;
+  margin-bottom: 8px;
+}
 a:visited {
   color: #1d68cd;
 }
@@ -106,17 +121,22 @@ a:visited {
   border-radius: 8px;
 }
 /* oplist */
+.opv86-description-panel {
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 32px;
+  border-bottom: 0.5px solid #d0d0d0;
+  background-color: #ffffee;
+  padding-bottom: 32px;
+}
 .opv86-oplist-container {
   display: grid;
-  grid-template-columns: 600px 424px 100px auto;
+  grid-template-columns: 600px 424px auto;
   padding-top: 1px;
   padding-bottom: 1px;
   border-bottom: 0.5px solid #d0d0d0;
 }
 .opv86-oplist-header {
-  background-color: #eeeeee;
-}
-.opv86-oplist-header-page {
   background-color: #eeeeee;
 }
 .opv86-oplist-header-description {
@@ -133,23 +153,24 @@ a:visited {
 .opv86-oplist-item-instr {
   background-color: #ffffff;
 }
-.opv86-oplist-item-page {
-  background-color: #ffffff;
-}
 .opv86-oplist-item-description {
   background-color: #ffffff;
+  display: inline-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
-@media (max-width: 1024px) {
+@media (max-width: 1280px) {
   .opv86-oplist-container {
     display: grid;
-    grid-template-columns: 600px minmax(128px, 424px);
+    grid-template-columns: 600px minmax(128px, auto);
     padding-top: 1px;
     padding-bottom: 1px;
     border-bottom: 0.5px solid #d0d0d0;
   }
-  .opv86-oplist-header-page,
   .opv86-oplist-header-description,
-  .opv86-oplist-item-page,
   .opv86-oplist-item-description {
     display:none;
   }
