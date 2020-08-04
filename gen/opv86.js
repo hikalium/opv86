@@ -57,7 +57,7 @@ class OpV86 {
         oplist.append($('<div>').addClass('opv86-oplist-header').text('Instr'));
         oplist.append($('<div>').addClass('opv86-oplist-header').text('Encoding'));
         oplist.append($('<div>').addClass('opv86-oplist-header').text('Page in SDM(phys)'));
-        oplist.append($('<div>').addClass('opv86-oplist-header').text('Description'));
+        oplist.append($('<div>').addClass('opv86-oplist-header-description').text('Description'));
         const opRowList = [];
         for (const index in data.ops) {
             const op = data.ops[index];
@@ -229,9 +229,8 @@ function appendOpListHeaders(oplist) {
     const oplistRow = $('<div>').addClass('opv86-oplist-container');
     oplistRow.append($('<div>').addClass('opv86-oplist-header').text('Opcode'));
     oplistRow.append($('<div>').addClass('opv86-oplist-header').text('Instr'));
-    oplistRow.append($('<div>').addClass('opv86-oplist-header').text('Encoding'));
-    oplistRow.append($('<div>').addClass('opv86-oplist-header').text('Page in SDM(phys)'));
-    oplistRow.append($('<div>').addClass('opv86-oplist-header').text('Description'));
+    oplistRow.append($('<div>').addClass('opv86-oplist-header-page').text('Page in SDM(phys)'));
+    oplistRow.append($('<div>').addClass('opv86-oplist-header-description').text('Description'));
     oplist.append(oplistRow);
 }
 function appendOpListElement(oplist, op, index) {
@@ -268,10 +267,6 @@ function appendOpListElement(oplist, op, index) {
         .addClass(`opv86-op-${index}`)
         .addClass('opv86-oplist-item-instr')
         .text(op.instr_parsed.join(' ')));
-    oplistRow.append($('<div>')
-        .addClass(`opv86-op-${index}`)
-        .addClass('opv86-oplist-item-encoding')
-        .text(op.op_en));
     const colPageInSDM = $('<div>')
         .addClass(`opv86-op-${index}`)
         .addClass('opv86-oplist-item-page');
