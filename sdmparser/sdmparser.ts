@@ -181,6 +181,10 @@ function CanonicalizeValidIn64(str: string): boolean {
   if (str === 'Valid') {
     return true;
   }
+  if (str === 'V/N.E.') {
+    // CMOVcc
+    return true;
+  }
   throw new Error(`${str} is not valid for ValidIn64`);
 }
 function CanonicalizeCompatLeg(str: string): boolean {
@@ -191,6 +195,9 @@ function CanonicalizeCompatLeg(str: string): boolean {
     return true;
   }
   if (str === 'N.E.') {
+    return false;
+  }
+  if (str === 'NA') {
     return false;
   }
   throw new Error(`${str} is not valid for CompatLeg`);

@@ -25,6 +25,7 @@ const validIn64Normalizer = {
   ' Valid': 'Valid',
   'Valid ': 'Valid',
   'Valid N.E.': ['Valid', 'N.E.'],
+  'V/N.E.': ['Valid', 'N.E.'],
   'Valid Valid': ['Valid', 'Valid'],
   'Invalid': true,
   'N. E.': 'N.E.',

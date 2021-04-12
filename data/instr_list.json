@@ -5229,6 +5229,4416 @@
   "page": 258
  },
  {
+  "opcode": "0F 47 /r",
+  "opcode_parsed": [
+   "0F",
+   "47",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "47"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVA r16, r/m16",
+  "instr_parsed": [
+   "CMOVA",
+   "r16",
+   "r/m16"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": true,
+  "description": "Move if above (CF=0 and ZF=0).",
+  "page": 259
+ },
+ {
+  "opcode": "0F 47 /r",
+  "opcode_parsed": [
+   "0F",
+   "47",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "47"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVA r32, r/m32",
+  "instr_parsed": [
+   "CMOVA",
+   "r32",
+   "r/m32"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": true,
+  "description": "Move if above (CF=0 and ZF=0).",
+  "page": 259
+ },
+ {
+  "opcode": "REX.W + 0F 47 /r",
+  "opcode_parsed": [
+   "REX.W",
+   "0F",
+   "47",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "REX.W"
+    ],
+    "byte_type": "rex-prefix",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "47"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVA r64, r/m64",
+  "instr_parsed": [
+   "CMOVA",
+   "r64",
+   "r/m64"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": false,
+  "valid_in_legacy_mode": false,
+  "description": "Move if above (CF=0 and ZF=0).",
+  "page": 259
+ },
+ {
+  "opcode": "0F 43 /r",
+  "opcode_parsed": [
+   "0F",
+   "43",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "43"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVAE r16, r/m16",
+  "instr_parsed": [
+   "CMOVAE",
+   "r16",
+   "r/m16"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": true,
+  "description": "Move if above or equal (CF=0).",
+  "page": 259
+ },
+ {
+  "opcode": "0F 43 /r",
+  "opcode_parsed": [
+   "0F",
+   "43",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "43"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVAE r32, r/m32",
+  "instr_parsed": [
+   "CMOVAE",
+   "r32",
+   "r/m32"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": true,
+  "description": "Move if above or equal (CF=0).",
+  "page": 259
+ },
+ {
+  "opcode": "REX.W + 0F 43 /r",
+  "opcode_parsed": [
+   "REX.W",
+   "0F",
+   "43",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "REX.W"
+    ],
+    "byte_type": "rex-prefix",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "43"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVAE r64, r/m64",
+  "instr_parsed": [
+   "CMOVAE",
+   "r64",
+   "r/m64"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": false,
+  "valid_in_legacy_mode": false,
+  "description": "Move if above or equal (CF=0).",
+  "page": 259
+ },
+ {
+  "opcode": "0F 42 /r",
+  "opcode_parsed": [
+   "0F",
+   "42",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "42"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVB r16, r/m16",
+  "instr_parsed": [
+   "CMOVB",
+   "r16",
+   "r/m16"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": true,
+  "description": "Move if below (CF=1).",
+  "page": 259
+ },
+ {
+  "opcode": "0F 42 /r",
+  "opcode_parsed": [
+   "0F",
+   "42",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "42"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVB r32, r/m32",
+  "instr_parsed": [
+   "CMOVB",
+   "r32",
+   "r/m32"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": true,
+  "description": "Move if below (CF=1).",
+  "page": 259
+ },
+ {
+  "opcode": "REX.W + 0F 42 /r",
+  "opcode_parsed": [
+   "REX.W",
+   "0F",
+   "42",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "REX.W"
+    ],
+    "byte_type": "rex-prefix",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "42"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVB r64, r/m64",
+  "instr_parsed": [
+   "CMOVB",
+   "r64",
+   "r/m64"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": false,
+  "valid_in_legacy_mode": false,
+  "description": "Move if below (CF=1).",
+  "page": 259
+ },
+ {
+  "opcode": "0F 46 /r",
+  "opcode_parsed": [
+   "0F",
+   "46",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "46"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVBE r16, r/m16",
+  "instr_parsed": [
+   "CMOVBE",
+   "r16",
+   "r/m16"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": true,
+  "description": "Move if below or equal (CF=1 or ZF=1).",
+  "page": 259
+ },
+ {
+  "opcode": "0F 46 /r",
+  "opcode_parsed": [
+   "0F",
+   "46",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "46"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVBE r32, r/m32",
+  "instr_parsed": [
+   "CMOVBE",
+   "r32",
+   "r/m32"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": true,
+  "description": "Move if below or equal (CF=1 or ZF=1).",
+  "page": 259
+ },
+ {
+  "opcode": "REX.W + 0F 46 /r",
+  "opcode_parsed": [
+   "REX.W",
+   "0F",
+   "46",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "REX.W"
+    ],
+    "byte_type": "rex-prefix",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "46"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVBE r64, r/m64",
+  "instr_parsed": [
+   "CMOVBE",
+   "r64",
+   "r/m64"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": false,
+  "valid_in_legacy_mode": false,
+  "description": "Move if below or equal (CF=1 or ZF=1).",
+  "page": 259
+ },
+ {
+  "opcode": "0F 42 /r",
+  "opcode_parsed": [
+   "0F",
+   "42",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "42"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVC r16, r/m16",
+  "instr_parsed": [
+   "CMOVC",
+   "r16",
+   "r/m16"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": true,
+  "description": "Move if carry (CF=1).",
+  "page": 259
+ },
+ {
+  "opcode": "0F 42 /r",
+  "opcode_parsed": [
+   "0F",
+   "42",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "42"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVC r32, r/m32",
+  "instr_parsed": [
+   "CMOVC",
+   "r32",
+   "r/m32"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": true,
+  "description": "Move if carry (CF=1).",
+  "page": 259
+ },
+ {
+  "opcode": "REX.W + 0F 42 /r",
+  "opcode_parsed": [
+   "REX.W",
+   "0F",
+   "42",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "REX.W"
+    ],
+    "byte_type": "rex-prefix",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "42"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVC r64, r/m64",
+  "instr_parsed": [
+   "CMOVC",
+   "r64",
+   "r/m64"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": false,
+  "valid_in_legacy_mode": false,
+  "description": "Move if carry (CF=1).",
+  "page": 259
+ },
+ {
+  "opcode": "0F 44 /r",
+  "opcode_parsed": [
+   "0F",
+   "44",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "44"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVE r16, r/m16",
+  "instr_parsed": [
+   "CMOVE",
+   "r16",
+   "r/m16"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": true,
+  "description": "Move if equal (ZF=1).",
+  "page": 259
+ },
+ {
+  "opcode": "0F 44 /r",
+  "opcode_parsed": [
+   "0F",
+   "44",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "44"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVE r32, r/m32",
+  "instr_parsed": [
+   "CMOVE",
+   "r32",
+   "r/m32"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": true,
+  "description": "Move if equal (ZF=1).",
+  "page": 259
+ },
+ {
+  "opcode": "REX.W + 0F 44 /r",
+  "opcode_parsed": [
+   "REX.W",
+   "0F",
+   "44",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "REX.W"
+    ],
+    "byte_type": "rex-prefix",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "44"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVE r64, r/m64",
+  "instr_parsed": [
+   "CMOVE",
+   "r64",
+   "r/m64"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": false,
+  "valid_in_legacy_mode": false,
+  "description": "Move if equal (ZF=1).",
+  "page": 259
+ },
+ {
+  "opcode": "0F 4F /r",
+  "opcode_parsed": [
+   "0F",
+   "4F",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "4F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVG r16, r/m16",
+  "instr_parsed": [
+   "CMOVG",
+   "r16",
+   "r/m16"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": true,
+  "description": "Move if greater (ZF=0 and SF=OF).",
+  "page": 259
+ },
+ {
+  "opcode": "0F 4F /r",
+  "opcode_parsed": [
+   "0F",
+   "4F",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "4F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVG r32, r/m32",
+  "instr_parsed": [
+   "CMOVG",
+   "r32",
+   "r/m32"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": true,
+  "description": "Move if greater (ZF=0 and SF=OF).",
+  "page": 259
+ },
+ {
+  "opcode": "REX.W + 0F 4F /r",
+  "opcode_parsed": [
+   "REX.W",
+   "0F",
+   "4F",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "REX.W"
+    ],
+    "byte_type": "rex-prefix",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "4F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVG r64, r/m64",
+  "instr_parsed": [
+   "CMOVG",
+   "r64",
+   "r/m64"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": false,
+  "valid_in_legacy_mode": false,
+  "description": "Move if greater (ZF=0 and SF=OF).",
+  "page": 259
+ },
+ {
+  "opcode": "0F 4D /r",
+  "opcode_parsed": [
+   "0F",
+   "4D",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "4D"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVGE r16, r/m16",
+  "instr_parsed": [
+   "CMOVGE",
+   "r16",
+   "r/m16"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": true,
+  "description": "Move if greater or equal (SF=OF).",
+  "page": 259
+ },
+ {
+  "opcode": "0F 4D /r",
+  "opcode_parsed": [
+   "0F",
+   "4D",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "4D"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVGE r32, r/m32",
+  "instr_parsed": [
+   "CMOVGE",
+   "r32",
+   "r/m32"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": true,
+  "description": "Move if greater or equal (SF=OF).",
+  "page": 259
+ },
+ {
+  "opcode": "REX.W + 0F 4D /r",
+  "opcode_parsed": [
+   "REX.W",
+   "0F",
+   "4D",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "REX.W"
+    ],
+    "byte_type": "rex-prefix",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "4D"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVGE r64, r/m64",
+  "instr_parsed": [
+   "CMOVGE",
+   "r64",
+   "r/m64"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": false,
+  "valid_in_legacy_mode": false,
+  "description": "Move if greater or equal (SF=OF).",
+  "page": 259
+ },
+ {
+  "opcode": "0F 4C /r",
+  "opcode_parsed": [
+   "0F",
+   "4C",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "4C"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVL r16, r/m16",
+  "instr_parsed": [
+   "CMOVL",
+   "r16",
+   "r/m16"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": true,
+  "description": "Move if less (SF ≠ OF).",
+  "page": 259
+ },
+ {
+  "opcode": "0F 4C /r",
+  "opcode_parsed": [
+   "0F",
+   "4C",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "4C"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVL r32, r/m32",
+  "instr_parsed": [
+   "CMOVL",
+   "r32",
+   "r/m32"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": true,
+  "description": "Move if less (SF ≠ OF).",
+  "page": 259
+ },
+ {
+  "opcode": "REX.W + 0F 4C /r",
+  "opcode_parsed": [
+   "REX.W",
+   "0F",
+   "4C",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "REX.W"
+    ],
+    "byte_type": "rex-prefix",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "4C"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVL r64, r/m64",
+  "instr_parsed": [
+   "CMOVL",
+   "r64",
+   "r/m64"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": false,
+  "valid_in_legacy_mode": false,
+  "description": "Move if less (SF ≠ OF).",
+  "page": 259
+ },
+ {
+  "opcode": "0F 4E /r",
+  "opcode_parsed": [
+   "0F",
+   "4E",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "4E"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVLE r16, r/m16",
+  "instr_parsed": [
+   "CMOVLE",
+   "r16",
+   "r/m16"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": true,
+  "description": "Move if less or equal (ZF=1 or SF ≠ OF).",
+  "page": 259
+ },
+ {
+  "opcode": "0F 4E /r",
+  "opcode_parsed": [
+   "0F",
+   "4E",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "4E"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVLE r32, r/m32",
+  "instr_parsed": [
+   "CMOVLE",
+   "r32",
+   "r/m32"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": true,
+  "description": "Move if less or equal (ZF=1 or SF ≠ OF).",
+  "page": 259
+ },
+ {
+  "opcode": "REX.W + 0F 4E /r",
+  "opcode_parsed": [
+   "REX.W",
+   "0F",
+   "4E",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "REX.W"
+    ],
+    "byte_type": "rex-prefix",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "4E"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVLE r64, r/m64",
+  "instr_parsed": [
+   "CMOVLE",
+   "r64",
+   "r/m64"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": false,
+  "valid_in_legacy_mode": false,
+  "description": "Move if less or equal (ZF=1 or SF ≠ OF).",
+  "page": 259
+ },
+ {
+  "opcode": "0F 46 /r",
+  "opcode_parsed": [
+   "0F",
+   "46",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "46"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVNA r16, r/m16",
+  "instr_parsed": [
+   "CMOVNA",
+   "r16",
+   "r/m16"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": true,
+  "description": "Move if not above (CF=1 or ZF=1).",
+  "page": 259
+ },
+ {
+  "opcode": "0F 46 /r",
+  "opcode_parsed": [
+   "0F",
+   "46",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "46"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVNA r32, r/m32",
+  "instr_parsed": [
+   "CMOVNA",
+   "r32",
+   "r/m32"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": true,
+  "description": "Move if not above (CF=1 or ZF=1).",
+  "page": 259
+ },
+ {
+  "opcode": "REX.W + 0F 46 /r",
+  "opcode_parsed": [
+   "REX.W",
+   "0F",
+   "46",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "REX.W"
+    ],
+    "byte_type": "rex-prefix",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "46"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVNA r64, r/m64",
+  "instr_parsed": [
+   "CMOVNA",
+   "r64",
+   "r/m64"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": false,
+  "valid_in_legacy_mode": false,
+  "description": "Move if not above (CF=1 or ZF=1).",
+  "page": 259
+ },
+ {
+  "opcode": "0F 42 /r",
+  "opcode_parsed": [
+   "0F",
+   "42",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "42"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVNAE r16, r/m16",
+  "instr_parsed": [
+   "CMOVNAE",
+   "r16",
+   "r/m16"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": true,
+  "description": "Move if not above or equal (CF=1).",
+  "page": 259
+ },
+ {
+  "opcode": "0F 42 /r",
+  "opcode_parsed": [
+   "0F",
+   "42",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "42"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVNAE r32, r/m32",
+  "instr_parsed": [
+   "CMOVNAE",
+   "r32",
+   "r/m32"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": true,
+  "description": "Move if not above or equal (CF=1).",
+  "page": 259
+ },
+ {
+  "opcode": "REX.W + 0F 42 /r",
+  "opcode_parsed": [
+   "REX.W",
+   "0F",
+   "42",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "REX.W"
+    ],
+    "byte_type": "rex-prefix",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "42"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVNAE r64, r/m64",
+  "instr_parsed": [
+   "CMOVNAE",
+   "r64",
+   "r/m64"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": false,
+  "valid_in_legacy_mode": false,
+  "description": "Move if not above or equal (CF=1).",
+  "page": 259
+ },
+ {
+  "opcode": "0F 43 /r",
+  "opcode_parsed": [
+   "0F",
+   "43",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "43"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVNB r16, r/m16",
+  "instr_parsed": [
+   "CMOVNB",
+   "r16",
+   "r/m16"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": true,
+  "description": "Move if not below (CF=0).",
+  "page": 259
+ },
+ {
+  "opcode": "0F 43 /r",
+  "opcode_parsed": [
+   "0F",
+   "43",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "43"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVNB r32, r/m32",
+  "instr_parsed": [
+   "CMOVNB",
+   "r32",
+   "r/m32"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": true,
+  "description": "Move if not below (CF=0).",
+  "page": 259
+ },
+ {
+  "opcode": "REX.W + 0F 43 /r",
+  "opcode_parsed": [
+   "REX.W",
+   "0F",
+   "43",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "REX.W"
+    ],
+    "byte_type": "rex-prefix",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "43"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVNB r64, r/m64",
+  "instr_parsed": [
+   "CMOVNB",
+   "r64",
+   "r/m64"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": false,
+  "valid_in_legacy_mode": false,
+  "description": "Move if not below (CF=0).",
+  "page": 259
+ },
+ {
+  "opcode": "0F 47 /r",
+  "opcode_parsed": [
+   "0F",
+   "47",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "47"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVNBE r16, r/m16",
+  "instr_parsed": [
+   "CMOVNBE",
+   "r16",
+   "r/m16"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": true,
+  "description": "Move if not below or equal (CF=0 and ZF=0).",
+  "page": 259
+ },
+ {
+  "opcode": "0F 47 /r",
+  "opcode_parsed": [
+   "0F",
+   "47",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "47"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVNBE r32, r/m32",
+  "instr_parsed": [
+   "CMOVNBE",
+   "r32",
+   "r/m32"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": true,
+  "description": "Move if not below or equal (CF=0 and ZF=0).",
+  "page": 260
+ },
+ {
+  "opcode": "REX.W + 0F 47 /r",
+  "opcode_parsed": [
+   "REX.W",
+   "0F",
+   "47",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "REX.W"
+    ],
+    "byte_type": "rex-prefix",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "47"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVNBE r64, r/m64",
+  "instr_parsed": [
+   "CMOVNBE",
+   "r64",
+   "r/m64"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": false,
+  "valid_in_legacy_mode": false,
+  "description": "Move if not below or equal (CF=0 and ZF=0).",
+  "page": 260
+ },
+ {
+  "opcode": "0F 43 /r",
+  "opcode_parsed": [
+   "0F",
+   "43",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "43"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVNC r16, r/m16",
+  "instr_parsed": [
+   "CMOVNC",
+   "r16",
+   "r/m16"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": true,
+  "description": "Move if not carry (CF=0).",
+  "page": 260
+ },
+ {
+  "opcode": "0F 43 /r",
+  "opcode_parsed": [
+   "0F",
+   "43",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "43"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVNC r32, r/m32",
+  "instr_parsed": [
+   "CMOVNC",
+   "r32",
+   "r/m32"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": true,
+  "description": "Move if not carry (CF=0).",
+  "page": 260
+ },
+ {
+  "opcode": "REX.W + 0F 43 /r",
+  "opcode_parsed": [
+   "REX.W",
+   "0F",
+   "43",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "REX.W"
+    ],
+    "byte_type": "rex-prefix",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "43"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVNC r64, r/m64",
+  "instr_parsed": [
+   "CMOVNC",
+   "r64",
+   "r/m64"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": false,
+  "valid_in_legacy_mode": false,
+  "description": "Move if not carry (CF=0).",
+  "page": 260
+ },
+ {
+  "opcode": "0F 45 /r",
+  "opcode_parsed": [
+   "0F",
+   "45",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "45"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVNE r16, r/m16",
+  "instr_parsed": [
+   "CMOVNE",
+   "r16",
+   "r/m16"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": true,
+  "description": "Move if not equal (ZF=0).",
+  "page": 260
+ },
+ {
+  "opcode": "0F 45 /r",
+  "opcode_parsed": [
+   "0F",
+   "45",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "45"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVNE r32, r/m32",
+  "instr_parsed": [
+   "CMOVNE",
+   "r32",
+   "r/m32"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": true,
+  "description": "Move if not equal (ZF=0).",
+  "page": 260
+ },
+ {
+  "opcode": "REX.W + 0F 45 /r",
+  "opcode_parsed": [
+   "REX.W",
+   "0F",
+   "45",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "REX.W"
+    ],
+    "byte_type": "rex-prefix",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "45"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVNE r64, r/m64",
+  "instr_parsed": [
+   "CMOVNE",
+   "r64",
+   "r/m64"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": false,
+  "valid_in_legacy_mode": false,
+  "description": "Move if not equal (ZF=0).",
+  "page": 260
+ },
+ {
+  "opcode": "0F 4E /r",
+  "opcode_parsed": [
+   "0F",
+   "4E",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "4E"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVNG r16, r/m16",
+  "instr_parsed": [
+   "CMOVNG",
+   "r16",
+   "r/m16"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": true,
+  "description": "Move if not greater (ZF=1 or SF ≠ OF).",
+  "page": 260
+ },
+ {
+  "opcode": "0F 4E /r",
+  "opcode_parsed": [
+   "0F",
+   "4E",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "4E"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVNG r32, r/m32",
+  "instr_parsed": [
+   "CMOVNG",
+   "r32",
+   "r/m32"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": true,
+  "description": "Move if not greater (ZF=1 or SF ≠ OF).",
+  "page": 260
+ },
+ {
+  "opcode": "REX.W + 0F 4E /r",
+  "opcode_parsed": [
+   "REX.W",
+   "0F",
+   "4E",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "REX.W"
+    ],
+    "byte_type": "rex-prefix",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "4E"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVNG r64, r/m64",
+  "instr_parsed": [
+   "CMOVNG",
+   "r64",
+   "r/m64"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": false,
+  "valid_in_legacy_mode": false,
+  "description": "Move if not greater (ZF=1 or SF ≠ OF).",
+  "page": 260
+ },
+ {
+  "opcode": "0F 4C /r",
+  "opcode_parsed": [
+   "0F",
+   "4C",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "4C"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVNGE r16, r/m16",
+  "instr_parsed": [
+   "CMOVNGE",
+   "r16",
+   "r/m16"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": true,
+  "description": "Move if not greater or equal (SF ≠ OF).",
+  "page": 260
+ },
+ {
+  "opcode": "0F 4C /r",
+  "opcode_parsed": [
+   "0F",
+   "4C",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "4C"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVNGE r32, r/m32",
+  "instr_parsed": [
+   "CMOVNGE",
+   "r32",
+   "r/m32"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": true,
+  "description": "Move if not greater or equal (SF ≠ OF).",
+  "page": 260
+ },
+ {
+  "opcode": "REX.W + 0F 4C /r",
+  "opcode_parsed": [
+   "REX.W",
+   "0F",
+   "4C",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "REX.W"
+    ],
+    "byte_type": "rex-prefix",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "4C"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVNGE r64, r/m64",
+  "instr_parsed": [
+   "CMOVNGE",
+   "r64",
+   "r/m64"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": false,
+  "valid_in_legacy_mode": false,
+  "description": "Move if not greater or equal (SF ≠ OF).",
+  "page": 260
+ },
+ {
+  "opcode": "0F 4D /r",
+  "opcode_parsed": [
+   "0F",
+   "4D",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "4D"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVNL r16, r/m16",
+  "instr_parsed": [
+   "CMOVNL",
+   "r16",
+   "r/m16"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": true,
+  "description": "Move if not less (SF=OF).",
+  "page": 260
+ },
+ {
+  "opcode": "0F 4D /r",
+  "opcode_parsed": [
+   "0F",
+   "4D",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "4D"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVNL r32, r/m32",
+  "instr_parsed": [
+   "CMOVNL",
+   "r32",
+   "r/m32"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": true,
+  "description": "Move if not less (SF=OF).",
+  "page": 260
+ },
+ {
+  "opcode": "REX.W + 0F 4D /r",
+  "opcode_parsed": [
+   "REX.W",
+   "0F",
+   "4D",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "REX.W"
+    ],
+    "byte_type": "rex-prefix",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "4D"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVNL r64, r/m64",
+  "instr_parsed": [
+   "CMOVNL",
+   "r64",
+   "r/m64"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": false,
+  "valid_in_legacy_mode": false,
+  "description": "Move if not less (SF=OF).",
+  "page": 260
+ },
+ {
+  "opcode": "0F 4F /r",
+  "opcode_parsed": [
+   "0F",
+   "4F",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "4F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVNLE r16, r/m16",
+  "instr_parsed": [
+   "CMOVNLE",
+   "r16",
+   "r/m16"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": true,
+  "description": "Move if not less or equal (ZF=0 and SF=OF).",
+  "page": 260
+ },
+ {
+  "opcode": "0F 4F /r",
+  "opcode_parsed": [
+   "0F",
+   "4F",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "4F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVNLE r32, r/m32",
+  "instr_parsed": [
+   "CMOVNLE",
+   "r32",
+   "r/m32"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": true,
+  "description": "Move if not less or equal (ZF=0 and SF=OF).",
+  "page": 260
+ },
+ {
+  "opcode": "REX.W + 0F 4F /r",
+  "opcode_parsed": [
+   "REX.W",
+   "0F",
+   "4F",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "REX.W"
+    ],
+    "byte_type": "rex-prefix",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "4F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVNLE r64, r/m64",
+  "instr_parsed": [
+   "CMOVNLE",
+   "r64",
+   "r/m64"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": false,
+  "valid_in_legacy_mode": false,
+  "description": "Move if not less or equal (ZF=0 and SF=OF).",
+  "page": 260
+ },
+ {
+  "opcode": "0F 41 /r",
+  "opcode_parsed": [
+   "0F",
+   "41",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "41"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVNO r16, r/m16",
+  "instr_parsed": [
+   "CMOVNO",
+   "r16",
+   "r/m16"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": true,
+  "description": "Move if not overflow (OF=0).",
+  "page": 260
+ },
+ {
+  "opcode": "0F 41 /r",
+  "opcode_parsed": [
+   "0F",
+   "41",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "41"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVNO r32, r/m32",
+  "instr_parsed": [
+   "CMOVNO",
+   "r32",
+   "r/m32"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": true,
+  "description": "Move if not overflow (OF=0).",
+  "page": 260
+ },
+ {
+  "opcode": "REX.W + 0F 41 /r",
+  "opcode_parsed": [
+   "REX.W",
+   "0F",
+   "41",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "REX.W"
+    ],
+    "byte_type": "rex-prefix",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "41"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVNO r64, r/m64",
+  "instr_parsed": [
+   "CMOVNO",
+   "r64",
+   "r/m64"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": false,
+  "valid_in_legacy_mode": false,
+  "description": "Move if not overflow (OF=0).",
+  "page": 260
+ },
+ {
+  "opcode": "0F 4B /r",
+  "opcode_parsed": [
+   "0F",
+   "4B",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "4B"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVNP r16, r/m16",
+  "instr_parsed": [
+   "CMOVNP",
+   "r16",
+   "r/m16"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": true,
+  "description": "Move if not parity (PF=0).",
+  "page": 260
+ },
+ {
+  "opcode": "0F 4B /r",
+  "opcode_parsed": [
+   "0F",
+   "4B",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "4B"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVNP r32, r/m32",
+  "instr_parsed": [
+   "CMOVNP",
+   "r32",
+   "r/m32"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": true,
+  "description": "Move if not parity (PF=0).",
+  "page": 260
+ },
+ {
+  "opcode": "REX.W + 0F 4B /r",
+  "opcode_parsed": [
+   "REX.W",
+   "0F",
+   "4B",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "REX.W"
+    ],
+    "byte_type": "rex-prefix",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "4B"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVNP r64, r/m64",
+  "instr_parsed": [
+   "CMOVNP",
+   "r64",
+   "r/m64"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": false,
+  "valid_in_legacy_mode": false,
+  "description": "Move if not parity (PF=0).",
+  "page": 260
+ },
+ {
+  "opcode": "0F 49 /r",
+  "opcode_parsed": [
+   "0F",
+   "49",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "49"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVNS r16, r/m16",
+  "instr_parsed": [
+   "CMOVNS",
+   "r16",
+   "r/m16"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": true,
+  "description": "Move if not sign (SF=0).",
+  "page": 260
+ },
+ {
+  "opcode": "0F 49 /r",
+  "opcode_parsed": [
+   "0F",
+   "49",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "49"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVNS r32, r/m32",
+  "instr_parsed": [
+   "CMOVNS",
+   "r32",
+   "r/m32"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": true,
+  "description": "Move if not sign (SF=0).",
+  "page": 260
+ },
+ {
+  "opcode": "REX.W + 0F 49 /r",
+  "opcode_parsed": [
+   "REX.W",
+   "0F",
+   "49",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "REX.W"
+    ],
+    "byte_type": "rex-prefix",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "49"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVNS r64, r/m64",
+  "instr_parsed": [
+   "CMOVNS",
+   "r64",
+   "r/m64"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": false,
+  "valid_in_legacy_mode": false,
+  "description": "Move if not sign (SF=0).",
+  "page": 260
+ },
+ {
+  "opcode": "0F 45 /r",
+  "opcode_parsed": [
+   "0F",
+   "45",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "45"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVNZ r16, r/m16",
+  "instr_parsed": [
+   "CMOVNZ",
+   "r16",
+   "r/m16"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": true,
+  "description": "Move if not zero (ZF=0).",
+  "page": 260
+ },
+ {
+  "opcode": "0F 45 /r",
+  "opcode_parsed": [
+   "0F",
+   "45",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "45"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVNZ r32, r/m32",
+  "instr_parsed": [
+   "CMOVNZ",
+   "r32",
+   "r/m32"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": true,
+  "description": "Move if not zero (ZF=0).",
+  "page": 260
+ },
+ {
+  "opcode": "REX.W + 0F 45 /r",
+  "opcode_parsed": [
+   "REX.W",
+   "0F",
+   "45",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "REX.W"
+    ],
+    "byte_type": "rex-prefix",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "45"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVNZ r64, r/m64",
+  "instr_parsed": [
+   "CMOVNZ",
+   "r64",
+   "r/m64"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": false,
+  "valid_in_legacy_mode": false,
+  "description": "Move if not zero (ZF=0).",
+  "page": 260
+ },
+ {
+  "opcode": "0F 40 /r",
+  "opcode_parsed": [
+   "0F",
+   "40",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "40"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVO r16, r/m16",
+  "instr_parsed": [
+   "CMOVO",
+   "r16",
+   "r/m16"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": true,
+  "description": "Move if overflow (OF=1).",
+  "page": 260
+ },
+ {
+  "opcode": "0F 40 /r",
+  "opcode_parsed": [
+   "0F",
+   "40",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "40"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVO r32, r/m32",
+  "instr_parsed": [
+   "CMOVO",
+   "r32",
+   "r/m32"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": true,
+  "description": "Move if overflow (OF=1).",
+  "page": 260
+ },
+ {
+  "opcode": "REX.W + 0F 40 /r",
+  "opcode_parsed": [
+   "REX.W",
+   "0F",
+   "40",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "REX.W"
+    ],
+    "byte_type": "rex-prefix",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "40"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVO r64, r/m64",
+  "instr_parsed": [
+   "CMOVO",
+   "r64",
+   "r/m64"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": false,
+  "valid_in_legacy_mode": false,
+  "description": "Move if overflow (OF=1).",
+  "page": 260
+ },
+ {
+  "opcode": "0F 4A /r",
+  "opcode_parsed": [
+   "0F",
+   "4A",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "4A"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVP r16, r/m16",
+  "instr_parsed": [
+   "CMOVP",
+   "r16",
+   "r/m16"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": true,
+  "description": "Move if parity (PF=1).",
+  "page": 260
+ },
+ {
+  "opcode": "0F 4A /r",
+  "opcode_parsed": [
+   "0F",
+   "4A",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "4A"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVP r32, r/m32",
+  "instr_parsed": [
+   "CMOVP",
+   "r32",
+   "r/m32"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": true,
+  "description": "Move if parity (PF=1).",
+  "page": 260
+ },
+ {
+  "opcode": "REX.W + 0F 4A /r",
+  "opcode_parsed": [
+   "REX.W",
+   "0F",
+   "4A",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "REX.W"
+    ],
+    "byte_type": "rex-prefix",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "4A"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVP r64, r/m64",
+  "instr_parsed": [
+   "CMOVP",
+   "r64",
+   "r/m64"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": false,
+  "valid_in_legacy_mode": false,
+  "description": "Move if parity (PF=1).",
+  "page": 260
+ },
+ {
+  "opcode": "0F 4A /r",
+  "opcode_parsed": [
+   "0F",
+   "4A",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "4A"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVPE r16, r/m16",
+  "instr_parsed": [
+   "CMOVPE",
+   "r16",
+   "r/m16"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": true,
+  "description": "Move if parity even (PF=1).",
+  "page": 260
+ },
+ {
+  "opcode": "0F 4A /r",
+  "opcode_parsed": [
+   "0F",
+   "4A",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "4A"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVPE r32, r/m32",
+  "instr_parsed": [
+   "CMOVPE",
+   "r32",
+   "r/m32"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": true,
+  "description": "Move if parity even (PF=1).",
+  "page": 260
+ },
+ {
+  "opcode": "REX.W + 0F 4A /r",
+  "opcode_parsed": [
+   "REX.W",
+   "0F",
+   "4A",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "REX.W"
+    ],
+    "byte_type": "rex-prefix",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "4A"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVPE r64, r/m64",
+  "instr_parsed": [
+   "CMOVPE",
+   "r64",
+   "r/m64"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": false,
+  "valid_in_legacy_mode": false,
+  "description": "Move if parity even (PF=1).",
+  "page": 260
+ },
+ {
+  "opcode": "0F 4B /r",
+  "opcode_parsed": [
+   "0F",
+   "4B",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "4B"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVPO r16, r/m16",
+  "instr_parsed": [
+   "CMOVPO",
+   "r16",
+   "r/m16"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": true,
+  "description": "Move if parity odd (PF=0).",
+  "page": 261
+ },
+ {
+  "opcode": "0F 4B /r",
+  "opcode_parsed": [
+   "0F",
+   "4B",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "4B"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVPO r32, r/m32",
+  "instr_parsed": [
+   "CMOVPO",
+   "r32",
+   "r/m32"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": true,
+  "description": "Move if parity odd (PF=0).",
+  "page": 261
+ },
+ {
+  "opcode": "REX.W + 0F 4B /r",
+  "opcode_parsed": [
+   "REX.W",
+   "0F",
+   "4B",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "REX.W"
+    ],
+    "byte_type": "rex-prefix",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "4B"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVPO r64, r/m64",
+  "instr_parsed": [
+   "CMOVPO",
+   "r64",
+   "r/m64"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": false,
+  "valid_in_legacy_mode": false,
+  "description": "Move if parity odd (PF=0).",
+  "page": 261
+ },
+ {
+  "opcode": "0F 48 /r",
+  "opcode_parsed": [
+   "0F",
+   "48",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "48"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVS r16, r/m16",
+  "instr_parsed": [
+   "CMOVS",
+   "r16",
+   "r/m16"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": true,
+  "description": "Move if sign (SF=1).",
+  "page": 261
+ },
+ {
+  "opcode": "0F 48 /r",
+  "opcode_parsed": [
+   "0F",
+   "48",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "48"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVS r32, r/m32",
+  "instr_parsed": [
+   "CMOVS",
+   "r32",
+   "r/m32"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": true,
+  "description": "Move if sign (SF=1).",
+  "page": 261
+ },
+ {
+  "opcode": "REX.W + 0F 48 /r",
+  "opcode_parsed": [
+   "REX.W",
+   "0F",
+   "48",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "REX.W"
+    ],
+    "byte_type": "rex-prefix",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "48"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVS r64, r/m64",
+  "instr_parsed": [
+   "CMOVS",
+   "r64",
+   "r/m64"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": false,
+  "valid_in_legacy_mode": false,
+  "description": "Move if sign (SF=1).",
+  "page": 261
+ },
+ {
+  "opcode": "0F 44 /r",
+  "opcode_parsed": [
+   "0F",
+   "44",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "44"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVZ r16, r/m16",
+  "instr_parsed": [
+   "CMOVZ",
+   "r16",
+   "r/m16"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": true,
+  "description": "Move if zero (ZF=1).",
+  "page": 261
+ },
+ {
+  "opcode": "0F 44 /r",
+  "opcode_parsed": [
+   "0F",
+   "44",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "44"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVZ r32, r/m32",
+  "instr_parsed": [
+   "CMOVZ",
+   "r32",
+   "r/m32"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": true,
+  "description": "Move if zero (ZF=1).",
+  "page": 261
+ },
+ {
+  "opcode": "REX.W + 0F 44 /r",
+  "opcode_parsed": [
+   "REX.W",
+   "0F",
+   "44",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "REX.W"
+    ],
+    "byte_type": "rex-prefix",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "44"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMOVZ r64, r/m64",
+  "instr_parsed": [
+   "CMOVZ",
+   "r64",
+   "r/m64"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": false,
+  "valid_in_legacy_mode": false,
+  "description": "Move if zero (ZF=1).",
+  "page": 261
+ },
+ {
   "opcode": "3C ib",
   "opcode_parsed": [
    "3C",
