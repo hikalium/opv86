@@ -1422,16 +1422,7 @@ const sections = [
   {header: 'Options', optionList: optionDefinitions}
 ];
 
-process.exit((() => {
-  const commandLineArgs = require('command-line-args');
-  const commandLineUsage = require('command-line-usage');
-  const options = commandLineArgs(optionDefinitions);
-  if (options.help) {
-    const usage = commandLineUsage(sections);
-    console.log(usage);
-    return 0;
-  }
-  if (options.runtest) {
+function runTest() {
     TestCanonicalizeDescription();
     TestMakeOpBytes();
     TestCanonicalizeOpcode();
@@ -1439,32 +1430,9 @@ process.exit((() => {
     TestExpandMnemonic();
     TestParser();
     console.log('PASS');
-    return 0;
-  }
-  let filepath;
-  if (options.file === undefined) {
-    filepath = 'pdf/325383-sdm-vol-2abcd.xml'
-    console.error(
-        `--file option is not set. Using default path (${filepath}).`);
-  } else {
-    filepath = options.file;
-  }
-  let requestedMnemonicList: Record<string, boolean>;
-  if (options.mnemonic) {
-    requestedMnemonicList = {};
-    for (const m of options.mnemonic) {
-      requestedMnemonicList[m] = true;
-    }
-    console.error(
-        `Parsing following mnemonic(s): ${options.mnemonic.join(', ')}`);
-  }
-  const data = fs.readFileSync(filepath, 'utf-8');
-  const sdmPages = ParseXMLToSDMPages(data);
-  const instrIndex: SDMInstrIndex[] = ExtractSDMInstrIndex(sdmPages);
-  if (options.list) {
-    console.log(JSON.stringify(instrIndex, null, ' '));
-    return 0;
-  }
+}
+
+function parseSDM(sdmPages, instrIndex, requestedMnemonicList, filepath) {
   let passCount = 0;
   let failCount = 0;
   let instList = [];
@@ -1513,4 +1481,44 @@ process.exit((() => {
   console.error(`Failed            : ${failCount} ( ${
       (failCount / (passCount + failCount) * 100).toPrecision(3)}% )`);
   return failCount === 0 ? 0 : 1;
+}
+
+process.exit((() => {
+  const commandLineArgs = require('command-line-args');
+  const commandLineUsage = require('command-line-usage');
+  const options = commandLineArgs(optionDefinitions);
+  if (options.help) {
+    const usage = commandLineUsage(sections);
+    console.log(usage);
+    return 0;
+  }
+  if (options.runtest) {
+    runTest();
+    return 0;
+  }
+  let filepath;
+  if (options.file === undefined) {
+    filepath = 'pdf/325383-sdm-vol-2abcd.xml'
+    console.error(
+        `--file option is not set. Using default path (${filepath}).`);
+  } else {
+    filepath = options.file;
+  }
+  let requestedMnemonicList: Record<string, boolean>;
+  if (options.mnemonic) {
+    requestedMnemonicList = {};
+    for (const m of options.mnemonic) {
+      requestedMnemonicList[m] = true;
+    }
+    console.error(
+        `Parsing following mnemonic(s): ${options.mnemonic.join(', ')}`);
+  }
+  const data = fs.readFileSync(filepath, 'utf-8');
+  const sdmPages = ParseXMLToSDMPages(data);
+  const instrIndex: SDMInstrIndex[] = ExtractSDMInstrIndex(sdmPages);
+  if (options.list) {
+    console.log(JSON.stringify(instrIndex, null, ' '));
+    return 0;
+  }
+  return parseSDM(sdmPages, instrIndex, requestedMnemonicList, filepath);
 })());
