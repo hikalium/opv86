@@ -13,7 +13,6 @@ function appendOpListElement(oplist, op, index) {
         .addClass('opv86-oplist-container')
         .addClass(`opv86-oplist-row-${index}`);
     oplistRow.click(() => {
-        console.log(`clicked! ${index}`);
         $('.opv86-description-panel').remove();
         const opDescription = $('<div>').addClass('opv86-description-panel');
         opDescription.append($('<h3>').text(op.instr));
@@ -22,6 +21,13 @@ function appendOpListElement(oplist, op, index) {
             opDescription.append($('<h4>').text('Encoding'));
             opDescription.append($('<p>').text(op.op_en));
         }
+        opDescription.append($('<h4>').text('Parsed info (Click to expand)').click(() => {
+            $(`#opv86-oplist-row-${index}-parsed-info`).toggle();
+        }));
+        opDescription.append($('<pre>')
+            .attr('id', `opv86-oplist-row-${index}-parsed-info`)
+            .text(JSON.stringify(op, null, '  '))
+            .hide());
         opDescription.insertAfter(oplistRow);
         if (op.page !== undefined) {
             opDescription.append($(`<a target="_blank" href='https://software.intel.com/content/dam/develop/public/us/en/documents/325383-sdm-vol-2abcd.pdf#page=${op.page}'>From p.${op.page} of Intel SDM</a>`));
