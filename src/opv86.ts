@@ -262,8 +262,7 @@ function appendOpListElement(oplist, op: SDMInstr, index: number) {
   oplistRow.click(() => {
     console.log(`clicked! ${index}`);
     $('.opv86-description-panel').remove();
-    const opDescription = $('<div>')
-                              .addClass('opv86-description-panel');
+    const opDescription = $('<div>').addClass('opv86-description-panel');
     opDescription.append($('<h3>').text(op.instr))
     opDescription.append($('<p>').text(op.description))
     if (op.op_en) {
@@ -336,16 +335,23 @@ function updateFilter(data: SDMInstr[], filter: string) {
 
 (() => {
   const opListContainerDiv = $('#oplist2');
+  const filterValueInput =
+      <HTMLInputElement>document.getElementById('filter-value');
   $.getJSON(`data/instr_list.json`, function(data: SDMInstr[]) {
     appendOpListHeaders(opListContainerDiv);
     console.log(data[0]);
     for (let i = 0; i < data.length; i++) {
       appendOpListElement(opListContainerDiv, data[i], i);
     }
-    document.getElementById('filter-value').addEventListener('keyup', () => {
-      updateFilter(
-          data,
-          (<HTMLInputElement>document.getElementById('filter-value')).value);
+    const q = new URL(location.href).searchParams.get('q');
+    if (q !== null) {
+      filterValueInput.value = decodeURIComponent(q);
+      updateFilter(data, q);
+    }
+    filterValueInput.addEventListener('keyup', () => {
+      const filterValue = filterValueInput.value;
+      updateFilter(data, filterValue);
+      history.replaceState(null, '', '?q=' + encodeURIComponent(filterValue));
     });
   });
 })();
