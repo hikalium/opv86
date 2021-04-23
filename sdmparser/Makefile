@@ -55,9 +55,6 @@ commit :
 	git diff HEAD --color=always | less -R
 	git commit
 
-extract_ops.js : extract_ops.ts
-	tsc extract_ops.ts
-
 sdmparser.js : sdmparser.ts sdm_instr.ts
 	tsc -target es2019 --out sdmparser.js sdmparser.ts sdm_instr.ts
 
