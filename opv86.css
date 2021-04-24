@@ -8,6 +8,9 @@ pre {
   padding-bottom: 16px;
   font-size: 12px;
 }
+#decoder-output-bin {
+  height: 64px;
+}
 .opv86-main-hex-input {
   font-family: 'Source Code Pro', monospace;
   font-size: 24px;
@@ -127,6 +130,14 @@ a:visited {
   background-color: #ffd972;
   border-radius: 8px;
 }
+.opv86-opcode-byte-disp {
+  background-color: #fff700;
+  border-radius: 8px;
+}
+.opv86-opcode-byte-unknown {
+  background-color: #eeeeee;
+  border-radius: 8px;
+}
 /* oplist */
 .opv86-description-panel {
   padding-top: 1px;
@@ -135,6 +146,13 @@ a:visited {
   border-bottom: 0.5px solid #d0d0d0;
   background-color: #ffffee;
   padding-bottom: 32px;
+}
+.opv86-oplist-container-decoder {
+  display: grid;
+  grid-template-columns: 860px auto;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  border-bottom: 0.5px solid #d0d0d0;
 }
 .opv86-oplist-container {
   display: grid;

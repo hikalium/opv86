@@ -69,25 +69,168 @@ function appendOpListElement(oplist, op, index) {
         .text(op.description));
     oplist.append(oplistRow);
 }
+const opTable = {
+    'c7': {
+        entry_type: 'op',
+        following_phases: [
+            'modrm',
+            ['imm', 4],
+        ],
+        instr: 'MOV r/m32 imm32',
+        description: 'Move imm32 to r/m32.',
+    }
+};
+function parseInstr(bin) {
+    const parsed = [];
+    let rexFound = false;
+    let table = opTable;
+    let phaseList = [ParserPhase.Op];
+    let instr = '?';
+    let description = '?';
+    for (const v of bin) {
+        const phase = phaseList.shift();
+        if (phase == ParserPhase.ModRM) {
+            parsed.push({
+                byte_value: v,
+                byte_type: ByteType.ModRM,
+            });
+            const mod = v >> 6;
+            const rm = v & 7;
+            if (mod == 0 && rm == 5) {
+                for (let i = 0; i < 4; i++) {
+                    phaseList.unshift(ParserPhase.Disp);
+                }
+            }
+            continue;
+        }
+        if (phase == ParserPhase.Disp) {
+            parsed.push({
+                byte_value: v,
+                byte_type: ByteType.Disp,
+            });
+            continue;
+        }
+        if (phase == ParserPhase.Imm) {
+            parsed.push({
+                byte_value: v,
+                byte_type: ByteType.Imm,
+            });
+            continue;
+        }
+        if (phase == ParserPhase.Op) {
+            if ((v & 0xF0) == 0x40) {
+                rexFound = true;
+                parsed.push({
+                    byte_value: v,
+                    byte_type: ByteType.REXPrefix,
+                });
+                phaseList.unshift(ParserPhase.Op);
+                continue;
+            }
+            parsed.push({
+                byte_value: v,
+                byte_type: ByteType.Opcode,
+            });
+            const e = opTable[('00' + v.toString(16)).substr(-2)];
+            if (e) {
+                instr = e.instr;
+                description = e.description;
+                for (const fp of e.following_phases) {
+                    if (fp === 'modrm') {
+                        phaseList.push(ParserPhase.ModRM);
+                    }
+                    if (fp instanceof Array && fp[0] == 'imm') {
+                        for (let i = 0; i < fp[1]; i++) {
+                            phaseList.push(ParserPhase.Imm);
+                        }
+                    }
+                }
+            }
+            continue;
+        }
+        parsed.push({
+            byte_value: v,
+            byte_type: ByteType.Unknown,
+        });
+    }
+    return {
+        bytes: parsed,
+        instr: instr,
+        description: description,
+    };
+}
+function updateDecoderOutput(filter) {
+    const decoderOutputContainerDiv = $('#decoder-output');
+    filter = filter.replace(/ /g, '');
+    if (!filter.match(/^[0-9a-fA-F]+$/)) {
+        decoderOutputContainerDiv.hide();
+        return;
+    }
+    decoderOutputContainerDiv.show();
+    const decoderOutputBinDiv = $('#decoder-output-bin');
+    decoderOutputBinDiv.empty();
+    const bin = filter.match(/.{1,2}/g).map(s => parseInt(s, 16));
+    const parsed = parseInstr(bin);
+    const opcodeByteElements = parsed.bytes.map(e => {
+        return $('<div>')
+            .addClass(`opv86-opcode-byte-${e.byte_type}`)
+            .addClass(`opv86-opcode-byte`)
+            .text(('00' + e.byte_value.toString(16).toUpperCase()).substr(-2));
+    });
+    const opcodeByteElementsDescription = parsed.bytes.map(e => {
+        if (e.byte_type == "rex-prefix") {
+            return $('<div>').addClass(`opv86-opcode-byte`).text("REX");
+        }
+        if (e.byte_type == "opcode") {
+            return $('<div>').addClass(`opv86-opcode-byte`).text("op");
+        }
+        if (e.byte_type == "unknown") {
+            return $('<div>').addClass(`opv86-opcode-byte`).text("?");
+        }
+        return $('<div>').addClass(`opv86-opcode-byte`).text(e.byte_type);
+    });
+    const oplistRow = $('<div>').addClass('opv86-oplist-container-decoder');
+    oplistRow.append($('<div>')
+        .addClass('opv86-oplist-item-opcode')
+        .append(opcodeByteElements));
+    oplistRow.append($('<div>').addClass('opv86-oplist-item-instr').text(parsed.instr));
+    oplistRow.append($('<div>')
+        .addClass('opv86-oplist-item-opcode')
+        .append(opcodeByteElementsDescription));
+    oplistRow.append($('<div>')
+        .addClass('opv86-oplist-item-description')
+        .text(parsed.description));
+    decoderOutputBinDiv.append(oplistRow);
+}
+function escapeRegExp(string) {
+    // from
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions#escaping
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
+}
 function isMatchedWithFilter(op, filter) {
     if (filter.length == 0)
         return true;
-    if (op.opcode.replace(/ /g, '').toLowerCase().indexOf(filter) != -1)
+    if (op.matcher_opcode.indexOf(filter) != -1)
         return true;
-    if (op.instr.replace(/ /g, '').toLowerCase().indexOf(filter) != -1)
+    if (op.matcher_instr.indexOf(filter) != -1)
         return true;
     return false;
 }
+function appendMatcherToOp(op) {
+    op.matcher_opcode = op.opcode.replace(/ /g, '').toLowerCase();
+    op.matcher_instr = op.instr.replace(/ /g, '').toLowerCase();
+}
 function updateFilter(data, filter) {
+    updateDecoderOutput(filter);
     $('.opv86-description-panel').remove();
     filter = filter.trim().toLowerCase().replace(/\s+/g, '');
     for (const index in data) {
         const op = data[index];
-        if (!isMatchedWithFilter(op, filter)) {
-            $(`.opv86-oplist-row-${index}`).css('display', 'none');
+        if (isMatchedWithFilter(op, filter)) {
+            $(`.opv86-oplist-row-${index}`).css('display', '');
             continue;
         }
-        $(`.opv86-oplist-row-${index}`).css('display', '');
+        $(`.opv86-oplist-row-${index}`).css('display', 'none');
     }
 }
 (() => {
@@ -98,6 +241,7 @@ function updateFilter(data, filter) {
         console.log(data[0]);
         for (let i = 0; i < data.length; i++) {
             appendOpListElement(opListContainerDiv, data[i], i);
+            appendMatcherToOp(data[i]);
         }
         const q = new URL(location.href).searchParams.get('q');
         if (q !== null) {
@@ -111,6 +255,22 @@ function updateFilter(data, filter) {
         });
     });
 })();
+var ParserPhase;
+(function (ParserPhase) {
+    ParserPhase[ParserPhase["Op"] = 0] = "Op";
+    ParserPhase[ParserPhase["ModRM"] = 1] = "ModRM";
+    ParserPhase[ParserPhase["Disp"] = 2] = "Disp";
+    ParserPhase[ParserPhase["Imm"] = 3] = "Imm";
+})(ParserPhase || (ParserPhase = {}));
+var ByteType;
+(function (ByteType) {
+    ByteType["Unknown"] = "unknown";
+    ByteType["Opcode"] = "opcode";
+    ByteType["REXPrefix"] = "rex-prefix";
+    ByteType["ModRM"] = "modrm";
+    ByteType["Imm"] = "imm";
+    ByteType["Disp"] = "disp";
+})(ByteType || (ByteType = {}));
 var SDMInstrOpByteType;
 (function (SDMInstrOpByteType) {
     SDMInstrOpByteType["Opcode"] = "opcode";

@@ -16,3 +16,27 @@ interface Result {
   document_version: string;
   ops: Op[];
 }
+
+enum ParserPhase {
+  Op,
+  ModRM,
+  Disp,
+  Imm,
+}
+enum ByteType {
+  Unknown = 'unknown',
+  Opcode = 'opcode',
+  REXPrefix = 'rex-prefix',
+  ModRM = 'modrm',
+  Imm = 'imm',
+  Disp = 'disp',
+}
+interface ParsedInstrByte {
+  byte_value: number;
+  byte_type: ByteType;
+}
+interface ParsedInstr {
+  bytes: ParsedInstrByte[];
+  instr: string;
+  description: string;
+}

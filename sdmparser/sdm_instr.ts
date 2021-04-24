@@ -23,4 +23,6 @@ interface SDMInstr {
   cpuid_feature_flag?: string;
   description: string;
   page?: number;
+  matcher_opcode?: string;  // will be added on load
+  matcher_instr?: string;   // will be added on load
 }

@@ -55,6 +55,9 @@ commit :
 	git diff HEAD --color=always | less -R
 	git commit
 
+op_table.json : sdmparser.js
+	node sdmparser.js --gen-op-table-only
+
 sdmparser.js : sdmparser.ts sdm_instr.ts
 	tsc -target es2019 --out sdmparser.js sdmparser.ts sdm_instr.ts
 

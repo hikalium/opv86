@@ -1415,6 +1415,11 @@ const optionDefinitions = [
     multiple: true,
     description: 'Mnemonics to parse. Default is not set (parse all mnemonics).'
   },
+  {
+    name: 'gen-op-table-only',
+    type: Boolean,
+    description: 'Generate op_table.json from generated instr_list.json'
+  },
 ];
 
 const sections = [
@@ -1423,13 +1428,13 @@ const sections = [
 ];
 
 function runTest() {
-    TestCanonicalizeDescription();
-    TestMakeOpBytes();
-    TestCanonicalizeOpcode();
-    TestCanonicalizeInstr();
-    TestExpandMnemonic();
-    TestParser();
-    console.log('PASS');
+  TestCanonicalizeDescription();
+  TestMakeOpBytes();
+  TestCanonicalizeOpcode();
+  TestCanonicalizeInstr();
+  TestExpandMnemonic();
+  TestParser();
+  console.log('PASS');
 }
 
 function parseSDM(sdmPages, instrIndex, requestedMnemonicList, filepath) {
@@ -1494,6 +1499,29 @@ process.exit((() => {
   }
   if (options.runtest) {
     runTest();
+    return 0;
+  }
+  if (options['gen-op-table-only']) {
+    const instr_list = JSON.parse(fs.readFileSync('instr_list.json', 'utf-8'));
+    const instrs = instr_list.map(e => e.opcode_bytes).map(e => {
+      return e.map(b => {
+        if (b.byte_type == 'opcode') {
+          return b.components[0];
+        }
+        if (b.byte_type == 'imm') {
+          return 'IMM' + (b.byte_size_min * 8);
+        }
+        return b.byte_type;
+      });
+    }).sort();
+    const opmap = {};
+    for(const s of instrs) {
+      if(opmap[s[0]] === undefined){
+        opmap[s[0]] = [];
+      }
+      opmap[s[0]].push(s);
+    }
+    console.log(opmap);
     return 0;
   }
   let filepath;
