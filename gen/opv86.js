@@ -232,6 +232,12 @@ function updateFilter(data, filter) {
         }
         $(`.opv86-oplist-row-${index}`).css('display', 'none');
     }
+    // Expand the panel if there is only one result
+    // (actually, 2, since they includes the header row).
+    const filteredRows = $('.opv86-oplist-container:visible');
+    if (filteredRows.length == 2) {
+        filteredRows[1].click();
+    }
 }
 (() => {
     const opListContainerDiv = $('#oplist2');
