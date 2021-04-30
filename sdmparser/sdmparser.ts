@@ -191,6 +191,10 @@ function CanonicalizeCompatLeg(str: string): boolean {
   if (str === 'Valid') {
     return true;
   }
+  if (str === 'Valid*') {
+    // CMPXCHG
+    return true;
+  }
   if (str === 'Invalid') {
     return true;
   }

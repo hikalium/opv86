@@ -10831,6 +10831,254 @@
   "page": 279
  },
  {
+  "opcode": "0F B0/ r",
+  "opcode_parsed": [
+   "0F",
+   "B0",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "B0"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMPXCHG r/m8, r8",
+  "instr_parsed": [
+   "CMPXCHG",
+   "r/m8",
+   "r8"
+  ],
+  "op_en": "MR",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": true,
+  "description": "Compare AL with r/m8 . If equal, ZF is set and r8 is loaded into r/m8 . Else, clear ZF and load r/m8 into AL.",
+  "page": 291
+ },
+ {
+  "opcode": "REX + 0F B0/ r",
+  "opcode_parsed": [
+   "REX",
+   "0F",
+   "B0",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "REX"
+    ],
+    "byte_type": "rex-prefix",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "B0"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMPXCHG r/m8**,r8",
+  "instr_parsed": [
+   "CMPXCHG",
+   "r/m8",
+   "r8"
+  ],
+  "op_en": "MR",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": false,
+  "valid_in_legacy_mode": false,
+  "description": "Compare AL with r/m8 . If equal, ZF is set and r8 is loaded into r/m8 . Else, clear ZF and load r/m8 into AL.",
+  "page": 291
+ },
+ {
+  "opcode": "0F B1/ r",
+  "opcode_parsed": [
+   "0F",
+   "B1",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "B1"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMPXCHG r/m16, r16",
+  "instr_parsed": [
+   "CMPXCHG",
+   "r/m16",
+   "r16"
+  ],
+  "op_en": "MR",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": true,
+  "description": "Compare AX with r/m16 . If equal, ZF is set and r16 is loaded into r/m16 . Else, clear ZF and load r/m16 into AX.",
+  "page": 291
+ },
+ {
+  "opcode": "0F B1/ r",
+  "opcode_parsed": [
+   "0F",
+   "B1",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "B1"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMPXCHG r/m32, r32",
+  "instr_parsed": [
+   "CMPXCHG",
+   "r/m32",
+   "r32"
+  ],
+  "op_en": "MR",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": true,
+  "description": "Compare EAX with r/m32 . If equal, ZF is set and r32 is loaded into r/m32 . Else, clear ZF and load r/m32 into EAX.",
+  "page": 291
+ },
+ {
+  "opcode": "REX.W + 0F B1/ r",
+  "opcode_parsed": [
+   "REX.W",
+   "0F",
+   "B1",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "REX.W"
+    ],
+    "byte_type": "rex-prefix",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "B1"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "CMPXCHG r/m64, r64",
+  "instr_parsed": [
+   "CMPXCHG",
+   "r/m64",
+   "r64"
+  ],
+  "op_en": "MR",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": false,
+  "valid_in_legacy_mode": false,
+  "description": "Compare RAX with r/m64 . If equal, ZF is set and r64 is loaded into r/m64 . Else, clear ZF and load r/m64 into RAX.",
+  "page": 291
+ },
+ {
   "opcode": "0F A2",
   "opcode_parsed": [
    "0F",
