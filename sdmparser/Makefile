@@ -18,7 +18,7 @@ test : sdmparser.js
 		ENTER LEAVE \
 		AAA \
 		INC DEC \
-		ADD SUB MUL DIV CMP \
+		ADD SUB MUL DIV CMP CMPXCHG \
 		CDQ \
 		IMUL \
 		SETcc \
