@@ -3447,6 +3447,327 @@
   "page": 214
  },
  {
+  "opcode": "0F A3 /r",
+  "opcode_parsed": [
+   "0F",
+   "A3",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "A3"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "BT r/m16, r16",
+  "instr_parsed": [
+   "BT",
+   "r/m16",
+   "r16"
+  ],
+  "op_en": "MR",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": true,
+  "description": "Store selected bit in CF flag.",
+  "page": 215
+ },
+ {
+  "opcode": "0F A3 /r",
+  "opcode_parsed": [
+   "0F",
+   "A3",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "A3"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "BT r/m32, r32",
+  "instr_parsed": [
+   "BT",
+   "r/m32",
+   "r32"
+  ],
+  "op_en": "MR",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": true,
+  "description": "Store selected bit in CF flag.",
+  "page": 215
+ },
+ {
+  "opcode": "REX.W + 0F A3 /r",
+  "opcode_parsed": [
+   "REX.W",
+   "0F",
+   "A3",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "REX.W"
+    ],
+    "byte_type": "rex-prefix",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "A3"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "BT r/m64, r64",
+  "instr_parsed": [
+   "BT",
+   "r/m64",
+   "r64"
+  ],
+  "op_en": "MR",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": false,
+  "valid_in_legacy_mode": false,
+  "description": "Store selected bit in CF flag.",
+  "page": 215
+ },
+ {
+  "opcode": "0F BA /4 ib",
+  "opcode_parsed": [
+   "0F",
+   "BA",
+   "/4",
+   "ib"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "BA"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/4"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "ib"
+    ],
+    "byte_type": "imm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "BT r/m16, imm8",
+  "instr_parsed": [
+   "BT",
+   "r/m16",
+   "imm8"
+  ],
+  "op_en": "MI",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": true,
+  "description": "Store selected bit in CF flag.",
+  "page": 215
+ },
+ {
+  "opcode": "0F BA /4 ib",
+  "opcode_parsed": [
+   "0F",
+   "BA",
+   "/4",
+   "ib"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "BA"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/4"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "ib"
+    ],
+    "byte_type": "imm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "BT r/m32, imm8",
+  "instr_parsed": [
+   "BT",
+   "r/m32",
+   "imm8"
+  ],
+  "op_en": "MI",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": true,
+  "description": "Store selected bit in CF flag.",
+  "page": 215
+ },
+ {
+  "opcode": "REX.W + 0F BA /4 ib",
+  "opcode_parsed": [
+   "REX.W",
+   "0F",
+   "BA",
+   "/4",
+   "ib"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "REX.W"
+    ],
+    "byte_type": "rex-prefix",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "BA"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/4"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "ib"
+    ],
+    "byte_type": "imm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "BT r/m64, imm8",
+  "instr_parsed": [
+   "BT",
+   "r/m64",
+   "imm8"
+  ],
+  "op_en": "MI",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": false,
+  "valid_in_legacy_mode": false,
+  "description": "Store selected bit in CF flag.",
+  "page": 215
+ },
+ {
   "opcode": "0F BB /r",
   "opcode_parsed": [
    "0F",

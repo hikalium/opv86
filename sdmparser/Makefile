@@ -14,6 +14,7 @@ unittest : sdmparser.js
 test : sdmparser.js
 	make unittest
 	node sdmparser.js --mnemonic \
+		BT \
 		SYSCALL SYSRET \
 		ENTER LEAVE \
 		AAA \

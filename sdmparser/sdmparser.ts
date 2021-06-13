@@ -4,6 +4,8 @@ const assert = require('assert').strict;
 const parser = require('fast-xml-parser');
 const he = require('he');
 
+const reMnemonic = /^[A-Z]\w+$/;
+
 interface SDMDataAttr {
   source_file: string;
   date_parsed: string;
@@ -352,7 +354,6 @@ function IsEndOfInstrTable(t: SDMText) {
 function CanonicalizeInstr(s: string): string[] {
   const canonicalized = [];
   let sep = s.split('*').join('').trim().split(' ');
-  const reMnemonic = /^[A-Z]\w+$/;
   const mn = sep[0];
   if (!reMnemonic.test(mn)) {
     throw new Error(`${mn} does not match with reMnemonic`);
@@ -1056,7 +1057,13 @@ const parserMap = {
           }
           let opcode = [];
           while (s.peek().attr.left < instrLeft - 1) {
-            opcode.push(GetText(s.next()).trim());
+            const e = s.peek();
+            const es = GetText(e);
+            if(opcode.length != 0 && reMnemonic.test(es)) {
+              break;
+            }
+            s.next();
+            opcode.push(es.trim());
           }
           const opcodeStr = opcode.join(' ');
           console.log(opcodeStr);
@@ -1064,6 +1071,7 @@ const parserMap = {
           while (s.peek().attr.left < opEnLeft - 50) {
             instr.push(GetText(s.next()).trim());
           }
+
           console.log(instr);
           let op_en = GetNonEmptyText(s);
           let valid_in_64_str;
@@ -1507,20 +1515,22 @@ process.exit((() => {
   }
   if (options['gen-op-table-only']) {
     const instr_list = JSON.parse(fs.readFileSync('instr_list.json', 'utf-8'));
-    const instrs = instr_list.map(e => e.opcode_bytes).map(e => {
-      return e.map(b => {
-        if (b.byte_type == 'opcode') {
-          return b.components[0];
-        }
-        if (b.byte_type == 'imm') {
-          return 'IMM' + (b.byte_size_min * 8);
-        }
-        return b.byte_type;
-      });
-    }).sort();
+    const instrs = instr_list.map(e => e.opcode_bytes)
+                       .map(e => {
+                         return e.map(b => {
+                           if (b.byte_type == 'opcode') {
+                             return b.components[0];
+                           }
+                           if (b.byte_type == 'imm') {
+                             return 'IMM' + (b.byte_size_min * 8);
+                           }
+                           return b.byte_type;
+                         });
+                       })
+                       .sort();
     const opmap = {};
-    for(const s of instrs) {
-      if(opmap[s[0]] === undefined){
+    for (const s of instrs) {
+      if (opmap[s[0]] === undefined) {
         opmap[s[0]] = [];
       }
       opmap[s[0]].push(s);
