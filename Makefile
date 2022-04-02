@@ -2,6 +2,9 @@ SRCS=src/opv86.ts src/opinterface.ts sdmparser/sdm_instr.ts
 
 TSARGS=-target es2016 --out gen/opv86.js ${SRCS}
 
+test:
+	make -C sdmparser test
+
 default:
 	make clean
 	make gen/opv86.js
@@ -12,7 +15,7 @@ gen/opv86.js : ${SRCS}
 
 .PHONY : default watch run clean
 
-watch : 
+watch :
 	tsc -w ${TSARGS}
 
 run : gen/opv86.js

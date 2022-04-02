@@ -1059,7 +1059,7 @@ const parserMap = {
           while (s.peek().attr.left < instrLeft - 1) {
             const e = s.peek();
             const es = GetText(e);
-            if(opcode.length != 0 && reMnemonic.test(es)) {
+            if (opcode.length != 0 && reMnemonic.test(es)) {
               break;
             }
             s.next();

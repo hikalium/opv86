@@ -2,8 +2,15 @@ PARSERFLAGS:=
 
 default: run
 
+.PHONY : pdf/325383-sdm-vol-2abcd.xml
+
 run : sdmparser.js
-	node sdmparser.js $(PARSERFLAGS)
+	-node sdmparser.js $(PARSERFLAGS)
+
+update_pdf : pdf/325383-sdm-vol-2abcd.xml
+
+pdf/325383-sdm-vol-2abcd.xml:
+	cd pdf && wget -O 325383-sdm-vol-2abcd.pdf --user-agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.60 Safari/537.36" https://www.intel.com/content/dam/develop/public/us/en/documents/325383-sdm-vol-2abcd.pdf && pdftohtml -nodrm -xml 325383-sdm-vol-2abcd.pdf
 
 debug : sdmparser.js
 	node --inspect-brk sdmparser.js $(PARSERFLAGS)
