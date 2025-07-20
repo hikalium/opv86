@@ -4,9 +4,12 @@
   "description": "Opcode / Instruction finder for x86_64",
   "main": "js/opv86.js",
   "dependencies": {
-    "@types/jquery": "^3.5.0"
+    "@types/jquery": "^3.5.0",
+    "command-line-args": "^6.0.1",
+    "fast-xml-parser": "^5.2.5",
+    "he": "^1.2.0",
+    "typescript": "^5.8.3"
   },
-  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

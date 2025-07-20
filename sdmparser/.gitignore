@@ -9,3 +9,4 @@ failed.json
 *.txt
 *.xml
 instr_list.json
+pdf/

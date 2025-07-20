@@ -30,7 +30,7 @@ function appendOpListElement(oplist, op, index) {
             .hide());
         opDescription.insertAfter(oplistRow);
         if (op.page !== undefined) {
-            opDescription.append($(`<a target="_blank" href='https://software.intel.com/content/dam/develop/public/us/en/documents/325383-sdm-vol-2abcd.pdf#page=${op.page}'>From p.${op.page} of Intel SDM</a>`));
+            opDescription.append($(`<a target="_blank" href='./sdmparser/pdf/325383-sdm-vol-2abcd.pdf#page=${op.page}'>From p.${op.page} of Intel SDM</a>`));
         }
     });
     const sizeAttrTable = {
