@@ -377,6 +377,34 @@ function TestLegacyPrefixNames() {
   assert.equal(d.bytes[0].name, 'opsize');
 }
 
+function TestIgnoredRexPrefix() {
+  // 'A REX prefix is ignored, as are its individual bits, when it is not
+  // needed for an instruction or when it does not immediately precede the
+  // opcode byte or the escape opcode byte (0FH)' (325383-092US, 2.2.1).
+  // objdump prints such a REX as an instruction of its own ('rex.WR'), but a
+  // processor consumes it as a part of the next instruction.
+  // 4c 36 94: the REX is followed by the SS override, so REX.W has no effect
+  // and the instruction is the 32 bit XCHG, three bytes long.
+  let d = decode('4c3694');
+  assert.equal(d.length, 3);
+  assert.equal(d.instr, 'XCHG EAX, r32');
+  assert.equal(typesOf(d), 'rex-prefix,prefix,opcode');
+  // 4c 0b 06: the same REX right in front of the opcode does take effect.
+  d = decode('4c0b06');
+  assert.equal(d.length, 3);
+  assert.equal(d.instr, 'OR r64, r/m64');
+  // 4c 36 0b 06: with a prefix in between, REX.W is ignored and the 32 bit
+  // form is decoded instead.
+  d = decode('4c360b06');
+  assert.equal(d.length, 4);
+  assert.equal(d.instr, 'OR r32, r/m32');
+  // 45 46 fa: two REX bytes in a row; only the last one counts and the
+  // instruction is CLI.
+  d = decode('4546fa');
+  assert.equal(d.length, 3);
+  assert.equal(d.mnemonic, 'CLI');
+}
+
 function TestMnemonicMatches() {
   assert.ok(mnemonicMatches('MOV', 'movl'));
   assert.ok(mnemonicMatches('MOV', 'movq'));
@@ -460,6 +488,7 @@ function TestAgainstObjdumpFixture() {
 function runTest() {
   TestPrefixesAndRex();
   TestLegacyPrefixNames();
+  TestIgnoredRexPrefix();
   TestModRMAndSIBAndDisp();
   TestImmediate();
   TestJumps();

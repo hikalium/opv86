@@ -522,8 +522,34 @@ function decodeInstr(bin, table) {
         vex_l: -1,
         modrm: -1,
     };
-    if (i < bin.length && (bin[i] & 0xf0) === 0x40) {
+    // A REX prefix takes effect only when it immediately precedes the opcode or
+    // the 0F escape byte: 'A REX prefix is ignored, as are its individual bits,
+    // when it is not needed for an instruction or when it does not immediately
+    // precede the opcode byte or the escape opcode byte (0FH)' (325383-092US,
+    // 2.2.1). So keep reading the prefixes after one, and only the last REX
+    // counts. objdump prints such an ignored REX as an instruction of its own
+    // ('4c 36 94' is 'rex.WR' followed by 'xchg'), but a processor consumes the
+    // three bytes as one instruction with the REX ignored.
+    while (i < bin.length && ((bin[i] & 0xf0) === 0x40 || isLegacyPrefixByte(bin[i]))) {
+        if (isLegacyPrefixByte(bin[i])) {
+            if (bin[i] === 0x66)
+                has66 = true;
+            if (bin[i] === 0xf2)
+                hasF2 = true;
+            if (bin[i] === 0xf3)
+                hasF3 = true;
+            types[i] = ByteType.Prefix;
+            names[i] = legacyPrefixName(bin[i], '', false, false);
+            prefixIndices.push(i);
+            // The REX which was read before this prefix has no effect.
+            ctx.rex_w = false;
+            ctx.mandatory_prefix = hasF3 ? 'F3' : hasF2 ? 'F2' : has66 ? '66' : 'NP';
+            ctx.operand_size_16 = has66;
+            i++;
+            continue;
+        }
         types[i] = ByteType.REXPrefix;
+        names[i] = 'REX';
         ctx.rex_w = (bin[i] & 0x08) !== 0;
         i++;
     }
