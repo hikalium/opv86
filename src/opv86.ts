@@ -8,7 +8,8 @@ function appendOpListHeaders(oplist) {
                        .text('Description'));
   oplist.append(oplistRow);
 }
-function appendOpListElement(oplist, op: SDMInstr, index: number) {
+function appendOpListElement(
+    oplist, op: SDMInstr, index: number): HTMLElement {
   const oplistRow = $('<div>')
                         .addClass('opv86-oplist-container')
                         .addClass(`opv86-oplist-row-${index}`);
@@ -71,6 +72,9 @@ function appendOpListElement(oplist, op: SDMInstr, index: number) {
                        .addClass('opv86-oplist-item-description')
                        .text(op.description));
   oplist.append(oplistRow);
+  // Return the raw element so that the filter can show/hide it without
+  // looking it up in the document again.
+  return oplistRow[0];
 }
 
 const opTable = {
@@ -226,24 +230,35 @@ function appendMatcherToOp(op: SDMInstr) {
   op.matcher_opcode = op.opcode.replace(/ /g, '').toLowerCase();
   op.matcher_instr = op.instr.replace(/ /g, '').toLowerCase();
 }
-function updateFilter(data: SDMInstr[], filter: string) {
+function updateFilter(data: SDMInstr[], rows: HTMLElement[], filter: string) {
   updateDecoderOutput(filter);
   $('.opv86-description-panel').remove();
   filter = filter.trim().toLowerCase().replace(/\s+/g, '');
-  for (const index in data) {
-    const op: SDMInstr = data[index];
-    if (isMatchedWithFilter(op, filter)) {
-      $(`.opv86-oplist-row-${index}`).css('display', '');
-      continue;
+  let matchedCount = 0;
+  let lastMatchedRow: HTMLElement = null;
+  for (let i = 0; i < data.length; i++) {
+    const matched = isMatchedWithFilter(data[i], filter);
+    // Touch the cached element directly: doing $('.opv86-oplist-row-i') here
+    // scans the whole document once per instruction, which is O(N^2) in total.
+    rows[i].style.display = matched ? '' : 'none';
+    if (matched) {
+      matchedCount++;
+      lastMatchedRow = rows[i];
     }
-    $(`.opv86-oplist-row-${index}`).css('display', 'none');
   }
-  // Expand the panel if there is only one result
-  // (actually, 2, since they includes the header row).
-  const filteredRows = $('.opv86-oplist-container:visible');
-  if (filteredRows.length == 2) {
-    filteredRows[1].click();
+  // Expand the panel if there is only one result.
+  if (matchedCount == 1) {
+    lastMatchedRow.click();
   }
+}
+function compareOps(a: SDMInstr, b: SDMInstr) {
+  // Sort by mnemonic, then by opcode to keep the same mnemonic in a stable
+  // and sensible order.
+  const mnemonicA = (a.instr_parsed[0] || '').toUpperCase();
+  const mnemonicB = (b.instr_parsed[0] || '').toUpperCase();
+  if (mnemonicA !== mnemonicB) return mnemonicA < mnemonicB ? -1 : 1;
+  if (a.opcode !== b.opcode) return a.opcode < b.opcode ? -1 : 1;
+  return 0;
 }
 
 (() => {
@@ -251,20 +266,23 @@ function updateFilter(data: SDMInstr[], filter: string) {
   const filterValueInput =
       <HTMLInputElement>document.getElementById('filter-value');
   $.getJSON(`data/instr_list.json`, function(data: SDMInstr[]) {
+    // The data file is in the SDM page order, so sort it here.
+    data.sort(compareOps);
     appendOpListHeaders(opListContainerDiv);
     console.log(data[0]);
+    const rows: HTMLElement[] = [];
     for (let i = 0; i < data.length; i++) {
-      appendOpListElement(opListContainerDiv, data[i], i);
+      rows.push(appendOpListElement(opListContainerDiv, data[i], i));
       appendMatcherToOp(data[i]);
     }
     const q = new URL(location.href).searchParams.get('q');
     if (q !== null) {
       filterValueInput.value = decodeURIComponent(q);
-      updateFilter(data, q);
+      updateFilter(data, rows, q);
     }
     filterValueInput.addEventListener('keyup', () => {
       const filterValue = filterValueInput.value;
-      updateFilter(data, filterValue);
+      updateFilter(data, rows, filterValue);
       history.replaceState(null, '', '?q=' + encodeURIComponent(filterValue));
     });
   });
