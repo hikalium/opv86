@@ -37,21 +37,12 @@ function appendOpListElement(oplist, op, index) {
         const opDescription = $('<div>').addClass('opv86-description-panel');
         opDescription.append($('<h3>').text(op.instr));
         opDescription.append($('<p>').text(op.description));
-        if (op.op_en) {
-            opDescription.append($('<h4>').text('Encoding'));
-            opDescription.append($('<p>').text(op.op_en));
-        }
-        opDescription.append($('<h4>').text('Parsed info (Click to expand)').click(() => {
-            $(`#opv86-oplist-row-${index}-parsed-info`).toggle();
-        }));
-        opDescription.append($('<pre>')
-            .attr('id', `opv86-oplist-row-${index}-parsed-info`)
-            .text(JSON.stringify(op, null, '  '))
-            .hide());
-        opDescription.insertAfter(oplistRow);
         if (op.page !== undefined) {
-            opDescription.append($(`<a target="_blank" href='./sdmparser/pdf/325383-sdm-vol-2abcd.pdf#page=${op.page}'>From p.${op.page} of Intel SDM</a>`));
+            opDescription.append($('<p>').append($(`<a target="_blank" href='./sdmparser/pdf/325383-sdm-vol-2abcd.pdf#page=${op.page}'>Source: p.${op.page} of Intel SDM (click to open PDF)</a>`)));
         }
+        opDescription.append($('<h4>').text('Parsed info'));
+        opDescription.append($('<pre>').text(JSON.stringify(op, null, '  ')));
+        opDescription.insertAfter(oplistRow);
     });
     const sizeAttrTable = {
         // A component which occupies no byte (e.g. 'NP' and the precondition of a
