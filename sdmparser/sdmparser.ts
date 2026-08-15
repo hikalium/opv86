@@ -246,8 +246,9 @@ function CanonicalizeValidIn3264(str: string):
   if (str === 'V/V' || str === 'VV' || str === 'V') {
     return {valid32: true, valid64: true};
   }
-  if (str === 'V/N.E.' || str === 'V/I') {
-    // Valid in 64 bit mode only.
+  if (str.startsWith('V/N.') || str === 'V/I') {
+    // Valid in 64 bit mode only. The trailing part of 'V/N.E.' can be lost by
+    // the text extraction.
     return {valid32: false, valid64: true};
   }
   if (str === 'N.E./V') {
@@ -1336,7 +1337,7 @@ function ParseInstrTableByColumns(
   console.error(columns);
   const findColumn = (re: RegExp) => columns.find(c => re.test(c.title));
   const opcodeCol = findColumn(/^opcode/);
-  const opEnCol = findColumn(/^op\/?en/);
+  const opEnCol = findColumn(/^op(\/?en)?$|^op\/?en64\/32/);
   let validIn3264Col = findColumn(/^64\/32/);
   if (!validIn3264Col && opEnCol && /^op\/?en64\/32/.test(opEnCol.title)) {
     // 'Op / En' and '64/32 bit' can be in the same token. In that case, the
@@ -1564,6 +1565,9 @@ const HeaderTexts = {
   // 'Op / En' and '64/32 bit' are sometimes merged into one token.
   'Op / En 64/32 bit': true,
   'Op/En 64/32 bit': true,
+  'Op/ En 64/32 bit': true,
+  'Op/ En 64/32-bit': true,
+  'Op/ En 64/32-': true,
   '64-Bit Mode Compat/': true,
   'Feature': true,
   'Feature Flag': true,

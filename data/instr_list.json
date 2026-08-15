@@ -57942,6 +57942,416 @@
   "page": 801
  },
  {
+  "opcode": "NP 0F 6F /r",
+  "opcode_parsed": [
+   "NP",
+   "0F",
+   "6F",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "NP"
+    ],
+    "byte_size_min": 0,
+    "byte_size_max": 0
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "6F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "MOVQ mm, mm/m64",
+  "instr_parsed": [
+   "MOVQ",
+   "mm",
+   "mm/m64"
+  ],
+  "op_en": "A",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "MMX",
+  "description": "Move quadword from mm/m64 to mm.",
+  "page": 802
+ },
+ {
+  "opcode": "NP 0F 7F /r",
+  "opcode_parsed": [
+   "NP",
+   "0F",
+   "7F",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "NP"
+    ],
+    "byte_size_min": 0,
+    "byte_size_max": 0
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "7F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "MOVQ mm/m64, mm",
+  "instr_parsed": [
+   "MOVQ",
+   "mm/m64",
+   "mm"
+  ],
+  "op_en": "B",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "MMX",
+  "description": "Move quadword from mm to mm/m64.",
+  "page": 802
+ },
+ {
+  "opcode": "F3 0F 7E /r",
+  "opcode_parsed": [
+   "F3",
+   "0F",
+   "7E",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "F3"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "7E"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "MOVQ xmm1, xmm2/m64",
+  "instr_parsed": [
+   "MOVQ",
+   "xmm1",
+   "xmm2/m64"
+  ],
+  "op_en": "A",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "SSE2",
+  "description": "Move quadword from xmm2/mem64 to xmm1.",
+  "page": 802
+ },
+ {
+  "opcode": "VEX.128.F3.0F.WIG 7E /r",
+  "opcode_parsed": [
+   "VEX.128.F3.0F.WIG",
+   "7E",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "VEX.128.F3.0F.WIG"
+    ],
+    "byte_type": "vex-prefix",
+    "byte_size_min": 2,
+    "byte_size_max": 3
+   },
+   {
+    "components": [
+     "7E"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "VMOVQ xmm1, xmm2/m64",
+  "instr_parsed": [
+   "VMOVQ",
+   "xmm1",
+   "xmm2/m64"
+  ],
+  "op_en": "A",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "AVX",
+  "description": "Move quadword from xmm2 to xmm1.",
+  "page": 802
+ },
+ {
+  "opcode": "EVEX.128.F3.0F.W1 7E /r",
+  "opcode_parsed": [
+   "EVEX.128.F3.0F.W1",
+   "7E",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "EVEX.128.F3.0F.W1"
+    ],
+    "byte_type": "evex-prefix",
+    "byte_size_min": 4,
+    "byte_size_max": 4
+   },
+   {
+    "components": [
+     "7E"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "VMOVQ xmm1, xmm2/m64",
+  "instr_parsed": [
+   "VMOVQ",
+   "xmm1",
+   "xmm2/m64"
+  ],
+  "op_en": "C",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "AVX512F",
+  "description": "Move quadword from xmm2/m64 to xmm1.",
+  "page": 802
+ },
+ {
+  "opcode": "66 0F D6 /r",
+  "opcode_parsed": [
+   "66",
+   "0F",
+   "D6",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "66"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "D6"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "MOVQ xmm2/m64, xmm1",
+  "instr_parsed": [
+   "MOVQ",
+   "xmm2/m64",
+   "xmm1"
+  ],
+  "op_en": "B",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "SSE2",
+  "description": "Move quadword from xmm1 to xmm2/mem64.",
+  "page": 802
+ },
+ {
+  "opcode": "VEX.128.66.0F.WIG D6 /r",
+  "opcode_parsed": [
+   "VEX.128.66.0F.WIG",
+   "D6",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "VEX.128.66.0F.WIG"
+    ],
+    "byte_type": "vex-prefix",
+    "byte_size_min": 2,
+    "byte_size_max": 3
+   },
+   {
+    "components": [
+     "D6"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "VMOVQ xmm1/m64, xmm2",
+  "instr_parsed": [
+   "VMOVQ",
+   "xmm1/m64",
+   "xmm2"
+  ],
+  "op_en": "B",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "AVX",
+  "description": "Move quadword from xmm2 register to xmm1/m64.",
+  "page": 802
+ },
+ {
+  "opcode": "EVEX.128.66.0F.W1 D6 /r",
+  "opcode_parsed": [
+   "EVEX.128.66.0F.W1",
+   "D6",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "EVEX.128.66.0F.W1"
+    ],
+    "byte_type": "evex-prefix",
+    "byte_size_min": 4,
+    "byte_size_max": 4
+   },
+   {
+    "components": [
+     "D6"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "VMOVQ xmm1/m64, xmm2",
+  "instr_parsed": [
+   "VMOVQ",
+   "xmm1/m64",
+   "xmm2"
+  ],
+  "op_en": "D",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "AVX512F",
+  "description": "Move quadword from xmm2 register to xmm1/m64.",
+  "page": 802
+ },
+ {
   "opcode": "F3 0F D6 /r",
   "opcode_parsed": [
    "F3",
@@ -62734,6 +63144,102 @@
   "cpuid_feature_flag": "AVX512F",
   "description": "Multiply the low single precision floating-point value in xmm3/m32 by the low single precision floating-point value in xmm2.",
   "page": 853
+ },
+ {
+  "opcode": "VEX.LZ.F2.0F38.W0 F6 /r",
+  "opcode_parsed": [
+   "VEX.LZ.F2.0F38.W0",
+   "F6",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "VEX.LZ.F2.0F38.W0"
+    ],
+    "byte_type": "vex-prefix",
+    "byte_size_min": 2,
+    "byte_size_max": 3
+   },
+   {
+    "components": [
+     "F6"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "MULX r32a, r32b, r/m32",
+  "instr_parsed": [
+   "MULX",
+   "r32a",
+   "r32b",
+   "r/m32"
+  ],
+  "op_en": "RVM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "BMI2",
+  "description": "Unsigned multiply of r/m32 with EDX without affecting arithmetic flags.",
+  "page": 855
+ },
+ {
+  "opcode": "VEX.LZ.F2.0F38.W1 F6 /r",
+  "opcode_parsed": [
+   "VEX.LZ.F2.0F38.W1",
+   "F6",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "VEX.LZ.F2.0F38.W1"
+    ],
+    "byte_type": "vex-prefix",
+    "byte_size_min": 2,
+    "byte_size_max": 3
+   },
+   {
+    "components": [
+     "F6"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "MULX r64a, r64b, r/m64",
+  "instr_parsed": [
+   "MULX",
+   "r64a",
+   "r64b",
+   "r/m64"
+  ],
+  "op_en": "RVM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": false,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "BMI2",
+  "description": "Unsigned multiply of r/m64 with RDX without affecting arithmetic flags.",
+  "page": 855
  },
  {
   "opcode": "0F 01 C9",
@@ -71924,6 +72430,1059 @@
   "page": 945
  },
  {
+  "opcode": "NP 0F 74 /r",
+  "opcode_parsed": [
+   "NP",
+   "0F",
+   "74",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "NP"
+    ],
+    "byte_size_min": 0,
+    "byte_size_max": 0
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "74"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "PCMPEQB mm, mm/m64",
+  "instr_parsed": [
+   "PCMPEQB",
+   "mm",
+   "mm/m64"
+  ],
+  "op_en": "A",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "MMX",
+  "description": "Compare packed bytes in mm/m64 and mm for equality.",
+  "page": 948
+ },
+ {
+  "opcode": "66 0F 74 /r",
+  "opcode_parsed": [
+   "66",
+   "0F",
+   "74",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "66"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "74"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "PCMPEQB xmm1, xmm2/m128",
+  "instr_parsed": [
+   "PCMPEQB",
+   "xmm1",
+   "xmm2/m128"
+  ],
+  "op_en": "A",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "SSE2",
+  "description": "Compare packed bytes in xmm2/m128 and xmm1 for equality.",
+  "page": 948
+ },
+ {
+  "opcode": "NP 0F 75 /r",
+  "opcode_parsed": [
+   "NP",
+   "0F",
+   "75",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "NP"
+    ],
+    "byte_size_min": 0,
+    "byte_size_max": 0
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "75"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "PCMPEQW mm, mm/m64",
+  "instr_parsed": [
+   "PCMPEQW",
+   "mm",
+   "mm/m64"
+  ],
+  "op_en": "A",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "MMX",
+  "description": "Compare packed words in mm/m64 and mm for equality.",
+  "page": 948
+ },
+ {
+  "opcode": "66 0F 75 /r",
+  "opcode_parsed": [
+   "66",
+   "0F",
+   "75",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "66"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "75"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "PCMPEQW xmm1, xmm2/m128",
+  "instr_parsed": [
+   "PCMPEQW",
+   "xmm1",
+   "xmm2/m128"
+  ],
+  "op_en": "A",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "SSE2",
+  "description": "Compare packed words in xmm2/m128 and xmm1 for equality.",
+  "page": 948
+ },
+ {
+  "opcode": "NP 0F 76 /r",
+  "opcode_parsed": [
+   "NP",
+   "0F",
+   "76",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "NP"
+    ],
+    "byte_size_min": 0,
+    "byte_size_max": 0
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "76"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "PCMPEQD mm, mm/m64",
+  "instr_parsed": [
+   "PCMPEQD",
+   "mm",
+   "mm/m64"
+  ],
+  "op_en": "A",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "MMX",
+  "description": "Compare packed doublewords in mm/m64 and mm for equality.",
+  "page": 948
+ },
+ {
+  "opcode": "66 0F 76 /r",
+  "opcode_parsed": [
+   "66",
+   "0F",
+   "76",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "66"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "76"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "PCMPEQD xmm1, xmm2/m128",
+  "instr_parsed": [
+   "PCMPEQD",
+   "xmm1",
+   "xmm2/m128"
+  ],
+  "op_en": "A",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "SSE2",
+  "description": "Compare packed doublewords in xmm2/m128 and xmm1 for equality.",
+  "page": 948
+ },
+ {
+  "opcode": "VEX.128.66.0F.WIG 74 /r",
+  "opcode_parsed": [
+   "VEX.128.66.0F.WIG",
+   "74",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "VEX.128.66.0F.WIG"
+    ],
+    "byte_type": "vex-prefix",
+    "byte_size_min": 2,
+    "byte_size_max": 3
+   },
+   {
+    "components": [
+     "74"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "VPCMPEQB xmm1, xmm2, xmm3/m128",
+  "instr_parsed": [
+   "VPCMPEQB",
+   "xmm1",
+   "xmm2",
+   "xmm3/m128"
+  ],
+  "op_en": "B",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "AVX",
+  "description": "Compare packed bytes in xmm3/m128 and xmm2 for equality.",
+  "page": 948
+ },
+ {
+  "opcode": "VEX.128.66.0F.WIG 75 /r",
+  "opcode_parsed": [
+   "VEX.128.66.0F.WIG",
+   "75",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "VEX.128.66.0F.WIG"
+    ],
+    "byte_type": "vex-prefix",
+    "byte_size_min": 2,
+    "byte_size_max": 3
+   },
+   {
+    "components": [
+     "75"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "VPCMPEQW xmm1, xmm2, xmm3/m128",
+  "instr_parsed": [
+   "VPCMPEQW",
+   "xmm1",
+   "xmm2",
+   "xmm3/m128"
+  ],
+  "op_en": "B",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "AVX",
+  "description": "Compare packed words in xmm3/m128 and xmm2 for equality.",
+  "page": 948
+ },
+ {
+  "opcode": "VEX.128.66.0F.WIG 76 /r",
+  "opcode_parsed": [
+   "VEX.128.66.0F.WIG",
+   "76",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "VEX.128.66.0F.WIG"
+    ],
+    "byte_type": "vex-prefix",
+    "byte_size_min": 2,
+    "byte_size_max": 3
+   },
+   {
+    "components": [
+     "76"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "VPCMPEQD xmm1, xmm2, xmm3/m128",
+  "instr_parsed": [
+   "VPCMPEQD",
+   "xmm1",
+   "xmm2",
+   "xmm3/m128"
+  ],
+  "op_en": "B",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "AVX",
+  "description": "Compare packed doublewords in xmm3/m128 and xmm2 for equality.",
+  "page": 948
+ },
+ {
+  "opcode": "VEX.256.66.0F.WIG 74 /r",
+  "opcode_parsed": [
+   "VEX.256.66.0F.WIG",
+   "74",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "VEX.256.66.0F.WIG"
+    ],
+    "byte_type": "vex-prefix",
+    "byte_size_min": 2,
+    "byte_size_max": 3
+   },
+   {
+    "components": [
+     "74"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "VPCMPEQB ymm1, ymm2, ymm3 /m256",
+  "instr_parsed": [
+   "VPCMPEQB",
+   "ymm1",
+   "ymm2",
+   "ymm3/m256"
+  ],
+  "op_en": "B",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "AVX2",
+  "description": "Compare packed bytes in ymm3/m256 and ymm2 for equality.",
+  "page": 948
+ },
+ {
+  "opcode": "VEX.256.66.0F.WIG 75 /r",
+  "opcode_parsed": [
+   "VEX.256.66.0F.WIG",
+   "75",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "VEX.256.66.0F.WIG"
+    ],
+    "byte_type": "vex-prefix",
+    "byte_size_min": 2,
+    "byte_size_max": 3
+   },
+   {
+    "components": [
+     "75"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "VPCMPEQW ymm1, ymm2, ymm3 /m256",
+  "instr_parsed": [
+   "VPCMPEQW",
+   "ymm1",
+   "ymm2",
+   "ymm3/m256"
+  ],
+  "op_en": "B",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "AVX2",
+  "description": "Compare packed words in ymm3/m256 and ymm2 for equality.",
+  "page": 948
+ },
+ {
+  "opcode": "VEX.256.66.0F.WIG 76 /r",
+  "opcode_parsed": [
+   "VEX.256.66.0F.WIG",
+   "76",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "VEX.256.66.0F.WIG"
+    ],
+    "byte_type": "vex-prefix",
+    "byte_size_min": 2,
+    "byte_size_max": 3
+   },
+   {
+    "components": [
+     "76"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "VPCMPEQD ymm1, ymm2, ymm3 /m256",
+  "instr_parsed": [
+   "VPCMPEQD",
+   "ymm1",
+   "ymm2",
+   "ymm3/m256"
+  ],
+  "op_en": "B",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "AVX2",
+  "description": "Compare packed doublewords in ymm3/m256 and ymm2 for equality.",
+  "page": 948
+ },
+ {
+  "opcode": "EVEX.128.66.0F.W0 76 /r",
+  "opcode_parsed": [
+   "EVEX.128.66.0F.W0",
+   "76",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "EVEX.128.66.0F.W0"
+    ],
+    "byte_type": "evex-prefix",
+    "byte_size_min": 4,
+    "byte_size_max": 4
+   },
+   {
+    "components": [
+     "76"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "VPCMPEQD k1 {k2}, xmm2, xmm3/m128/m32bcst",
+  "instr_parsed": [
+   "VPCMPEQD",
+   "k1 {k2}",
+   "xmm2",
+   "xmm3/m128/m32bcst"
+  ],
+  "op_en": "C",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "(AVX512VL AND",
+  "description": "Compare Equal between int32 vector xmm2 and int32 vector xmm3/m128/m32bcst, and set vector mask k1 to reflect the zero/nonzero status of each element of the result, under writemask.",
+  "page": 948
+ },
+ {
+  "opcode": "EVEX.256.66.0F.W0 76 /r",
+  "opcode_parsed": [
+   "EVEX.256.66.0F.W0",
+   "76",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "EVEX.256.66.0F.W0"
+    ],
+    "byte_type": "evex-prefix",
+    "byte_size_min": 4,
+    "byte_size_max": 4
+   },
+   {
+    "components": [
+     "76"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "VPCMPEQD k1 {k2}, ymm2, ymm3/m256/m32bcst",
+  "instr_parsed": [
+   "VPCMPEQD",
+   "k1 {k2}",
+   "ymm2",
+   "ymm3/m256/m32bcst"
+  ],
+  "op_en": "C",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "(AVX512VL AND",
+  "description": "Compare Equal between int32 vector ymm2 and int32 vector ymm3/m256/m32bcst, and set vector mask k1 to reflect the zero/nonzero status of each element of the result, under writemask.",
+  "page": 948
+ },
+ {
+  "opcode": "EVEX.512.66.0F.W0 76 /r",
+  "opcode_parsed": [
+   "EVEX.512.66.0F.W0",
+   "76",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "EVEX.512.66.0F.W0"
+    ],
+    "byte_type": "evex-prefix",
+    "byte_size_min": 4,
+    "byte_size_max": 4
+   },
+   {
+    "components": [
+     "76"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "VPCMPEQD k1 {k2}, zmm2, zmm3/m512/m32bcst",
+  "instr_parsed": [
+   "VPCMPEQD",
+   "k1 {k2}",
+   "zmm2",
+   "zmm3/m512/m32bcst"
+  ],
+  "op_en": "C",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "AVX512F",
+  "description": "Compare Equal between int32 vectors in zmm2 and zmm3/m512/m32bcst, and set destination k1 according to the comparison results under writemask k2.",
+  "page": 948
+ },
+ {
+  "opcode": "EVEX.128.66.0F.WIG 74 /r",
+  "opcode_parsed": [
+   "EVEX.128.66.0F.WIG",
+   "74",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "EVEX.128.66.0F.WIG"
+    ],
+    "byte_type": "evex-prefix",
+    "byte_size_min": 4,
+    "byte_size_max": 4
+   },
+   {
+    "components": [
+     "74"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "VPCMPEQB k1 {k2}, xmm2, xmm3 /m128",
+  "instr_parsed": [
+   "VPCMPEQB",
+   "k1 {k2}",
+   "xmm2",
+   "xmm3/m128"
+  ],
+  "op_en": "D",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "(AVX512VL AND",
+  "description": "Compare packed bytes in xmm3/m128 and xmm2 for equality and set vector mask k1 to reflect the zero/nonzero status of each element of the result, under writemask.",
+  "page": 948
+ },
+ {
+  "opcode": "EVEX.256.66.0F.WIG 74 /r",
+  "opcode_parsed": [
+   "EVEX.256.66.0F.WIG",
+   "74",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "EVEX.256.66.0F.WIG"
+    ],
+    "byte_type": "evex-prefix",
+    "byte_size_min": 4,
+    "byte_size_max": 4
+   },
+   {
+    "components": [
+     "74"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "VPCMPEQB k1 {k2}, ymm2, ymm3 /m256",
+  "instr_parsed": [
+   "VPCMPEQB",
+   "k1 {k2}",
+   "ymm2",
+   "ymm3/m256"
+  ],
+  "op_en": "D",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "(AVX512VL AND",
+  "description": "Compare packed bytes in ymm3/m256 and ymm2 for equality and set vector mask k1 to reflect the zero/nonzero status of each element of the result, under writemask.",
+  "page": 949
+ },
+ {
+  "opcode": "EVEX.512.66.0F.WIG 74 /r",
+  "opcode_parsed": [
+   "EVEX.512.66.0F.WIG",
+   "74",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "EVEX.512.66.0F.WIG"
+    ],
+    "byte_type": "evex-prefix",
+    "byte_size_min": 4,
+    "byte_size_max": 4
+   },
+   {
+    "components": [
+     "74"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "VPCMPEQB k1 {k2}, zmm2, zmm3 /m512",
+  "instr_parsed": [
+   "VPCMPEQB",
+   "k1 {k2}",
+   "zmm2",
+   "zmm3/m512"
+  ],
+  "op_en": "D",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "AVX512BW",
+  "description": "Compare packed bytes in zmm3/m512 and zmm2 for equality and set vector mask k1 to reflect the zero/nonzero status of each element of the result, under writemask.",
+  "page": 949
+ },
+ {
+  "opcode": "EVEX.128.66.0F.WIG 75 /r",
+  "opcode_parsed": [
+   "EVEX.128.66.0F.WIG",
+   "75",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "EVEX.128.66.0F.WIG"
+    ],
+    "byte_type": "evex-prefix",
+    "byte_size_min": 4,
+    "byte_size_max": 4
+   },
+   {
+    "components": [
+     "75"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "VPCMPEQW k1 {k2}, xmm2, xmm3 /m128",
+  "instr_parsed": [
+   "VPCMPEQW",
+   "k1 {k2}",
+   "xmm2",
+   "xmm3/m128"
+  ],
+  "op_en": "D",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "(AVX512VL AND",
+  "description": "Compare packed words in xmm3/m128 and xmm2 for equality and set vector mask k1 to reflect the zero/nonzero status of each element of the result, under writemask.",
+  "page": 949
+ },
+ {
+  "opcode": "EVEX.256.66.0F.WIG 75 /r",
+  "opcode_parsed": [
+   "EVEX.256.66.0F.WIG",
+   "75",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "EVEX.256.66.0F.WIG"
+    ],
+    "byte_type": "evex-prefix",
+    "byte_size_min": 4,
+    "byte_size_max": 4
+   },
+   {
+    "components": [
+     "75"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "VPCMPEQW k1 {k2}, ymm2, ymm3 /m256",
+  "instr_parsed": [
+   "VPCMPEQW",
+   "k1 {k2}",
+   "ymm2",
+   "ymm3/m256"
+  ],
+  "op_en": "D",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "(AVX512VL AND",
+  "description": "Compare packed words in ymm3/m256 and ymm2 for equality and set vector mask k1 to reflect the zero/nonzero status of each element of the result, under writemask.",
+  "page": 949
+ },
+ {
+  "opcode": "EVEX.512.66.0F.WIG 75 /r",
+  "opcode_parsed": [
+   "EVEX.512.66.0F.WIG",
+   "75",
+   "/r"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "EVEX.512.66.0F.WIG"
+    ],
+    "byte_type": "evex-prefix",
+    "byte_size_min": 4,
+    "byte_size_max": 4
+   },
+   {
+    "components": [
+     "75"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "VPCMPEQW k1 {k2}, zmm2, zmm3 /m512",
+  "instr_parsed": [
+   "VPCMPEQW",
+   "k1 {k2}",
+   "zmm2",
+   "zmm3/m512"
+  ],
+  "op_en": "D",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "AVX512BW",
+  "description": "Compare packed words in zmm3/m512 and zmm2 for equality and set vector mask k1 to reflect the zero/nonzero status of each element of the result, under writemask.",
+  "page": 949
+ },
+ {
   "opcode": "66 0F 38 29 /r",
   "opcode_parsed": [
    "66",
@@ -74640,6 +76199,835 @@
   "cpuid_feature_flag": "AVX",
   "description": "Find the minimum unsigned word in xmm2/m128 and place its value in the low word of xmm1 and its index in the second-lowest word of xmm1.",
   "page": 1001
+ },
+ {
+  "opcode": "66 0F 3A 20 /r ib",
+  "opcode_parsed": [
+   "66",
+   "0F",
+   "3A",
+   "20",
+   "/r",
+   "ib"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "66"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "3A"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "20"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "ib"
+    ],
+    "byte_type": "imm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "PINSRB xmm1, r32/m8, imm8",
+  "instr_parsed": [
+   "PINSRB",
+   "xmm1",
+   "r32/m8",
+   "imm8"
+  ],
+  "op_en": "A",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "SSE4_1",
+  "description": "Insert a byte integer value from r32/m8 into xmm1 at the destination element in xmm1 specified by imm8.",
+  "page": 1008
+ },
+ {
+  "opcode": "66 0F 3A 22 /r ib",
+  "opcode_parsed": [
+   "66",
+   "0F",
+   "3A",
+   "22",
+   "/r",
+   "ib"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "66"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "3A"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "22"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "ib"
+    ],
+    "byte_type": "imm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "PINSRD xmm1, r/m32, imm8",
+  "instr_parsed": [
+   "PINSRD",
+   "xmm1",
+   "r/m32",
+   "imm8"
+  ],
+  "op_en": "A",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "SSE4_1",
+  "description": "Insert a dword integer value from r/m32 into the xmm1 at the destination element specified by imm8.",
+  "page": 1008
+ },
+ {
+  "opcode": "66 REX.W 0F 3A 22 /r ib",
+  "opcode_parsed": [
+   "66",
+   "REX.W",
+   "0F",
+   "3A",
+   "22",
+   "/r",
+   "ib"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "66"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "REX.W"
+    ],
+    "byte_type": "rex-prefix",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "3A"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "22"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "ib"
+    ],
+    "byte_type": "imm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "PINSRQ xmm1, r/m64, imm8",
+  "instr_parsed": [
+   "PINSRQ",
+   "xmm1",
+   "r/m64",
+   "imm8"
+  ],
+  "op_en": "A",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": false,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "SSE4_1",
+  "description": "Insert a qword integer value from r/m64 into the xmm1 at the destination element specified by imm8.",
+  "page": 1008
+ },
+ {
+  "opcode": "VEX.128.66.0F3A.W0 20 /r ib",
+  "opcode_parsed": [
+   "VEX.128.66.0F3A.W0",
+   "20",
+   "/r",
+   "ib"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "VEX.128.66.0F3A.W0"
+    ],
+    "byte_type": "vex-prefix",
+    "byte_size_min": 2,
+    "byte_size_max": 3
+   },
+   {
+    "components": [
+     "20"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "ib"
+    ],
+    "byte_type": "imm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "VPINSRB xmm1, xmm2, r32/m8, imm8",
+  "instr_parsed": [
+   "VPINSRB",
+   "xmm1",
+   "xmm2",
+   "r32/m8",
+   "imm8"
+  ],
+  "op_en": "B",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "AVX",
+  "description": "Merge a byte integer value from r32/m8 and rest from xmm2 into xmm1 at the byte offset in imm8.",
+  "page": 1008
+ },
+ {
+  "opcode": "VEX.128.66.0F3A.W0 22 /r ib",
+  "opcode_parsed": [
+   "VEX.128.66.0F3A.W0",
+   "22",
+   "/r",
+   "ib"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "VEX.128.66.0F3A.W0"
+    ],
+    "byte_type": "vex-prefix",
+    "byte_size_min": 2,
+    "byte_size_max": 3
+   },
+   {
+    "components": [
+     "22"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "ib"
+    ],
+    "byte_type": "imm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "VPINSRD xmm1, xmm2, r/m32, imm8",
+  "instr_parsed": [
+   "VPINSRD",
+   "xmm1",
+   "xmm2",
+   "r/m32",
+   "imm8"
+  ],
+  "op_en": "B",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "AVX",
+  "description": "Insert a dword integer value from r32/m32 and rest from xmm2 into xmm1 at the dword offset in imm8.",
+  "page": 1008
+ },
+ {
+  "opcode": "VEX.128.66.0F3A.W1 22 /r ib",
+  "opcode_parsed": [
+   "VEX.128.66.0F3A.W1",
+   "22",
+   "/r",
+   "ib"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "VEX.128.66.0F3A.W1"
+    ],
+    "byte_type": "vex-prefix",
+    "byte_size_min": 2,
+    "byte_size_max": 3
+   },
+   {
+    "components": [
+     "22"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "ib"
+    ],
+    "byte_type": "imm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "VPINSRQ xmm1, xmm2, r/m64, imm8",
+  "instr_parsed": [
+   "VPINSRQ",
+   "xmm1",
+   "xmm2",
+   "r/m64",
+   "imm8"
+  ],
+  "op_en": "B",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": false,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "AVX",
+  "description": "Insert a qword integer value from r64/m64 and rest from xmm2 into xmm1 at the qword offset in imm8.",
+  "page": 1008
+ },
+ {
+  "opcode": "EVEX.128.66.0F3A.WIG 20 /r ib",
+  "opcode_parsed": [
+   "EVEX.128.66.0F3A.WIG",
+   "20",
+   "/r",
+   "ib"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "EVEX.128.66.0F3A.WIG"
+    ],
+    "byte_type": "evex-prefix",
+    "byte_size_min": 4,
+    "byte_size_max": 4
+   },
+   {
+    "components": [
+     "20"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "ib"
+    ],
+    "byte_type": "imm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "VPINSRB xmm1, xmm2, r32/m8, imm8",
+  "instr_parsed": [
+   "VPINSRB",
+   "xmm1",
+   "xmm2",
+   "r32/m8",
+   "imm8"
+  ],
+  "op_en": "C",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "AVX512BW",
+  "description": "Merge a byte integer value from r32/m8 and rest from xmm2 into xmm1 at the byte offset in imm8.",
+  "page": 1008
+ },
+ {
+  "opcode": "EVEX.128.66.0F3A.W0 22 /r ib",
+  "opcode_parsed": [
+   "EVEX.128.66.0F3A.W0",
+   "22",
+   "/r",
+   "ib"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "EVEX.128.66.0F3A.W0"
+    ],
+    "byte_type": "evex-prefix",
+    "byte_size_min": 4,
+    "byte_size_max": 4
+   },
+   {
+    "components": [
+     "22"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "ib"
+    ],
+    "byte_type": "imm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "VPINSRD xmm1, xmm2, r32/m32, imm8",
+  "instr_parsed": [
+   "VPINSRD",
+   "xmm1",
+   "xmm2",
+   "r32/m32",
+   "imm8"
+  ],
+  "op_en": "C",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "AVX512DQ",
+  "description": "Insert a dword integer value from r32/m32 and rest from xmm2 into xmm1 at the dword offset in imm8.",
+  "page": 1008
+ },
+ {
+  "opcode": "EVEX.128.66.0F3A.W1 22 /r ib",
+  "opcode_parsed": [
+   "EVEX.128.66.0F3A.W1",
+   "22",
+   "/r",
+   "ib"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "EVEX.128.66.0F3A.W1"
+    ],
+    "byte_type": "evex-prefix",
+    "byte_size_min": 4,
+    "byte_size_max": 4
+   },
+   {
+    "components": [
+     "22"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "ib"
+    ],
+    "byte_type": "imm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "VPINSRQ xmm1, xmm2, r64/m64, imm8",
+  "instr_parsed": [
+   "VPINSRQ",
+   "xmm1",
+   "xmm2",
+   "r64/m64",
+   "imm8"
+  ],
+  "op_en": "C",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": false,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "AVX512DQ",
+  "description": "Insert a qword integer value from r64/m64 and rest from xmm2 into xmm1 at the qword offset in imm8.",
+  "page": 1008
+ },
+ {
+  "opcode": "NP 0F C4 / r ib",
+  "opcode_parsed": [
+   "NP",
+   "0F",
+   "C4",
+   "/r",
+   "ib"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "NP"
+    ],
+    "byte_size_min": 0,
+    "byte_size_max": 0
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "C4"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "ib"
+    ],
+    "byte_type": "imm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "PINSRW mm, r32/m16, imm8",
+  "instr_parsed": [
+   "PINSRW",
+   "mm",
+   "r32/m16",
+   "imm8"
+  ],
+  "op_en": "A",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "SSE",
+  "description": "Insert the low word from r32 or from m16 into mm at the word position specified by imm8.",
+  "page": 1011
+ },
+ {
+  "opcode": "66 0F C4 / r ib",
+  "opcode_parsed": [
+   "66",
+   "0F",
+   "C4",
+   "/r",
+   "ib"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "66"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "C4"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "ib"
+    ],
+    "byte_type": "imm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "PINSRW xmm, r32/m16, imm8",
+  "instr_parsed": [
+   "PINSRW",
+   "xmm",
+   "r32/m16",
+   "imm8"
+  ],
+  "op_en": "A",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "SSE2",
+  "description": "Move  the  low  word  of r32 or from m16 into xmm at the word position specified by imm8.",
+  "page": 1011
+ },
+ {
+  "opcode": "VEX.128.66.0F.W0 C4 /r ib",
+  "opcode_parsed": [
+   "VEX.128.66.0F.W0",
+   "C4",
+   "/r",
+   "ib"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "VEX.128.66.0F.W0"
+    ],
+    "byte_type": "vex-prefix",
+    "byte_size_min": 2,
+    "byte_size_max": 3
+   },
+   {
+    "components": [
+     "C4"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "ib"
+    ],
+    "byte_type": "imm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "VPINSRW xmm1, xmm2, r32/m16, imm8",
+  "instr_parsed": [
+   "VPINSRW",
+   "xmm1",
+   "xmm2",
+   "r32/m16",
+   "imm8"
+  ],
+  "op_en": "B",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "AVX",
+  "description": "Insert the word from r32/m16 at the offset indicated by imm8 into the value from xmm2 and store result in xmm1.",
+  "page": 1011
+ },
+ {
+  "opcode": "EVEX.128.66.0F.WIG C4 /r ib",
+  "opcode_parsed": [
+   "EVEX.128.66.0F.WIG",
+   "C4",
+   "/r",
+   "ib"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "EVEX.128.66.0F.WIG"
+    ],
+    "byte_type": "evex-prefix",
+    "byte_size_min": 4,
+    "byte_size_max": 4
+   },
+   {
+    "components": [
+     "C4"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/r"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "ib"
+    ],
+    "byte_type": "imm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "VPINSRW xmm1, xmm2, r32/m16, imm8",
+  "instr_parsed": [
+   "VPINSRW",
+   "xmm1",
+   "xmm2",
+   "r32/m16",
+   "imm8"
+  ],
+  "op_en": "C",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "AVX512BW  OR",
+  "description": "Insert the word from r32/m16 at the offset indicated by imm8 into the value from xmm2 and store result in xmm1.",
+  "page": 1011
  },
  {
   "opcode": "NP 0F 38 04 /r ",
@@ -97524,6 +99912,125 @@
   "cpuid_feature_flag": "AVX",
   "description": "Set ZF and CF depending on bitwise AND and ANDN of sources.",
   "page": 1201
+ },
+ {
+  "opcode": "F3 REX.W 0F AE /4",
+  "opcode_parsed": [
+   "F3",
+   "REX.W",
+   "0F",
+   "AE",
+   "/4"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "F3"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "REX.W"
+    ],
+    "byte_type": "rex-prefix",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "AE"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/4"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "PTWRITE r64/m64",
+  "instr_parsed": [
+   "PTWRITE",
+   "r64/m64"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": false,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "PTWRITE",
+  "description": "Reads the data from r64/m64 to encode into a PTW packet if dependencies are met (see details below).",
+  "page": 1203
+ },
+ {
+  "opcode": "F3 0F AE /4",
+  "opcode_parsed": [
+   "F3",
+   "0F",
+   "AE",
+   "/4"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "F3"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "AE"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "/4"
+    ],
+    "byte_type": "modrm",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "PTWRITE r32/m32",
+  "instr_parsed": [
+   "PTWRITE",
+   "r32/m32"
+  ],
+  "op_en": "RM",
+  "valid_in_64bit_mode": true,
+  "valid_in_compatibility_mode": true,
+  "valid_in_legacy_mode": false,
+  "cpuid_feature_flag": "PTWRITE",
+  "description": "Reads the data from r32/m32 to encode into a PTW packet if dependencies are met (see details below).",
+  "page": 1203
  },
  {
   "opcode": "NP 0F 68 /r",
