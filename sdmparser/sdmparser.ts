@@ -919,9 +919,11 @@ function MoveMnemonicFromOpcode(opcode: string, instr: string):
   // The instruction can be extracted as a part of the opcode when the both are
   // rendered in the same line. The mnemonic is required to be 3 characters or
   // longer here, so that the opcode bytes like 'D8' are not moved by mistake.
-  // Required by: LAHF ('9F LAHF') and CRC32 ('F2 0F 38 F0 /r CRC32 r32, r/m8')
-  // in 325383-092US (June 2026).
-  const reOpcodeWithInstr = /^(.*\S)\s+([A-Z][A-Z0-9]{2,}(\s+\S.*)?)$/;
+  // Required by: LAHF ('9F LAHF'), CRC32 ('F2 0F 38 F0 /r CRC32 r32, r/m8') and
+  // GETSEC[SMCTRL] ('NP 0F 37 (EAX = 7) GETSEC[SMCTRL]') in 325383-092US
+  // (June 2026).
+  const reOpcodeWithInstr =
+      /^(.*\S)\s+([A-Z][A-Z0-9]{2,}(\[\w+\])?(\s+\S.*)?)$/;
   const match = opcode.match(reOpcodeWithInstr);
   if (!match) {
     return {opcode: opcode, instr: instr};
@@ -972,8 +974,10 @@ function Parser_OpInstr_OpEn_6432_CPUID_Desc(table: SDMText[][][]) {
       opcode = opcode.substr(0, opcode.length - hyphenated[0].length).trim();
       instr = hyphenated[1] + instr;
     }
-    // '/r' of the opcode can be placed at the end of the last row of the
-    // instruction, since the both are in the same column.
+    // The SDM prints '/r' of the opcode at the end of the last row of the
+    // instruction by mistake, since the both are in the same column. Move it
+    // back to the opcode, where it belongs; the instruction column would have
+    // an operand named 'imm8/r' otherwise.
     // Required by: VREDUCESD in 325383-092US (June 2026), which is written as
     // 'EVEX.LLIG.66.0F3A.W1 57' + 'VREDUCESD xmm1 {k1}{z}, xmm2,
     // xmm3/m64{sae}, imm8/r'.
@@ -1758,8 +1762,14 @@ function ParseInstrTableCells(
     let opcode: string;
     let instr: string;
     if (role['instr'] !== undefined) {
-      opcode = cellText('opcode');
-      instr = cellText('instr');
+      // The instruction can be in the opcode cell even if the table has a
+      // separate column for it.
+      // Required by: GETSEC[SMCTRL] in 325383-092US (June 2026), whose row is
+      // 'NP 0F 37 (EAX = 7) GETSEC[SMCTRL]' in the opcode column.
+      const opcodeAndInstr =
+          MoveMnemonicFromOpcode(cellText('opcode'), cellText('instr'));
+      opcode = opcodeAndInstr.opcode;
+      instr = opcodeAndInstr.instr;
     } else if (!cell('opcode').length) {
       opcode = '';
       instr = '';
@@ -1883,14 +1893,22 @@ function ParseInstrTableByColumns(
   const role = {};
   used.forEach((e, i) => role[e.role] = i);
   // Use the column which has exactly one value for each row as the key.
-  let keyColIndex = role['op_en'];
-  for (const name of ['valid3264', 'valid64', 'instr', 'description']) {
-    if (keyColIndex !== undefined) {
-      break;
+  // A column which has no token cannot be the key of the rows.
+  // Required by: GETSEC[SMCTRL] in 325383-092US (June 2026), whose Instruction
+  // column is empty because the instruction is in the opcode cell.
+  const lefts = used.map(e => e.col.left);
+  const cols = MakeCols(tokens, lefts);
+  let keyColIndex = undefined;
+  for (const name of ['op_en', 'valid3264', 'valid64', 'instr', 'opcode']) {
+    if (keyColIndex !== undefined || role[name] === undefined) {
+      continue;
+    }
+    if (!cols[role[name]].length) {
+      continue;
     }
     keyColIndex = role[name];
   }
-  const table = MakeTable(tokens, used.map(e => e.col.left), keyColIndex);
+  const table = MakeTable(tokens, lefts, keyColIndex);
   if (role['instr'] === undefined && role['op_en'] !== undefined &&
       role['valid3264'] !== undefined && role['cpuid'] !== undefined &&
       role['description'] !== undefined && Object.keys(role).length === 5) {
@@ -2241,6 +2259,10 @@ function TestSplitMergedCells() {
   assert.deepEqual(
       MoveMnemonicFromOpcode('F2 0F 38 F0 /r CRC32 r32, r/m8', ''),
       {opcode: 'F2 0F 38 F0 /r', instr: 'CRC32 r32, r/m8'});
+  // GETSEC[SMCTRL]: the opcode and the instruction in one cell.
+  assert.deepEqual(
+      MoveMnemonicFromOpcode('NP 0F 37 (EAX = 7) GETSEC[SMCTRL]', ''),
+      {opcode: 'NP 0F 37 (EAX = 7)', instr: 'GETSEC[SMCTRL]'});
   // An opcode byte like 'D8' should not be taken as a mnemonic.
   assert.deepEqual(
       MoveMnemonicFromOpcode('F3 0F 38 D8 !(11):011:bbb', 'AESDECWIDE256KL m512'),
@@ -2350,6 +2372,73 @@ function TestDedupInstrList() {
     'BLSMSK r32, r/m32',
     'BLSMSK r64, r/m64',
   ]);
+}
+
+function TestParserOfRecentSDM() {
+  // The row of VREDUCESD in 325383-092US (June 2026). It covers the CPUID
+  // Feature Flag cell wrapped into two lines, the instruction wrapped into
+  // three rows, and '/r' printed at the end of the instruction by mistake.
+  const table = [[
+    [
+      {text: 'EVEX.LLIG.66.0F3A.W1 57', attr: {top: 175, left: 78}},
+      {text: 'VREDUCESD xmm1 {k1}{z},', attr: {top: 191, left: 78}},
+      {text: 'xmm2, xmm3/m64{sae},', attr: {top: 208, left: 78}},
+      {text: 'imm8/r', attr: {top: 225, left: 78}},
+    ],
+    [{text: 'A', attr: {top: 175, left: 269}}],
+    [{text: 'V/V', attr: {top: 175, left: 315}}],
+    [
+      {text: 'AVX512DQ', attr: {top: 175, left: 392}},
+      {text: 'OR AVX10.1', attr: {top: 191, left: 392}},
+    ],
+    [
+      {
+        text: 'Perform a reduction transformation on a scalar double',
+        attr: {top: 175, left: 498}
+      },
+      {
+        text: 'precision floating-point value in xmm3/m64 by',
+        attr: {top: 191, left: 498}
+      },
+    ],
+  ]];
+  assert.deepEqual(Parser_OpInstr_OpEn_6432_CPUID_Desc(table), [{
+                     opcode: 'EVEX.LLIG.66.0F3A.W1 57 /r',
+                     opcode_parsed: ['EVEX.LLIG.66.0F3A.W1', '57', '/r'],
+                     opcode_bytes: [
+                       {
+                         components: ['EVEX.LLIG.66.0F3A.W1'],
+                         byte_type: 'evex-prefix',
+                         byte_size_min: 4,
+                         byte_size_max: 4,
+                       },
+                       {
+                         components: ['57'],
+                         byte_type: 'opcode',
+                         byte_size_min: 1,
+                         byte_size_max: 1,
+                       },
+                       {
+                         components: ['/r'],
+                         byte_type: 'modrm',
+                         byte_size_min: 1,
+                         byte_size_max: 1,
+                       },
+                     ],
+                     instr: 'VREDUCESD xmm1 {k1}{z}, xmm2, xmm3/m64{sae}, imm8',
+                     instr_parsed: [
+                       'VREDUCESD', 'xmm1 {k1}{z}', 'xmm2', 'xmm3/m64{sae}',
+                       'imm8'
+                     ],
+                     op_en: 'A',
+                     valid_in_64bit_mode: true,
+                     valid_in_compatibility_mode: true,
+                     valid_in_legacy_mode: false,
+                     cpuid_feature_flag: 'AVX512DQ OR AVX10.1',
+                     description:
+                         'Perform a reduction transformation on a scalar double' +
+                         ' precision floating-point value in xmm3/m64 by',
+                   }]);
 }
 
 const HeaderTexts = {
@@ -2547,6 +2636,7 @@ function runTest() {
   TestDedupInstrList();
   TestExpandMnemonic();
   TestParser();
+  TestParserOfRecentSDM();
   console.log('PASS');
 }
 

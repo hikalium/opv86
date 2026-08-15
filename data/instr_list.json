@@ -201100,6 +201100,47 @@
   "page": 2353
  },
  {
+  "opcode": "NP 0F 37 (EAX = 7)",
+  "opcode_parsed": [
+   "NP",
+   "0F",
+   "37",
+   "(EAX = 7)"
+  ],
+  "opcode_bytes": [
+   {
+    "components": [
+     "NP"
+    ],
+    "byte_size_min": 0,
+    "byte_size_max": 0
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "37",
+     "(EAX = 7)"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   }
+  ],
+  "instr": "GETSEC[SMCTRL]",
+  "instr_parsed": [
+   "GETSEC[SMCTRL]"
+  ],
+  "description": "Perform specified SMX mode control as selected with the input EBX.",
+  "page": 2357
+ },
+ {
   "opcode": "NP 0F 37 (EAX=8)",
   "opcode_parsed": [
    "NP",
