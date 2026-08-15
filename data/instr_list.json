@@ -347,7 +347,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Add with carry imm32 sign extended to 64bits to RAX.",
+  "description": "Add with carry imm32 sign extended to 64-bits to RAX.",
   "page": 127
  },
  {
@@ -3789,7 +3789,7 @@
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": false,
   "cpuid_feature_flag": "AES",
-  "description": "Perform the last round of an AES decryption flow, using the Equivalent Inverse Cipher, using one 128bit data (state) from xmm1 with one 128-bit round key from xmm2/m128.",
+  "description": "Perform the last round of an AES decryption flow, using the Equivalent Inverse Cipher, using one 128-bit data (state) from xmm1 with one 128-bit round key from xmm2/m128.",
   "page": 157
  },
  {
@@ -3837,7 +3837,7 @@
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": false,
   "cpuid_feature_flag": "AES AVX",
-  "description": "Perform the last round of an AES decryption flow, using the Equivalent Inverse Cipher, using one 128bit data (state) from xmm2 with one 128-bit round key from xmm3/m128; store the result in xmm1.",
+  "description": "Perform the last round of an AES decryption flow, using the Equivalent Inverse Cipher, using one 128-bit data (state) from xmm2 with one 128-bit round key from xmm3/m128; store the result in xmm1.",
   "page": 157
  },
  {
@@ -3885,7 +3885,7 @@
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": false,
   "cpuid_feature_flag": "VAES",
-  "description": "Perform the last round of an AES decryption flow, using the Equivalent Inverse Cipher, using two 128bit data (state) from ymm2 with two 128-bit round keys from ymm3/m256; store the result in ymm1.",
+  "description": "Perform the last round of an AES decryption flow, using the Equivalent Inverse Cipher, using two 128-bit data (state) from ymm2 with two 128-bit round keys from ymm3/m256; store the result in ymm1.",
   "page": 157
  },
  {
@@ -3933,7 +3933,7 @@
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": false,
   "cpuid_feature_flag": "VAES (AVX512VL OR AVX10.1)",
-  "description": "Perform the last round of an AES decryption flow, using the Equivalent Inverse Cipher, using one 128bit data (state) from xmm2 with one 128-bit round key from xmm3/m128; store the result in xmm1.",
+  "description": "Perform the last round of an AES decryption flow, using the Equivalent Inverse Cipher, using one 128-bit data (state) from xmm2 with one 128-bit round key from xmm3/m128; store the result in xmm1.",
   "page": 157
  },
  {
@@ -3981,7 +3981,7 @@
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": false,
   "cpuid_feature_flag": "VAES (AVX512VL OR AVX10.1)",
-  "description": "Perform the last round of an AES decryption flow, using the Equivalent Inverse Cipher, using two 128bit data (state) from ymm2 with two 128-bit round keys from ymm3/m256; store the result in ymm1.",
+  "description": "Perform the last round of an AES decryption flow, using the Equivalent Inverse Cipher, using two 128-bit data (state) from ymm2 with two 128-bit round keys from ymm3/m256; store the result in ymm1.",
   "page": 157
  },
  {
@@ -4029,7 +4029,7 @@
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": false,
   "cpuid_feature_flag": "VAES (AVX512F OR AVX10.1)",
-  "description": "Perform the last round of an AES decryption flow, using the Equivalent Inverse Cipher, using four128bit data (state) from zmm2 with four 128-bit round keys from zmm3/m512; store the result in zmm1.",
+  "description": "Perform the last round of an AES decryption flow, using the Equivalent Inverse Cipher, using four128-bit data (state) from zmm2 with four 128-bit round keys from zmm3/m512; store the result in zmm1.",
   "page": 157
  },
  {
@@ -26355,7 +26355,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Unsigned divide AX by r/m8, with result stored in AL  := Quotient, AH  := Remainder.",
+  "description": "Unsigned divide AX by r/m8, with result stored in AL := Quotient, AH := Remainder.",
   "page": 382
  },
  {
@@ -26391,7 +26391,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Unsigned divide DX:AX by r/m16, with result stored in AX  := Quotient, DX  := Remainder.",
+  "description": "Unsigned divide DX:AX by r/m16, with result stored in AX := Quotient, DX := Remainder.",
   "page": 382
  },
  {
@@ -26427,7 +26427,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Unsigned divide EDX:EAX by r/m32, with result stored in EAX  := Quotient, EDX  := Remainder.",
+  "description": "Unsigned divide EDX:EAX by r/m32, with result stored in EAX := Quotient, EDX := Remainder.",
   "page": 382
  },
  {
@@ -26472,7 +26472,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Unsigned divide RDX:RAX by r/m64, with result stored in RAX  := Quotient, RDX  := Remainder.",
+  "description": "Unsigned divide RDX:RAX by r/m64, with result stored in RAX := Quotient, RDX := Remainder.",
   "page": 382
  },
  {
@@ -28571,7 +28571,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Replace ST(0) with (2 ST(0)  – 1).",
+  "description": "Replace ST(0) with (2 ST(0) – 1).",
   "page": 425
  },
  {
@@ -33354,7 +33354,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Subtract ST(i) from ST(0)  and store result in ST(i).",
+  "description": "Subtract ST(i) from ST(0) and store result in ST(i).",
   "page": 515
  },
  {
@@ -35922,7 +35922,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Signed divide AX by r/m8, with result stored in: AL  := Quotient, AH  := Remainder.",
+  "description": "Signed divide AX by r/m8, with result stored in: AL := Quotient, AH := Remainder.",
   "page": 566
  },
  {
@@ -35958,7 +35958,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Signed divide DX:AX by r/m16, with result stored in AX  := Quotient, DX  := Remainder.",
+  "description": "Signed divide DX:AX by r/m16, with result stored in AX := Quotient, DX := Remainder.",
   "page": 566
  },
  {
@@ -35994,7 +35994,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Signed divide EDX:EAX by r/m32, with result stored in EAX  := Quotient, EDX  := Remainder.",
+  "description": "Signed divide EDX:EAX by r/m32, with result stored in EAX := Quotient, EDX := Remainder.",
   "page": 566
  },
  {
@@ -36039,7 +36039,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Signed divide RDX:RAX by r/m64, with result stored in RAX  := Quotient, RDX  := Remainder.",
+  "description": "Signed divide RDX:RAX by r/m64, with result stored in RAX := Quotient, RDX := Remainder.",
   "page": 566
  },
  {
@@ -36284,7 +36284,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Doubleword register := doubleword register ∗  r/m32.",
+  "description": "Doubleword register := doubleword register ∗ r/m32.",
   "page": 569
  },
  {
@@ -36339,7 +36339,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": false,
   "valid_in_legacy_mode": false,
-  "description": "Quadword register := Quadword register ∗  r/m64.",
+  "description": "Quadword register := Quadword register ∗ r/m64.",
   "page": 569
  },
  {
@@ -41771,7 +41771,7 @@
   "valid_in_64bit_mode": false,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "Jump near if sign (SF=1). Not supported in 64bit mode.",
+  "description": "Jump near if sign (SF=1). Not supported in 64-bit mode.",
   "page": 619
  },
  {
@@ -53321,7 +53321,7 @@
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": false,
   "cpuid_feature_flag": "MOVDIR64B",
-  "description": "Move 64-bytes as direct-store with guaranteed 64byte write atomicity from the source memory operand address to destination memory address specified as offset to ES segment in the register operand.",
+  "description": "Move 64-bytes as direct-store with guaranteed 64-byte write atomicity from the source memory operand address to destination memory address specified as offset to ES segment in the register operand.",
   "page": 753
  },
  {
@@ -68024,7 +68024,7 @@
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": false,
   "cpuid_feature_flag": "AVX",
-  "description": "Compute the absolute value of 16bit integers in xmm2/m128 and store UNSIGNED result in xmm1.",
+  "description": "Compute the absolute value of 16- bit integers in xmm2/m128 and store UNSIGNED result in xmm1.",
   "page": 880
  },
  {
@@ -68071,7 +68071,7 @@
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": false,
   "cpuid_feature_flag": "AVX",
-  "description": "Compute the absolute value of 32bit integers in xmm2/m128 and store UNSIGNED result in xmm1.",
+  "description": "Compute the absolute value of 32- bit integers in xmm2/m128 and store UNSIGNED result in xmm1.",
   "page": 880
  },
  {
@@ -69098,7 +69098,7 @@
   "page": 886
  },
  {
-  "opcode": "VEX.256.66.0F .WIG 63 /r",
+  "opcode": "VEX.256.66.0F.WIG 63 /r",
   "opcode_parsed": [
    "VEX.256.66.0F.WIG",
    "63",
@@ -69146,7 +69146,7 @@
   "page": 886
  },
  {
-  "opcode": "VEX.256.66.0F .WIG 6B /r",
+  "opcode": "VEX.256.66.0F.WIG 6B /r",
   "opcode_parsed": [
    "VEX.256.66.0F.WIG",
    "6B",
@@ -71860,7 +71860,7 @@
   "page": 911
  },
  {
-  "opcode": "VEX.256.66.0F .WIG EC /r",
+  "opcode": "VEX.256.66.0F.WIG EC /r",
   "opcode_parsed": [
    "VEX.256.66.0F.WIG",
    "EC",
@@ -71908,7 +71908,7 @@
   "page": 911
  },
  {
-  "opcode": "VEX.256.66.0F .WIG ED /r",
+  "opcode": "VEX.256.66.0F.WIG ED /r",
   "opcode_parsed": [
    "VEX.256.66.0F.WIG",
    "ED",
@@ -72562,7 +72562,7 @@
   "page": 915
  },
  {
-  "opcode": "VEX.256.66.0F .WIG DC /r",
+  "opcode": "VEX.256.66.0F.WIG DC /r",
   "opcode_parsed": [
    "VEX.256.66.0F.WIG",
    "DC",
@@ -72610,7 +72610,7 @@
   "page": 915
  },
  {
-  "opcode": "VEX.256.66.0F .WIG DD /r",
+  "opcode": "VEX.256.66.0F.WIG DD /r",
   "opcode_parsed": [
    "VEX.256.66.0F.WIG",
    "DD",
@@ -73544,7 +73544,7 @@
   "page": 923
  },
  {
-  "opcode": "VEX.256.66.0F .WIG DB /r",
+  "opcode": "VEX.256.66.0F.WIG DB /r",
   "opcode_parsed": [
    "VEX.256.66.0F.WIG",
    "DB",
@@ -74039,7 +74039,7 @@
   "page": 926
  },
  {
-  "opcode": "VEX.256.66.0F .WIG DF /r",
+  "opcode": "VEX.256.66.0F.WIG DF /r",
   "opcode_parsed": [
    "VEX.256.66.0F.WIG",
    "DF",
@@ -74728,7 +74728,7 @@
   "page": 930
  },
  {
-  "opcode": "VEX.256.66.0F .WIG E0 /r",
+  "opcode": "VEX.256.66.0F.WIG E0 /r",
   "opcode_parsed": [
    "VEX.256.66.0F.WIG",
    "E0",
@@ -74776,7 +74776,7 @@
   "page": 930
  },
  {
-  "opcode": "VEX.256.66.0F .WIG E3 /r",
+  "opcode": "VEX.256.66.0F.WIG E3 /r",
   "opcode_parsed": [
    "VEX.256.66.0F.WIG",
    "E3",
@@ -126086,7 +126086,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "For legacy mode, store AL at address ES:(E)DI; For 64bit mode store AL at address RDI or EDI.",
+  "description": "For legacy mode, store AL at address ES:(E)DI; For 64-bit mode store AL at address RDI or EDI.",
   "page": 1379
  },
  {
@@ -126113,7 +126113,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "For legacy mode, store AX at address ES:(E)DI; For 64bit mode store AX at address RDI or EDI.",
+  "description": "For legacy mode, store AX at address ES:(E)DI; For 64-bit mode store AX at address RDI or EDI.",
   "page": 1379
  },
  {
@@ -126202,7 +126202,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "For legacy mode, store AL at address ES:(E)DI; For 64bit mode store AL at address RDI or EDI.",
+  "description": "For legacy mode, store AL at address ES:(E)DI; For 64-bit mode store AL at address RDI or EDI.",
   "page": 1379
  },
  {
@@ -126228,7 +126228,7 @@
   "valid_in_64bit_mode": true,
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": true,
-  "description": "For legacy mode, store AX at address ES:(E)DI; For 64bit mode store AX at address RDI or EDI.",
+  "description": "For legacy mode, store AX at address ES:(E)DI; For 64-bit mode store AX at address RDI or EDI.",
   "page": 1379
  },
  {
@@ -137454,7 +137454,7 @@
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": false,
   "cpuid_feature_flag": "AVX512F OR AVX10.1",
-  "description": "Convert sixteen packed single-precision floatingpoint values in zmm2 to packed half-precision (16bit) floating-point values in ymm1/m256. Imm8 provides rounding controls.",
+  "description": "Convert sixteen packed single-precision floatingpoint values in zmm2 to packed half-precision (16-bit) floating-point values in ymm1/m256. Imm8 provides rounding controls.",
   "page": 1537
  },
  {
@@ -159661,7 +159661,7 @@
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": false,
   "cpuid_feature_flag": "(AVX512VL AND AVX512DQ) OR AVX10.1",
-  "description": "Tests the input for the following categories:  NaN, +0, 0, +Infinity,-Infinity, denormal, finite negative.  The immediate field provides a mask bit for each of these category tests.  The masked test results are OR-ed together to form a mask result.",
+  "description": "Tests the input for the following categories:  NaN, +0, -0, +Infinity, -Infinity, denormal, finite negative.  The immediate field provides a mask bit for each of these category tests.  The masked test results are OR-ed together to form a mask result.",
   "page": 1814
  },
  {
@@ -159718,7 +159718,7 @@
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": false,
   "cpuid_feature_flag": "(AVX512VL AND AVX512DQ) OR AVX10.1",
-  "description": "Tests the input for the following categories:  NaN, +0, 0, +Infinity,-Infinity, denormal, finite negative.  The immediate field provides a mask bit for each of these category tests.  The masked test results are OR-ed together to form a mask result.",
+  "description": "Tests the input for the following categories:  NaN, +0, -0, +Infinity, -Infinity, denormal, finite negative.  The immediate field provides a mask bit for each of these category tests.  The masked test results are OR-ed together to form a mask result.",
   "page": 1814
  },
  {
@@ -159775,7 +159775,7 @@
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": false,
   "cpuid_feature_flag": "AVX512DQ OR AVX10.1",
-  "description": "Tests the input for the following categories:  NaN, +0, 0, +Infinity,-Infinity, denormal, finite negative.  The immediate field provides a mask bit for each of these category tests.  The masked test results are OR-ed together to form a mask result.",
+  "description": "Tests the input for the following categories:  NaN, +0, -0, +Infinity, -Infinity, denormal, finite negative.  The immediate field provides a mask bit for each of these category tests.  The masked test results are OR-ed together to form a mask result.",
   "page": 1814
  },
  {
@@ -159832,7 +159832,7 @@
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": false,
   "cpuid_feature_flag": "(AVX512_FP16 AND AVX512VL) OR AVX10.1",
-  "description": "Test the input for the following categories:  NaN, +0,-0, +Infinity,-Infinity, denormal, finite negative.  The immediate field provides a mask bit for each of these category tests.  The masked test results are OR-ed together to form a mask result.",
+  "description": "Test the input for the following categories:  NaN, +0, -0, +Infinity, -Infinity, denormal, finite negative.  The immediate field provides a mask bit for each of these category tests.  The masked test results are OR-ed together to form a mask result.",
   "page": 1817
  },
  {
@@ -159889,7 +159889,7 @@
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": false,
   "cpuid_feature_flag": "(AVX512_FP16 AND AVX512VL) OR AVX10.1",
-  "description": "Test the input for the following categories:  NaN, +0,-0, +Infinity,-Infinity, denormal, finite negative.  The immediate field provides a mask bit for each of these category tests.  The masked test results are OR-ed together to form a mask result.",
+  "description": "Test the input for the following categories:  NaN, +0, -0, +Infinity, -Infinity, denormal, finite negative.  The immediate field provides a mask bit for each of these category tests.  The masked test results are OR-ed together to form a mask result.",
   "page": 1817
  },
  {
@@ -159946,7 +159946,7 @@
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": false,
   "cpuid_feature_flag": "AVX512_FP16 OR AVX10.1",
-  "description": "Test the input for the following categories:  NaN, +0,-0, +Infinity,-Infinity, denormal, finite negative.  The immediate field provides a mask bit for each of these category tests.  The masked test results are OR-ed together to form a mask result.",
+  "description": "Test the input for the following categories:  NaN, +0, -0, +Infinity, -Infinity, denormal, finite negative.  The immediate field provides a mask bit for each of these category tests.  The masked test results are OR-ed together to form a mask result.",
   "page": 1817
  },
  {
@@ -160003,7 +160003,7 @@
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": false,
   "cpuid_feature_flag": "(AVX512VL AND AVX512DQ) OR AVX10.1",
-  "description": "Tests the input for the following categories:  NaN, +0, 0, +Infinity,-Infinity, denormal, finite negative.  The immediate field provides a mask bit for each of these category tests.  The masked test results are OR-ed together to form a mask result.",
+  "description": "Tests the input for the following categories:  NaN, +0, -0, +Infinity, -Infinity, denormal, finite negative.  The immediate field provides a mask bit for each of these category tests.  The masked test results are OR-ed together to form a mask result.",
   "page": 1820
  },
  {
@@ -160060,7 +160060,7 @@
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": false,
   "cpuid_feature_flag": "(AVX512VL AND AVX512DQ) OR AVX10.1",
-  "description": "Tests the input for the following categories:  NaN, +0, 0, +Infinity,-Infinity, denormal, finite negative.  The immediate field provides a mask bit for each of these category tests.  The masked test results are OR-ed together to form a mask result.",
+  "description": "Tests the input for the following categories:  NaN, +0, -0, +Infinity, -Infinity, denormal, finite negative.  The immediate field provides a mask bit for each of these category tests.  The masked test results are OR-ed together to form a mask result.",
   "page": 1820
  },
  {
@@ -160117,7 +160117,7 @@
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": false,
   "cpuid_feature_flag": "AVX512DQ OR AVX10.1",
-  "description": "Tests the input for the following categories:  NaN, +0, 0, +Infinity,-Infinity, denormal, finite negative.  The immediate field provides a mask bit for each of these category tests.  The masked test results are OR-ed together to form a mask result.",
+  "description": "Tests the input for the following categories:  NaN, +0, -0, +Infinity, -Infinity, denormal, finite negative.  The immediate field provides a mask bit for each of these category tests.  The masked test results are OR-ed together to form a mask result.",
   "page": 1820
  },
  {
@@ -160174,7 +160174,7 @@
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": false,
   "cpuid_feature_flag": "AVX512DQ OR AVX10.1",
-  "description": "Tests the input for the following categories: NaN, +0,-0, +Infinity,-Infinity, denormal, finite negative. The immediate field provides a mask bit for each of these category tests. The masked test results are OR-ed together to form a mask result.",
+  "description": "Tests the input for the following categories: NaN, +0, -0, +Infinity, -Infinity, denormal, finite negative. The immediate field provides a mask bit for each of these category tests. The masked test results are OR-ed together to form a mask result.",
   "page": 1822
  },
  {
@@ -160231,7 +160231,7 @@
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": false,
   "cpuid_feature_flag": "AVX512_FP16 OR AVX10.1",
-  "description": "Test the input for the following categories:  NaN, +0,-0, +Infinity,-Infinity, denormal, finite negative.  The immediate field provides a mask bit for each of these category tests.  The masked test results are OR-ed together to form a mask result.",
+  "description": "Test the input for the following categories:  NaN, +0, -0, +Infinity, -Infinity, denormal, finite negative.  The immediate field provides a mask bit for each of these category tests.  The masked test results are OR-ed together to form a mask result.",
   "page": 1824
  },
  {
@@ -160279,7 +160279,7 @@
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": false,
   "cpuid_feature_flag": "AVX512DQ OR AVX10.1",
-  "description": "Tests the input for the following categories: NaN, +0,-0, +Infinity,-Infinity, denormal, finite negative. The immediate field provides a mask bit for each of these category tests. The masked test results are OR-ed together to form a mask result.",
+  "description": "Tests the input for the following categories: NaN, +0, -0, +Infinity, -Infinity, denormal, finite negative. The immediate field provides a mask bit for each of these category tests. The masked test results are OR-ed together to form a mask result.",
   "page": 1825
  },
  {
@@ -202242,7 +202242,7 @@
   "valid_in_compatibility_mode": true,
   "valid_in_legacy_mode": false,
   "cpuid_feature_flag": "AVX512ER",
-  "description": "Computes approximations to the Reciprocal square root (<2^28 relative error) of the packed double precision floating-point values from zmm2/m512/m64bcst and stores result in zmm1with writemask k1.",
+  "description": "Computes approximations to the Reciprocal square root (<2^-28 relative error) of the packed double precision floating-point values from zmm2/m512/m64bcst and stores result in zmm1with writemask k1.",
   "page": 2390
  },
  {

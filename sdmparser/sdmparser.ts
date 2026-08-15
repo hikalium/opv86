@@ -51,7 +51,30 @@ function ExtractSDMDataAttr(filepath: string, firstPage: SDMPage): SDMDataAttr {
   return result;
 }
 
+function ExpandBracketedMnemonic(title: string): string[] {
+  // A group of the alternatives can be written in the brackets. Expand them
+  // into all the combinations. A bracket without a comma in it is a part of
+  // the mnemonic itself (e.g. 'GETSEC[CAPABILITIES]'), so it is kept.
+  // Required by: VF[,N]MADD[132,213,231]PH, VF[,N]MADD[132,213,231]SH,
+  // VF[,N]MSUB[132,213,231]PH, VF[,N]MSUB[132,213,231]SH,
+  // VPDPB[SU,UU,SS]D[,S] and VPDPW[SU,US,UU]D[,S] in 325383-092US (June 2026).
+  const match = title.match(/^([^\[]*)\[([^\]]*,[^\]]*)\](.*)$/);
+  if (!match) {
+    return [title];
+  }
+  return match[2]
+      .split(',')
+      .map(alt => ExpandBracketedMnemonic(`${match[1]}${alt}${match[3]}`))
+      .flat();
+}
+
 function ExpandMnemonic(title: string): string[] {
+  return ExpandBracketedMnemonic(title.trim())
+      .map(t => ExpandSlashSeparatedMnemonic(t))
+      .flat();
+}
+
+function ExpandSlashSeparatedMnemonic(title: string): string[] {
   const suffixList = ['8', '16', '32', '64', 'B', 'W', 'D', 'Q'];
   const commaSeparated = title.split(',');
   let ops = [];
@@ -90,6 +113,17 @@ function TestExpandMnemonic() {
       ExpandMnemonic('VPBROADCASTB/W/D/Q'),
       ['VPBROADCASTB', 'VPBROADCASTW', 'VPBROADCASTD', 'VPBROADCASTQ']);
   assert.deepEqual(ExpandMnemonic(' XTEST '), ['XTEST']);
+  // The groups of the alternatives written in the brackets.
+  assert.deepEqual(ExpandMnemonic('VF[,N]MADD[132,213,231]SH'), [
+    'VFMADD132SH', 'VFMADD213SH', 'VFMADD231SH', 'VFNMADD132SH',
+    'VFNMADD213SH', 'VFNMADD231SH'
+  ]);
+  assert.deepEqual(ExpandMnemonic('VPDPW[SU,US,UU]D[,S]'), [
+    'VPDPWSUD', 'VPDPWSUDS', 'VPDPWUSD', 'VPDPWUSDS', 'VPDPWUUD', 'VPDPWUUDS'
+  ]);
+  // A bracket without a comma is a part of the mnemonic.
+  assert.deepEqual(
+      ExpandMnemonic('GETSEC[CAPABILITIES]'), ['GETSEC[CAPABILITIES]']);
 }
 
 interface SDMInstrIndex {
@@ -803,17 +837,19 @@ function GetTextWithoutPadding(t: SDMText): string {
 }
 
 function JoinTokensInRow(tokens: SDMText[]): string {
-  // Concatenate the tokens of a row with a space, except after a '/' which is
-  // the beginning of a ModRM notation splitted into multiple tokens.
-  // Required by: PINSRW in 325383-092US (June 2026), whose opcode is rendered
-  // as 'NP 0F C4 /' + an italic 'r' + 'ib'.
+  // Concatenate the tokens of a row with a space, except where a word is
+  // splitted into multiple tokens: after a '/' which begins a ModRM notation,
+  // and before a '.' which continues a VEX/EVEX prefix.
+  // Required by: PINSRW ('NP 0F C4 /' + an italic 'r' + 'ib') and VPADDUSB
+  // ('VEX.256.66.0F' + '.WIG') in 325383-092US (June 2026).
   let joined = '';
   for (const t of tokens) {
     const text = GetTextWithoutPadding(t).trim();
     if (!text.length) {
       continue;
     }
-    joined += (!joined.length || joined.endsWith('/')) ? text : ` ${text}`;
+    const isContinuation = joined.endsWith('/') || text.startsWith('.');
+    joined += (!joined.length || isContinuation) ? text : ` ${text}`;
   }
   return joined;
 }
@@ -972,8 +1008,8 @@ function Parser_OpInstr_OpEn_6432_CPUID_Desc(table: SDMText[][][]) {
     const cpuidWithDescription = cpuid_str.match(reCpuidWithDescription);
     if (cpuidWithDescription) {
       cpuid_str = cpuidWithDescription[1];
-      description = CanonicalizeDescriptionText(
-          `${cpuidWithDescription[2]} ${description}`.trim());
+      description =
+          JoinDescriptionLines([cpuidWithDescription[2].trim(), description]);
     }
     console.log({
       opcode: opcode,
@@ -1189,13 +1225,39 @@ function TestMakeOpBytes() {
                    }]);
 }
 
-function CanonicalizeDescriptionText(s: string): string {
-  // Join the words which are hyphenated at the end of a line.
-  return s.split('- ').join('').split(' -').join('-');
+function JoinDescriptionLines(lines: string[]): string {
+  // Join the lines of a description, connecting the words which are hyphenated
+  // at the end of a line (e.g. 'mem-' + 'ory' -> 'memory'). A hyphen in the
+  // middle of a line is a part of the text and is kept as it is.
+  // Required by: VFPCLASSPS in 325383-092US (June 2026), whose description
+  // contains '+Infinity, -Infinity'; joining the whole text at once used to
+  // turn it into '+Infinity,-Infinity'.
+  let joined = '';
+  for (const line of lines) {
+    if (!line.length) {
+      continue;
+    }
+    if (!joined.length) {
+      joined = line;
+      continue;
+    }
+    if (joined.endsWith('-')) {
+      // The hyphen is removed only when it hyphenates one word into two lines.
+      // A hyphen which follows or precedes a non-letter is a part of the text,
+      // like the minus sign of '-0' and the hyphen of '64-byte'.
+      const isWordHyphenation = /[a-z]-$/.test(joined) && /^[a-z]/.test(line);
+      joined = isWordHyphenation ? joined.substr(0, joined.length - 1) + line :
+                                   joined + line;
+      continue;
+    }
+    joined += ` ${line}`;
+  }
+  return joined;
 }
 function CanonicalizeDescription(descText: SDMText[]): string {
-  const rows = MakeRows(descText).map(r => r.map(t => GetText(t).trim()));
-  return CanonicalizeDescriptionText(rows.flat().join(' '));
+  const lines = MakeRows(descText).map(
+      r => r.map(t => GetText(t).trim()).filter(t => t.length).join(' ').trim());
+  return JoinDescriptionLines(lines);
 }
 function TestCanonicalizeDescription() {
   assert.deepEqual(
@@ -1235,6 +1297,35 @@ function TestCanonicalizeDescription() {
       ]),
       'Hint to hardware to move the cache line containing m8 to a' +
           ' more distant level of the cache without writing back to memory.');
+  assert.deepEqual(
+      // A hyphen in the middle of a line is not a hyphenation of a word.
+      // VFPCLASSPS in 325383-092US (June 2026).
+      CanonicalizeDescription([
+        {
+          'text': 'Tests the input for the following categories: NaN, +0, -0,',
+          'attr': {'top': 175, 'left': 519}
+        },
+        {
+          'text': '+Infinity, -Infinity, denormal, finite negative.',
+          'attr': {'top': 191, 'left': 519}
+        },
+      ]),
+      'Tests the input for the following categories: NaN, +0, -0,' +
+          ' +Infinity, -Infinity, denormal, finite negative.');
+  assert.deepEqual(
+      // MOVDIR64B in 325383-092US (June 2026): a hyphen after a digit is a
+      // part of the text.
+      JoinDescriptionLines(['with guaranteed 64-', 'byte write atomicity']),
+      'with guaranteed 64-byte write atomicity');
+  assert.deepEqual(
+      // VFPCLASSPS in 325383-092US (June 2026): the line break inside '-0'.
+      JoinDescriptionLines(['categories: NaN, +0, -', '0, +Infinity']),
+      'categories: NaN, +0, -0, +Infinity');
+  assert.deepEqual(
+      // CLDEMOTE in 325383-092US (June 2026): a word hyphenated at the end of
+      // a line is joined into one word.
+      JoinDescriptionLines(['without writing back to mem-', 'ory.']),
+      'without writing back to memory.');
 }
 
 const parserMap = {
@@ -1963,6 +2054,304 @@ function TestParser() {
       }]);
 }
 
+function TestCanonicalizeOpcodeOfRecentSDM() {
+  // Every case here is an opcode as it is written in 325383-092US (June 2026).
+  // ENCODEKEY128: the ModRM byte written as a bit pattern.
+  assert.deepEqual(
+      CanonicalizeOpcode('F3 0F 38 FA 11:rrr:bbb'),
+      ['F3', '0F', '38', 'FA', '11:rrr:bbb']);
+  // AESDECWIDE256KL: the memory form of the bit pattern.
+  assert.deepEqual(
+      CanonicalizeOpcode('F3 0F 38 D8 !(11):011:bbb'),
+      ['F3', '0F', '38', 'D8', '!(11):011:bbb']);
+  // VGATHERPF0DPS: two ModRM components in one opcode.
+  assert.deepEqual(
+      CanonicalizeOpcode('EVEX.512.66.0F38.W0 C6 /1 /vsib'),
+      ['EVEX.512.66.0F38.W0', 'C6', '/1', '/vsib']);
+  // VBLENDVPD: the register specifier in imm8[7:4].
+  assert.deepEqual(
+      CanonicalizeOpcode('VEX.128.66.0F3A.W0 4B /r /is4'),
+      ['VEX.128.66.0F3A.W0', '4B', '/r', '/is4']);
+  // ENDBR64 and RSTORSSP: a condition on the ModRM byte.
+  assert.deepEqual(
+      CanonicalizeOpcode('F3 0F 1E /1 (mod=11)'),
+      ['F3', '0F', '1E', '/1', '(mod=11)']);
+  assert.deepEqual(
+      CanonicalizeOpcode('F3 0F 01 /5 (mod!=11, /5, memory only)'),
+      ['F3', '0F', '01', '/5', '(mod!=11, /5, memory only)']);
+  // GETSEC[CAPABILITIES]: a precondition of a register.
+  assert.deepEqual(
+      CanonicalizeOpcode('NP 0F 37 (EAX = 0)'), ['NP', '0F', '37', '(EAX = 0)']);
+  // ADCX: the REX prefix after a mandatory prefix, with a lowercase '.w'.
+  assert.deepEqual(
+      CanonicalizeOpcode('66 REX.w 0F 38 F6 /r'),
+      ['66', 'REX.w', '0F', '38', 'F6', '/r']);
+  // PMOVSXBW: the opcode bytes in lowercase.
+  assert.deepEqual(
+      CanonicalizeOpcode('66 0f 38 20 /r'), ['66', '0F', '38', '20', '/r']);
+  // PCMPISTRI: the immediate spelled out as 'imm8'.
+  assert.deepEqual(
+      CanonicalizeOpcode('66 0F 3A 63 /r imm8'),
+      ['66', '0F', '3A', '63', '/r', 'imm8']);
+  // PAVGB: a comma put after an opcode byte by mistake.
+  assert.deepEqual(
+      CanonicalizeOpcode('66 0F E0, /r'), ['66', '0F', 'E0', '/r']);
+  // VPADDSB: the VEX prefix splitted into two tokens.
+  assert.deepEqual(
+      CanonicalizeOpcode('VEX.256.66.0F .WIG EC /r'),
+      ['VEX.256.66.0F.WIG', 'EC', '/r']);
+  // VPMOVZXBW: a component of the VEX prefix splitted into two tokens.
+  assert.deepEqual(
+      CanonicalizeOpcode('VEX.128.66.0F 38.WIG 30 /r'),
+      ['VEX.128.66.0F38.WIG', '30', '/r']);
+  // URDMSR: ':' used as a separator of the VEX prefix.
+  assert.deepEqual(
+      CanonicalizeOpcode('VEX.128.F2.MAP7:W0.F8 11:000:bbb'),
+      ['VEX.128.F2.MAP7:W0.F8', '11:000:bbb']);
+  // VMOVD: the 'r' of '/r' missing in the text layer of the PDF.
+  assert.deepEqual(
+      CanonicalizeOpcode('VEX.128.66.0F.W0 6E /'),
+      ['VEX.128.66.0F.W0', '6E', '/r']);
+}
+
+function TestCanonicalizeInstrOfRecentSDM() {
+  // Every case here is an instruction as it is written in 325383-092US.
+  // VANDPD: a SIMD operand with a writemask, a memory form and a broadcast.
+  assert.deepEqual(
+      CanonicalizeInstr('VANDPD zmm1 {k1}{z}, zmm2, zmm3/m512/m64bcst'),
+      ['VANDPD', 'zmm1 {k1}{z}', 'zmm2', 'zmm3/m512/m64bcst']);
+  // VP2INTERSECTD: a pair of the opmask registers.
+  assert.deepEqual(
+      CanonicalizeInstr('VP2INTERSECTD k1+1, xmm2, xmm3/m128/m32bcst'),
+      ['VP2INTERSECTD', 'k1+1', 'xmm2', 'xmm3/m128/m32bcst']);
+  // ENCODEKEY256: the implicit operands without a separator.
+  assert.deepEqual(
+      CanonicalizeInstr('ENCODEKEY256 r32, r32 <XMM0-6>'),
+      ['ENCODEKEY256', 'r32', 'r32 <XMM0-6>']);
+  // GETSEC: the leaf function name in the brackets.
+  assert.deepEqual(
+      CanonicalizeInstr('GETSEC[CAPABILITIES]'), ['GETSEC[CAPABILITIES]']);
+  // VGATHERPF0DPS: a vsib operand with a writemask.
+  assert.deepEqual(
+      CanonicalizeInstr('VGATHERPF0DPS vm32z {k1}'),
+      ['VGATHERPF0DPS', 'vm32z {k1}']);
+  // TILELOADD: the AMX operands.
+  assert.deepEqual(
+      CanonicalizeInstr('TILELOADD tmm1, sibmem'), ['TILELOADD', 'tmm1', 'sibmem']);
+  // ADD: the space left where a footnote marker was removed.
+  assert.deepEqual(
+      CanonicalizeInstr('ADD r/m8 , imm8'), ['ADD', 'r/m8', 'imm8']);
+}
+
+function TestCanonicalizeModes() {
+  // The values of the mode columns in 325383-092US.
+  assert.deepEqual(
+      CanonicalizeValidIn3264('V/V'), {valid32: true, valid64: true});
+  // CMOVcc etc.: valid in 64 bit mode only.
+  assert.deepEqual(
+      CanonicalizeValidIn3264('V/N.E.'), {valid32: false, valid64: true});
+  assert.deepEqual(
+      CanonicalizeValidIn3264('V/I'), {valid32: false, valid64: true});
+  assert.deepEqual(
+      CanonicalizeValidIn3264('N.E./V'), {valid32: true, valid64: false});
+  // The '/' can be lost by the text extraction.
+  assert.deepEqual(
+      CanonicalizeValidIn3264('VV'), {valid32: true, valid64: true});
+  // VPMADD52LUQ: the CPUID feature flag merged into this column.
+  assert.deepEqual(
+      CanonicalizeValidIn3264('V/V (AVX512_IFMA'),
+      {valid32: true, valid64: true});
+  // RDMSR: the value of the 64-Bit Mode column used in this column.
+  assert.deepEqual(
+      CanonicalizeValidIn3264('Valid'), {valid32: true, valid64: true});
+  // ARPL: extra spaces in the value.
+  assert.equal(CanonicalizeValidIn64('N. E.'), false);
+  assert.equal(CanonicalizeValidIn64('Valid'), true);
+  assert.equal(CanonicalizeValidIn64('Invalid'), false);
+  // SYSCALL: 'Invalid' means that it is NOT valid in the compatibility mode.
+  assert.equal(CanonicalizeCompatLeg('Invalid'), false);
+  assert.equal(CanonicalizeCompatLeg('Valid'), true);
+  // CMOVcc
+  assert.equal(CanonicalizeCompatLeg('N/A'), false);
+}
+
+function TestMakeOpBytesOfRecentSDM() {
+  // ENCODEKEY128: the ModRM byte written as a bit pattern.
+  assert.deepEqual(makeOpBytes(['11:rrr:bbb']), [{
+                     components: ['11:rrr:bbb'],
+                     byte_type: 'modrm',
+                     byte_size_min: 1,
+                     byte_size_max: 1,
+                   }]);
+  // VBLENDVPD: '/is4' is an immediate byte.
+  assert.deepEqual(makeOpBytes(['/is4']), [{
+                     components: ['/is4'],
+                     byte_type: 'imm',
+                     byte_size_min: 1,
+                     byte_size_max: 1,
+                   }]);
+  // ENDBR64: the condition is attached to the ModRM byte.
+  assert.deepEqual(makeOpBytes(['/1', '(mod=11)']), [{
+                     components: ['/1', '(mod=11)'],
+                     byte_type: 'modrm',
+                     byte_size_min: 1,
+                     byte_size_max: 1,
+                   }]);
+  // GETSEC[CAPABILITIES]: the precondition is attached to the opcode byte.
+  assert.deepEqual(makeOpBytes(['37', '(EAX = 0)']), [{
+                     components: ['37', '(EAX = 0)'],
+                     byte_type: 'opcode',
+                     byte_size_min: 1,
+                     byte_size_max: 1,
+                   }]);
+}
+
+function TestJoinWrappedText() {
+  // ANDPD: the CPUID Feature Flag cell wrapped into three lines.
+  assert.equal(
+      JoinWrappedText(['(AVX512VL AND', 'AVX512DQ) OR', 'AVX10.1']),
+      '(AVX512VL AND AVX512DQ) OR AVX10.1');
+  // VCVTNEEPH2PS: a word wrapped after '_'.
+  assert.equal(JoinWrappedText(['AVX_NE_', 'CONVERT']), 'AVX_NE_CONVERT');
+  assert.equal(JoinWrappedText(['AVX512F', '', 'OR AVX10.1']), 'AVX512F OR AVX10.1');
+}
+
+function TestSplitMergedCells() {
+  // VPMADD52LUQ: the mode column merged with the first line of the CPUID one.
+  assert.deepEqual(
+      SplitValidIn3264AndCpuid('V/V (AVX512_IFMA', 'AND AVX512VL) OR AVX10.1'),
+      {validIn3264: 'V/V', cpuid: '(AVX512_IFMA AND AVX512VL) OR AVX10.1'});
+  assert.deepEqual(
+      SplitValidIn3264AndCpuid('V/V', 'AVX512F OR AVX10.1'),
+      {validIn3264: 'V/V', cpuid: 'AVX512F OR AVX10.1'});
+  // PSHUFW and IMUL: the Op/En column merged with the 64-Bit Mode one.
+  assert.deepEqual(
+      SplitOpEnAndValidIn64('RMI Valid', ''), {opEn: 'RMI', validIn64: 'Valid'});
+  assert.deepEqual(
+      SplitOpEnAndValidIn64('ZO', 'Valid'), {opEn: 'ZO', validIn64: 'Valid'});
+  // ADDSUBPD: the Op/En column merged with the 64/32 bit Mode Support one.
+  assert.deepEqual(
+      SplitOpEnAndValidIn3264('RVM V/V', ''),
+      {opEn: 'RVM', validIn3264: 'V/V'});
+  assert.deepEqual(
+      SplitOpEnAndValidIn3264('A', 'V/V'), {opEn: 'A', validIn3264: 'V/V'});
+  // LAHF and CRC32: the instruction extracted as a part of the opcode.
+  assert.deepEqual(
+      MoveMnemonicFromOpcode('9F LAHF', ''), {opcode: '9F', instr: 'LAHF'});
+  assert.deepEqual(
+      MoveMnemonicFromOpcode('F2 0F 38 F0 /r CRC32 r32, r/m8', ''),
+      {opcode: 'F2 0F 38 F0 /r', instr: 'CRC32 r32, r/m8'});
+  // An opcode byte like 'D8' should not be taken as a mnemonic.
+  assert.deepEqual(
+      MoveMnemonicFromOpcode('F3 0F 38 D8 !(11):011:bbb', 'AESDECWIDE256KL m512'),
+      {opcode: 'F3 0F 38 D8 !(11):011:bbb', instr: 'AESDECWIDE256KL m512'});
+}
+
+function TestIsEndOfInstrTable() {
+  // The section header of the next instruction ends the table.
+  assert.equal(
+      IsEndOfInstrTable(
+          {text: 'ENCODEKEY256—Encode 256-Bit Key With Key Locker',
+           attr: {top: 98, left: 69}}),
+      true);
+  assert.equal(
+      IsEndOfInstrTable(
+          {text: 'Instruction Operand Encoding', attr: {top: 264, left: 350}}),
+      true);
+  // ENCODEKEY256: an em dash inside a description does not end the table.
+  assert.equal(
+      IsEndOfInstrTable(
+          {text: 'handle and store it in XMM0—3.', attr: {top: 191, left: 527}}),
+      false);
+}
+
+function TestRemoveFootnoteMarkers() {
+  // The row of 'ADD r/m8, imm8' in 325383-092US, where the footnote marker is
+  // a superscript '1' between 'ADD r/m8' and ', imm8'.
+  const row = [
+    {text: '1', attr: {top: 247, left: 278, height: 14}},
+    {text: '80 /0 ib', attr: {top: 250, left: 74, height: 17}},
+    {text: 'ADD r/m8', attr: {top: 250, left: 221, height: 17}},
+    {text: ', imm8', attr: {top: 250, left: 284, height: 17}},
+    {text: 'MI', attr: {top: 250, left: 389, height: 17}},
+  ];
+  assert.deepEqual(
+      RemoveFootnoteMarkers(row).map(t => GetText(t)),
+      ['80 /0 ib', 'ADD r/m8', ', imm8', 'MI']);
+  // A '1' of the same size as the row is an operand, not a marker.
+  const shiftRow = [
+    {text: 'D0 /4', attr: {top: 250, left: 74, height: 17}},
+    {text: 'SAL r/m8, 1', attr: {top: 250, left: 221, height: 17}},
+  ];
+  assert.deepEqual(RemoveFootnoteMarkers(shiftRow).length, 2);
+}
+
+function TestJoinTokensInRow() {
+  // The opcode row of 'PINSRW mm, r32/m16, imm8' in 325383-092US, where '/r'
+  // is rendered as '/' and an italic 'r'.
+  const row = [
+    {text: 'NP 0F C4 /', attr: {top: 175, left: 74, height: 17}},
+    {i: 'r', attr: {top: 175, left: 135, height: 17}},
+    {text: 'ib', attr: {top: 175, left: 139, height: 17}},
+  ];
+  assert.equal(JoinTokensInRow(row), 'NP 0F C4 /r ib');
+  // The opcode row of 'VPADDUSB ymm1, ymm2, ymm3/m256' in 325383-092US, where
+  // '.WIG' is rendered in a smaller font as a separate token.
+  const vexRow = [
+    {text: 'VEX.256.66.0F', attr: {top: 436, left: 74, height: 17}},
+    {text: '.WIG', attr: {top: 438, left: 160, height: 15}},
+    {text: 'DC /r', attr: {top: 436, left: 182, height: 17}},
+  ];
+  assert.equal(JoinTokensInRow(vexRow), 'VEX.256.66.0F.WIG DC /r');
+}
+
+function TestFlattenAnchorsInMixedText() {
+  // A hyperlink of a footnote marker splits the text of an instruction.
+  assert.equal(
+      FlattenAnchorsInMixedText(
+          '<text top="424" left="284"><a href="#132">, r</a>8</text>'),
+      '<text top="424" left="284">, r8</text>');
+  assert.equal(
+      FlattenAnchorsInMixedText(
+          '<text top="424" left="221">ADC r/m<a href="#127">8</a></text>'),
+      '<text top="424" left="221">ADC r/m8</text>');
+  // An element which has nothing but an anchor is kept, since the index of the
+  // instructions is extracted from its href.
+  assert.equal(
+      FlattenAnchorsInMixedText(
+          '<text top="421" left="278"><a href="#132">1</a></text>'),
+      '<text top="421" left="278"><a href="#132">1</a></text>');
+}
+
+function TestGetTextOfAnchor() {
+  // A token which has nothing but an anchor (a footnote marker).
+  assert.equal(GetText({a: {text: '1', attr: {href: '#132'}}, attr: {}}), '1');
+  assert.equal(GetText({text: 'ADD r/m8', attr: {}}), 'ADD r/m8');
+  assert.equal(GetText({i: 'r', attr: {}}), ' r ');
+}
+
+function TestDedupInstrList() {
+  // One page can be referenced from multiple entries of the index.
+  const e = (page, opcode, instr) => <SDMInstr>{
+    opcode: opcode,
+    opcode_parsed: [],
+    opcode_bytes: [],
+    instr: instr,
+    instr_parsed: [],
+    description: '',
+    page: page,
+  };
+  const list = [
+    e(206, 'VEX.LZ.0F38.W0 F3 /2', 'BLSMSK r32, r/m32'),
+    e(206, 'VEX.LZ.0F38.W0 F3 /2', 'BLSMSK r32, r/m32'),
+    e(206, 'VEX.LZ.0F38.W1 F3 /2', 'BLSMSK r64, r/m64'),
+  ];
+  assert.deepEqual(DedupInstrList(list).map(x => x.instr), [
+    'BLSMSK r32, r/m32',
+    'BLSMSK r64, r/m64',
+  ]);
+}
+
 const HeaderTexts = {
   'Opcode': true,
   'Opcode/': true,
@@ -2142,8 +2531,20 @@ const sections = [
 function runTest() {
   TestCanonicalizeDescription();
   TestMakeOpBytes();
+  TestMakeOpBytesOfRecentSDM();
   TestCanonicalizeOpcode();
+  TestCanonicalizeOpcodeOfRecentSDM();
   TestCanonicalizeInstr();
+  TestCanonicalizeInstrOfRecentSDM();
+  TestCanonicalizeModes();
+  TestJoinWrappedText();
+  TestSplitMergedCells();
+  TestIsEndOfInstrTable();
+  TestRemoveFootnoteMarkers();
+  TestJoinTokensInRow();
+  TestFlattenAnchorsInMixedText();
+  TestGetTextOfAnchor();
+  TestDedupInstrList();
   TestExpandMnemonic();
   TestParser();
   console.log('PASS');
