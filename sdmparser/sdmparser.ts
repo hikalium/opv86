@@ -242,6 +242,14 @@ function CanonicalizeValidIn3264(str: string):
   if (str === 'V/V') {
     return {valid32: true, valid64: true};
   }
+  if (str === 'V/N.E.' || str === 'V/I') {
+    // Valid in 64 bit mode only.
+    return {valid32: false, valid64: true};
+  }
+  if (str === 'N.E./V') {
+    // Not encodable in 64 bit mode.
+    return {valid32: true, valid64: false};
+  }
   throw new Error(`${str} is not valid for 64/32 bit Mode Support`);
 }
 function GetText(t: SDMText): string {
@@ -459,6 +467,36 @@ function CanonicalizeInstr(s: string): string[] {
     'ST\\((0|i)\\)',
     'ST',
     '1',
+    // SIMD registers, optionally followed by the memory / broadcast forms and
+    // the decorators like {k1}{z}, {er} and {sae}.
+    // e.g. 'xmm3/m128/m32bcst', 'zmm3/m512/m64bcst {er}', 'zmm2+3'
+    '(x|y|z)mm\\d*(\\+3)?(/m\\d+)?(/m\\d+bcst)?(\\s*\\{k\\d\\})?(\\s*\\{z\\})?' +
+        '(\\s*\\{(er|sae)\\})?',
+    // opmask registers. e.g. 'k1', 'k2 {k1}', 'k2/m16'
+    'k\\d(/m\\d+)?(\\s*\\{k\\d\\s*\\})?(\\s*\\{z\\})?',
+    // MMX registers. e.g. 'mm', 'mm2/m64'
+    'mm\\d*(/m\\d+)?',
+    // VSIB addressing. e.g. 'vm32x'
+    'vm(32|64)(x|y|z)',
+    'bnd\\d*(/m(32|64|128))?',
+    'mib',
+    'mem',
+    'sibmem',
+    // AMX tile registers
+    'tmm\\d*',
+    'reg(/m(8|16|32|64))?',
+    'r32/r64',
+    'm32&32',
+    'r\\d+[ab]?(/m\\d+)?(\\s*\\{(er|sae)\\})?',
+    'r/m(8|16|32|64)\\s*\\{(er|sae)\\}',
+    'r16/r32/r64',
+    'm\\d+(\\s*\\{k\\d\\})?',
+    'm(14|94)/(28|108)byte',
+    'm512byte',
+    'm80bcd',
+    'm16&16',
+    // implicit operands. e.g. '<XMM0>'
+    '<[\\w-]+>',
   ];
   const reRemovePunctuator = /\s*\**\s*$/;
   const reRemoveSpaces = /\s/g;
@@ -506,7 +544,8 @@ function TestCanonicalizeInstr() {
 
 function CanonicalizeOpcode(s: string): string[] {
   const canonicalized = [];
-  const reREXPrefix = /^(REX(\.R|\.W)?)(\s*\+\s*)?/;
+  // '.w' in lowercase is used for ADCX/ADOX.
+  const reREXPrefix = /^(REX(\.R|\.W|\.w)?)(\s*\+\s*)?/;
   const reOpByte = /^[0-9A-F]{2}(\s|$|\/|\+)/;
   const reImm = /^((i(b|w|d|o))|\/ib)/;  // /ib for VEX
   const reRemovePunctuator = /\**/g;
@@ -582,14 +621,24 @@ function CanonicalizeOpcode(s: string): string[] {
     s = s.substr(match[0].length).trim();
   }
   if (s[0] === '/') {
-    // /digit (0-7) or /r
-    const reModRM = /^(\/\s*(r|[0-7]))/;
+    // /digit (0-7), /r, or /vsib
+    const reModRM = /^(\/\s*(r|vsib|[0-7]))/;
     const match = s.match(reModRM);
     if (!match) {
-      throw new Error(`/[0-7] or /r is expected. input: ${s}`);
+      throw new Error(`/[0-7], /r or /vsib is expected. input: ${s}`);
     }
     canonicalized.push(match[1].replace(/ /g, ''));
     s = s.substr(match[0].length).trim();
+  }
+  {
+    // ModRM byte written as a bit pattern, e.g. '11:rrr:bbb' for the register
+    // form and '!(11):rrr:bbb' for the memory form.
+    const reModRMPattern = /^((!\(11\)|11):(rrr|[0-7]{3}):(bbb|[0-7]{3}))/;
+    const match = s.match(reModRMPattern);
+    if (match) {
+      canonicalized.push(match[1]);
+      s = s.substr(match[0].length).trim();
+    }
   }
   {
     const match = s.match(reImm);
@@ -672,7 +721,8 @@ function Parser_OpInstr_OpEn_6432_CPUID_Desc(table: SDMText[][][]) {
 function makeOpBytes(op_parsed: string[]): SDMInstrOpByte[] {
   const opcode_bytes = [];
   const reOpByte = /^[0-9A-F]{2}$/;
-  const reModRM = /^\/([0-7]|r)$/;
+  const reModRM =
+      /^(\/([0-7]|r|vsib)|(!\(11\)|11):(rrr|[0-7]{3}):(bbb|[0-7]{3}))$/;
   for (let i = 0; i < op_parsed.length;) {
     if (op_parsed[i] === 'NP' || op_parsed[i] === 'NFx') {
       opcode_bytes.push({
@@ -1227,6 +1277,74 @@ const parserMap = {
       },
 };
 
+interface InstrTableColumn {
+  title: string;
+  left: number;
+}
+
+function MakeHeaderColumns(headers: SDMText[]): InstrTableColumn[] {
+  // Concatenate the header texts stacked in the same column (e.g.
+  // 'CPUID Feature' and 'Flag') to get the title of each column.
+  // headers should be sorted by (left, top).
+  const columns: InstrTableColumn[] = [];
+  for (const h of headers) {
+    const text = GetText(h).replace(/\*/g, '').trim();
+    const last = columns.length ? columns[columns.length - 1] : undefined;
+    if (last && h.attr.left - last.left <= 10) {
+      last.title += text;
+      continue;
+    }
+    columns.push({title: text, left: h.attr.left});
+  }
+  for (const c of columns) {
+    c.title = c.title.replace(/\s/g, '').toLowerCase();
+  }
+  return columns;
+}
+
+function ParseInstrTableByColumns(
+    headers: SDMText[], tokens: SDMText[]): SDMInstr[] {
+  // Parse an instruction table by looking at the title of each column, instead
+  // of having a dedicated parser for every variation of the header layout.
+  const columns = MakeHeaderColumns(headers);
+  console.error(columns);
+  const findColumn = (re: RegExp) => columns.find(c => re.test(c.title));
+  const opcodeCol = findColumn(/^opcode/);
+  const opEnCol = findColumn(/^op\/?en/);
+  let validIn3264Col = findColumn(/^64\/32/);
+  if (!validIn3264Col && opEnCol && /^op\/?en64\/32/.test(opEnCol.title)) {
+    // 'Op / En' and '64/32 bit' can be in the same token. In that case, the
+    // rest of the title of the mode column ('Mode Support') is in the next
+    // column, which is the column we are looking for.
+    const next = columns[columns.indexOf(opEnCol) + 1];
+    if (next && /^(bit)?mode/.test(next.title)) {
+      validIn3264Col = next;
+    }
+  }
+  const cpuidCol = findColumn(/^cpuid/);
+  const descriptionCol = findColumn(/^description$/);
+  if (!opcodeCol || !opEnCol || !validIn3264Col || !cpuidCol ||
+      !descriptionCol) {
+    throw new Error(`Parser not implemented for the columns: ${
+        columns.map(c => c.title).join('#')}`);
+  }
+  if (!/instruction/.test(opcodeCol.title)) {
+    throw new Error(`Opcode and Instruction should be in the same column: ${
+        opcodeCol.title}`);
+  }
+  const table = MakeTable(
+      tokens,
+      [
+        opcodeCol.left,
+        opEnCol.left,
+        validIn3264Col.left,
+        cpuidCol.left,
+        descriptionCol.left,
+      ],
+      1);
+  return Parser_OpInstr_OpEn_6432_CPUID_Desc(table);
+}
+
 function TestParser() {
   let parser;
   parser =
@@ -1386,12 +1504,21 @@ const HeaderTexts = {
   'Opcode/': true,
   'Opcode /': true,
   'Opcode*': true,
+  'Opcode*/': true,
   'Opcode***': true,
+  'Opcode/Instruction': true,
   'Op/': true,
   'Op /': true,
+  'Op/En': true,
   'Op / En': true,
   '64/32': true,
   '64/32 bit': true,
+  '64/32 Bit': true,
+  '64/32bit': true,
+  '64/32-': true,
+  '64/32-bit': true,
+  'bit': true,
+  'Bit Mode': true,
   '64-Bit': true,
   '64-bit': true,
   'Compat/': true,
@@ -1402,7 +1529,12 @@ const HeaderTexts = {
   'Mode': true,
   'Leg Mode': true,
   'CPUID Feature': true,
+  'CPUID Feature Flag': true,
   'CPUID': true,
+  // 'Op / En' and '64/32 bit' are sometimes merged into one token.
+  'Op / En 64/32 bit': true,
+  'Op/En 64/32 bit': true,
+  '64-Bit Mode Compat/': true,
   'Feature': true,
   'Feature Flag': true,
   'Flag': true,
@@ -1468,10 +1600,8 @@ function ParseInstr(pages: SDMPage[], startPage: number): SDMInstr[] {
           (lastHeaderKey !== headerKey || pageHeader.length > 1)) {
         break;
       }
-      if (!parserMap[headerKey]) {
-        throw new Error(
-            `Parser not implemented for tableHeader key ${headerKey}`);
-      }
+      // Fall back to the generic parser if the header layout is not known.
+      const parseInstrTable = parserMap[headerKey] || ParseInstrTableByColumns;
       let count = 0;
       while (!IsEndOfInstrTable(s.peek(count))) {
         count++;
@@ -1481,11 +1611,10 @@ function ParseInstr(pages: SDMPage[], startPage: number): SDMInstr[] {
       console.error(
           JSON.stringify(tableHeader, null, ''),
           JSON.stringify(tokens, null, ''));
-      instrs =
-          instrs.concat(parserMap[headerKey](tableHeader, tokens).map(e => {
-            e.page = p;
-            return e;
-          }));
+      instrs = instrs.concat(parseInstrTable(tableHeader, tokens).map(e => {
+        e.page = p;
+        return e;
+      }));
       lastHeaderKey = headerKey;
     } catch (e) {
       console.log(page);
