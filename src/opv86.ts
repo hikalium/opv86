@@ -39,6 +39,10 @@ function appendOpListElement(
     }
   });
   const sizeAttrTable = {
+    // A component which occupies no byte (e.g. 'NP' and the precondition of a
+    // register like '(EAX = 0)' of GETSEC) is shown in a wider box of its own,
+    // so that it is not wrapped into the next line.
+    0: 'opv86-opcode-pseudo-byte',
     1: 'opv86-opcode-byte',
     2: 'opv86-opcode-word',
     4: 'opv86-opcode-dword',
@@ -240,7 +244,12 @@ function updateFilter(data: SDMInstr[], rows: HTMLElement[], filter: string) {
     const matched = isMatchedWithFilter(data[i], filter);
     // Touch the cached element directly: doing $('.opv86-oplist-row-i') here
     // scans the whole document once per instruction, which is O(N^2) in total.
-    rows[i].style.display = matched ? '' : 'none';
+    // Writing the same value again would invalidate the style of the row for
+    // nothing, and most of the rows keep their state between the keystrokes.
+    const display = matched ? '' : 'none';
+    if (rows[i].style.display !== display) {
+      rows[i].style.display = display;
+    }
     if (matched) {
       matchedCount++;
       lastMatchedRow = rows[i];
@@ -270,11 +279,15 @@ function compareOps(a: SDMInstr, b: SDMInstr) {
     data.sort(compareOps);
     appendOpListHeaders(opListContainerDiv);
     console.log(data[0]);
+    // Build the rows in a fragment and put them into the document at once,
+    // instead of inserting 4000+ rows into the live list one by one.
     const rows: HTMLElement[] = [];
+    const oplistFragment = $(document.createDocumentFragment());
     for (let i = 0; i < data.length; i++) {
-      rows.push(appendOpListElement(opListContainerDiv, data[i], i));
+      rows.push(appendOpListElement(oplistFragment, data[i], i));
       appendMatcherToOp(data[i]);
     }
+    opListContainerDiv.append(oplistFragment);
     const q = new URL(location.href).searchParams.get('q');
     if (q !== null) {
       filterValueInput.value = decodeURIComponent(q);

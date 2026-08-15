@@ -67,6 +67,15 @@ a:visited {
   height: 20px;
   grid-column: span 1;
 }
+/* A component which occupies no byte, like 'NP' and '(EAX = 0)' of GETSEC.
+   It is wider than a byte and is kept in one line. */
+.opv86-opcode-pseudo-byte {
+  text-align: center;
+  display: inline;
+  height: 20px;
+  grid-column: span 2;
+  white-space: nowrap;
+}
 .opv86-opcode-word {
   text-align: center;
   display: inline;

@@ -200879,12 +200879,18 @@
    },
    {
     "components": [
-     "37",
-     "(EAX = 0)"
+     "37"
     ],
     "byte_type": "opcode",
     "byte_size_min": 1,
     "byte_size_max": 1
+   },
+   {
+    "components": [
+     "(EAX = 0)"
+    ],
+    "byte_size_min": 0,
+    "byte_size_max": 0
    }
   ],
   "instr": "GETSEC[CAPABILITIES]",
@@ -200920,12 +200926,18 @@
    },
    {
     "components": [
-     "37",
-     "(EAX = 2)"
+     "37"
     ],
     "byte_type": "opcode",
     "byte_size_min": 1,
     "byte_size_max": 1
+   },
+   {
+    "components": [
+     "(EAX = 2)"
+    ],
+    "byte_size_min": 0,
+    "byte_size_max": 0
    }
   ],
   "instr": "GETSEC[ENTERACCS]",
@@ -200961,12 +200973,18 @@
    },
    {
     "components": [
-     "37",
-     "(EAX=3)"
+     "37"
     ],
     "byte_type": "opcode",
     "byte_size_min": 1,
     "byte_size_max": 1
+   },
+   {
+    "components": [
+     "(EAX=3)"
+    ],
+    "byte_size_min": 0,
+    "byte_size_max": 0
    }
   ],
   "instr": "GETSEC[EXITAC]",
@@ -201002,12 +201020,18 @@
    },
    {
     "components": [
-     "37",
-     "(EAX=4)"
+     "37"
     ],
     "byte_type": "opcode",
     "byte_size_min": 1,
     "byte_size_max": 1
+   },
+   {
+    "components": [
+     "(EAX=4)"
+    ],
+    "byte_size_min": 0,
+    "byte_size_max": 0
    }
   ],
   "instr": "GETSEC[SENTER]",
@@ -201043,12 +201067,18 @@
    },
    {
     "components": [
-     "37",
-     "(EAX=5)"
+     "37"
     ],
     "byte_type": "opcode",
     "byte_size_min": 1,
     "byte_size_max": 1
+   },
+   {
+    "components": [
+     "(EAX=5)"
+    ],
+    "byte_size_min": 0,
+    "byte_size_max": 0
    }
   ],
   "instr": "GETSEC[SEXIT]",
@@ -201084,12 +201114,18 @@
    },
    {
     "components": [
-     "37",
-     "(EAX=6)"
+     "37"
     ],
     "byte_type": "opcode",
     "byte_size_min": 1,
     "byte_size_max": 1
+   },
+   {
+    "components": [
+     "(EAX=6)"
+    ],
+    "byte_size_min": 0,
+    "byte_size_max": 0
    }
   ],
   "instr": "GETSEC[PARAMETERS]",
@@ -201125,12 +201161,18 @@
    },
    {
     "components": [
-     "37",
-     "(EAX = 7)"
+     "37"
     ],
     "byte_type": "opcode",
     "byte_size_min": 1,
     "byte_size_max": 1
+   },
+   {
+    "components": [
+     "(EAX = 7)"
+    ],
+    "byte_size_min": 0,
+    "byte_size_max": 0
    }
   ],
   "instr": "GETSEC[SMCTRL]",
@@ -201166,12 +201208,18 @@
    },
    {
     "components": [
-     "37",
-     "(EAX=8)"
+     "37"
     ],
     "byte_type": "opcode",
     "byte_size_min": 1,
     "byte_size_max": 1
+   },
+   {
+    "components": [
+     "(EAX=8)"
+    ],
+    "byte_size_min": 0,
+    "byte_size_max": 0
    }
   ],
   "instr": "GETSEC[WAKEUP]",

@@ -1106,9 +1106,15 @@ function makeOpBytes(op_parsed: string[]): SDMInstrOpByte[] {
     if (op_parsed[i].startsWith('(E') || op_parsed[i].startsWith('(A') ||
         op_parsed[i].startsWith('(B') || op_parsed[i].startsWith('(C') ||
         op_parsed[i].startsWith('(D')) {
-      // A precondition of the register. See CanonicalizeOpcode.
-      assert(opcode_bytes.length > 0);
-      opcode_bytes[opcode_bytes.length - 1].components.push(op_parsed[i++]);
+      // A precondition of a register (see CanonicalizeOpcode). It occupies no
+      // byte of the instruction, so make it a pseudo byte of its own instead
+      // of appending it to the preceding opcode byte, which is shown in one
+      // box in the UI and is too narrow for it.
+      opcode_bytes.push({
+        components: [op_parsed[i++]],
+        byte_size_min: 0,
+        byte_size_max: 0,
+      });
       continue;
     }
     if (op_parsed[i].startsWith('(mod')) {
@@ -2215,13 +2221,21 @@ function TestMakeOpBytesOfRecentSDM() {
                      byte_size_min: 1,
                      byte_size_max: 1,
                    }]);
-  // GETSEC[CAPABILITIES]: the precondition is attached to the opcode byte.
-  assert.deepEqual(makeOpBytes(['37', '(EAX = 0)']), [{
-                     components: ['37', '(EAX = 0)'],
-                     byte_type: 'opcode',
-                     byte_size_min: 1,
-                     byte_size_max: 1,
-                   }]);
+  // GETSEC[CAPABILITIES]: the precondition is a pseudo byte of its own, so
+  // that it is not squeezed into the box of the opcode byte in the UI.
+  assert.deepEqual(makeOpBytes(['37', '(EAX = 0)']), [
+    {
+      components: ['37'],
+      byte_type: 'opcode',
+      byte_size_min: 1,
+      byte_size_max: 1,
+    },
+    {
+      components: ['(EAX = 0)'],
+      byte_size_min: 0,
+      byte_size_max: 0,
+    },
+  ]);
 }
 
 function TestJoinWrappedText() {
