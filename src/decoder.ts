@@ -63,6 +63,9 @@ interface DecoderTable {
 interface DecodedInstrByte {
   byte_value: number;
   byte_type: ByteType;
+  // What this byte is, for the legacy prefixes: 'LOCK', 'BND', 'REP', 'FS',
+  // 'opsize' and so on. Empty for the other byte types.
+  name?: string;
 }
 
 interface DecodedInstr {
@@ -84,6 +87,42 @@ interface DecodedInstr {
 function toHex2(v: number): string {
   return ('0' + v.toString(16)).substr(-2);
 }
+
+function isBranchMnemonic(mnemonic: string): boolean {
+  return mnemonic === 'CALL' || mnemonic === 'RET' || /^J[A-Z]+$/.test(mnemonic);
+}
+
+function legacyPrefixName(
+    v: number, mnemonic: string, hasModRM: boolean,
+    isMandatory: boolean): string {
+  // Names the legacy prefixes the way objdump shows them. Which one a byte is
+  // depends on the instruction it is attached to: F2 in front of a branch is
+  // the BND prefix of MPX, and 3E in front of an indirect branch is the
+  // NOTRACK prefix of CET, not a segment override.
+  // Required by: 'f2 e9 d1 fd ff ff' (bnd jmp), '3e ff e0' (notrack jmp),
+  // 'f0 0f b1 15 ...' (lock cmpxchg) and 'f3 ab' (rep stos) of a real binary.
+  if (isMandatory) {
+    // The byte is a part of the opcode, not a prefix of its own.
+    return toHex2(v).toUpperCase();
+  }
+  if (v === 0xf0) return 'LOCK';
+  if (v === 0xf2) return isBranchMnemonic(mnemonic) ? 'BND' : 'REPNE';
+  if (v === 0xf3) return 'REP';
+  if (v === 0x3e) {
+    return (isBranchMnemonic(mnemonic) && hasModRM) ? 'NOTRACK' : 'DS';
+  }
+  if (v === 0x2e) return 'CS';
+  if (v === 0x36) return 'SS';
+  if (v === 0x26) return 'ES';
+  if (v === 0x64) return 'FS';
+  if (v === 0x65) return 'GS';
+  if (v === 0x66) return 'opsize';
+  if (v === 0x67) return 'addrsize';
+  return 'prefix';
+}
+
+// The prefixes which objdump writes in front of the mnemonic.
+const PREFIXES_SHOWN_WITH_INSTR = ['LOCK', 'BND', 'NOTRACK', 'REP', 'REPNE'];
 
 function isLegacyPrefixByte(v: number): boolean {
   // Group 1: LOCK / REPNE / REP, group 2: the segment overrides,
@@ -485,11 +524,14 @@ function decodeInstr(bin: number[], table: DecoderTable): DecodedInstr {
     description: '',
     note: '',
   };
+  const names: string[] = [];
+  for (let i = 0; i < bin.length; i++) names.push('');
   const finish = (length: number) => {
     for (let i = 0; i < bin.length; i++) {
       result.bytes.push({
         byte_value: bin[i],
         byte_type: i < length ? types[i] : ByteType.Unknown,
+        name: i < length ? names[i] : '',
       });
     }
     result.length = length;
@@ -499,11 +541,14 @@ function decodeInstr(bin: number[], table: DecoderTable): DecodedInstr {
   let has66 = false;
   let hasF2 = false;
   let hasF3 = false;
+  const prefixIndices: number[] = [];
   while (i < bin.length && isLegacyPrefixByte(bin[i])) {
     if (bin[i] === 0x66) has66 = true;
     if (bin[i] === 0xf2) hasF2 = true;
     if (bin[i] === 0xf3) hasF3 = true;
     types[i] = ByteType.Prefix;
+    names[i] = legacyPrefixName(bin[i], '', false, false);
+    prefixIndices.push(i);
     i++;
     if (i >= 15) break;  // An instruction is never longer than 15 bytes.
   }
@@ -613,6 +658,23 @@ function decodeInstr(bin: number[], table: DecoderTable): DecodedInstr {
   result.mnemonic = e.mnemonic;
   result.instr = e.instr;
   result.description = e.description;
+  // Now that the instruction is known, the legacy prefixes can be named, and
+  // the ones which objdump writes in front of the mnemonic are put in front of
+  // the instruction as well (e.g. 'BND JMP rel32' for 'f2 e9 d1 fd ff ff').
+  const shownPrefixes: string[] = [];
+  for (const p of prefixIndices) {
+    const isMandatory = e.mandatory_prefix === toHex2(bin[p]).toUpperCase();
+    const name =
+        legacyPrefixName(bin[p], e.mnemonic, e.has_modrm, isMandatory);
+    names[p] = name;
+    if (PREFIXES_SHOWN_WITH_INSTR.indexOf(name) !== -1 &&
+        e.mnemonic.indexOf(name) === -1) {
+      shownPrefixes.push(name);
+    }
+  }
+  if (shownPrefixes.length) {
+    result.instr = `${shownPrefixes.join(' ')} ${result.instr}`;
+  }
   if (e.has_modrm) {
     if (i >= bin.length) {
       result.truncated = true;

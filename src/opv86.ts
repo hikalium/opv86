@@ -155,8 +155,11 @@ function updateDecoderOutput(filter: string) {
         .text(('00' + e.byte_value.toString(16).toUpperCase()).substr(-2));
   });
   const opcodeByteElementsDescription = decoded.bytes.map(e => {
-    const name = byteTypeNameTable[e.byte_type] ? byteTypeNameTable[e.byte_type] :
-                                                  e.byte_type;
+    // A legacy prefix knows its own name (LOCK, BND, FS, ...); the other bytes
+    // are named after their type.
+    const name = e.name ? e.name :
+        (byteTypeNameTable[e.byte_type] ? byteTypeNameTable[e.byte_type] :
+                                          e.byte_type);
     return $('<div>').addClass(`opv86-opcode-byte`).text(name);
   });
 

@@ -332,6 +332,51 @@ function mnemonicMatches(sdmMnemonic, objdumpMnemonic) {
   return false;
 }
 
+function TestLegacyPrefixNames() {
+  // Every case here is taken from `objdump -d` of /bin/ls or libc.so.6, and
+  // the comment shows what objdump prints for it.
+  const namesOf = (d) => d.bytes.slice(0, d.length).map(b => b.name).join(',');
+  // f2 e9 d1 fd ff ff: 'bnd jmp'. F2 in front of a branch is the BND prefix
+  // of MPX, not REPNE.
+  let d = decode('f2e9d1fdffff');
+  assert.equal(d.length, 6);
+  assert.equal(d.mnemonic, 'JMP');
+  assert.equal(d.instr, 'BND JMP rel32');
+  assert.equal(typesOf(d), 'prefix,opcode,imm,imm,imm,imm');
+  assert.equal(namesOf(d), 'BND,,,,,');
+  // f2 ff 25 03 20 1f 00: 'bnd jmp *0x1f2003(%rip)', the indirect form.
+  d = decode('f2ff2503201f00');
+  assert.equal(d.length, 7);
+  assert.equal(d.instr, 'BND JMP r/m64');
+  // 3e ff e0: 'notrack jmp *%rax'. 3E in front of an indirect branch is the
+  // NOTRACK prefix of CET, not the DS segment override.
+  d = decode('3effe0');
+  assert.equal(d.length, 3);
+  assert.equal(d.instr, 'NOTRACK JMP r/m64');
+  assert.equal(namesOf(d), 'NOTRACK,,');
+  // f0 0f b1 15 2a 37 1f 00: 'lock cmpxchg %edx,0x1f372a(%rip)'.
+  d = decode('f00fb1152a371f00');
+  assert.equal(d.length, 8);
+  assert.equal(d.instr, 'LOCK CMPXCHG r/m32, r32');
+  assert.equal(namesOf(d).split(',')[0], 'LOCK');
+  // f3 ab: 'rep stos %eax,%es:(%rdi)'. The SDM lists this one with its F3, so
+  // the byte is a part of the opcode and REP is not added twice.
+  d = decode('f3ab');
+  assert.equal(d.length, 2);
+  assert.equal(d.instr, 'REP STOS m32');
+  assert.equal(namesOf(d), 'F3,');
+  // 64 48 8b 04 25 28 00 00 00: 'mov %fs:0x28,%rax'. A segment override is
+  // named but is not shown in front of the mnemonic.
+  d = decode('64488b042528000000');
+  assert.equal(d.length, 9);
+  assert.equal(d.instr, 'MOV r64, r/m64');
+  assert.equal(namesOf(d).split(',')[0], 'FS');
+  // 66 90: 'xchg %ax,%ax' (the two byte nop). 66 is the operand size prefix.
+  d = decode('6690');
+  assert.equal(d.length, 2);
+  assert.equal(d.bytes[0].name, 'opsize');
+}
+
 function TestMnemonicMatches() {
   assert.ok(mnemonicMatches('MOV', 'movl'));
   assert.ok(mnemonicMatches('MOV', 'movq'));
@@ -414,6 +459,7 @@ function TestAgainstObjdumpFixture() {
 
 function runTest() {
   TestPrefixesAndRex();
+  TestLegacyPrefixNames();
   TestModRMAndSIBAndDisp();
   TestImmediate();
   TestJumps();

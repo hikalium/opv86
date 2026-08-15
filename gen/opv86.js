@@ -21,6 +21,47 @@ const REG_ANY = -1;
 function toHex2(v) {
     return ('0' + v.toString(16)).substr(-2);
 }
+function isBranchMnemonic(mnemonic) {
+    return mnemonic === 'CALL' || mnemonic === 'RET' || /^J[A-Z]+$/.test(mnemonic);
+}
+function legacyPrefixName(v, mnemonic, hasModRM, isMandatory) {
+    // Names the legacy prefixes the way objdump shows them. Which one a byte is
+    // depends on the instruction it is attached to: F2 in front of a branch is
+    // the BND prefix of MPX, and 3E in front of an indirect branch is the
+    // NOTRACK prefix of CET, not a segment override.
+    // Required by: 'f2 e9 d1 fd ff ff' (bnd jmp), '3e ff e0' (notrack jmp),
+    // 'f0 0f b1 15 ...' (lock cmpxchg) and 'f3 ab' (rep stos) of a real binary.
+    if (isMandatory) {
+        // The byte is a part of the opcode, not a prefix of its own.
+        return toHex2(v).toUpperCase();
+    }
+    if (v === 0xf0)
+        return 'LOCK';
+    if (v === 0xf2)
+        return isBranchMnemonic(mnemonic) ? 'BND' : 'REPNE';
+    if (v === 0xf3)
+        return 'REP';
+    if (v === 0x3e) {
+        return (isBranchMnemonic(mnemonic) && hasModRM) ? 'NOTRACK' : 'DS';
+    }
+    if (v === 0x2e)
+        return 'CS';
+    if (v === 0x36)
+        return 'SS';
+    if (v === 0x26)
+        return 'ES';
+    if (v === 0x64)
+        return 'FS';
+    if (v === 0x65)
+        return 'GS';
+    if (v === 0x66)
+        return 'opsize';
+    if (v === 0x67)
+        return 'addrsize';
+    return 'prefix';
+}
+// The prefixes which objdump writes in front of the mnemonic.
+const PREFIXES_SHOWN_WITH_INSTR = ['LOCK', 'BND', 'NOTRACK', 'REP', 'REPNE'];
 function isLegacyPrefixByte(v) {
     // Group 1: LOCK / REPNE / REP, group 2: the segment overrides,
     // group 3: operand size, group 4: address size.
@@ -439,11 +480,15 @@ function decodeInstr(bin, table) {
         description: '',
         note: '',
     };
+    const names = [];
+    for (let i = 0; i < bin.length; i++)
+        names.push('');
     const finish = (length) => {
         for (let i = 0; i < bin.length; i++) {
             result.bytes.push({
                 byte_value: bin[i],
                 byte_type: i < length ? types[i] : ByteType.Unknown,
+                name: i < length ? names[i] : '',
             });
         }
         result.length = length;
@@ -453,6 +498,7 @@ function decodeInstr(bin, table) {
     let has66 = false;
     let hasF2 = false;
     let hasF3 = false;
+    const prefixIndices = [];
     while (i < bin.length && isLegacyPrefixByte(bin[i])) {
         if (bin[i] === 0x66)
             has66 = true;
@@ -461,6 +507,8 @@ function decodeInstr(bin, table) {
         if (bin[i] === 0xf3)
             hasF3 = true;
         types[i] = ByteType.Prefix;
+        names[i] = legacyPrefixName(bin[i], '', false, false);
+        prefixIndices.push(i);
         i++;
         if (i >= 15)
             break; // An instruction is never longer than 15 bytes.
@@ -576,6 +624,22 @@ function decodeInstr(bin, table) {
     result.mnemonic = e.mnemonic;
     result.instr = e.instr;
     result.description = e.description;
+    // Now that the instruction is known, the legacy prefixes can be named, and
+    // the ones which objdump writes in front of the mnemonic are put in front of
+    // the instruction as well (e.g. 'BND JMP rel32' for 'f2 e9 d1 fd ff ff').
+    const shownPrefixes = [];
+    for (const p of prefixIndices) {
+        const isMandatory = e.mandatory_prefix === toHex2(bin[p]).toUpperCase();
+        const name = legacyPrefixName(bin[p], e.mnemonic, e.has_modrm, isMandatory);
+        names[p] = name;
+        if (PREFIXES_SHOWN_WITH_INSTR.indexOf(name) !== -1 &&
+            e.mnemonic.indexOf(name) === -1) {
+            shownPrefixes.push(name);
+        }
+    }
+    if (shownPrefixes.length) {
+        result.instr = `${shownPrefixes.join(' ')} ${result.instr}`;
+    }
     if (e.has_modrm) {
         if (i >= bin.length) {
             result.truncated = true;
@@ -782,8 +846,11 @@ function updateDecoderOutput(filter) {
             .text(('00' + e.byte_value.toString(16).toUpperCase()).substr(-2));
     });
     const opcodeByteElementsDescription = decoded.bytes.map(e => {
-        const name = byteTypeNameTable[e.byte_type] ? byteTypeNameTable[e.byte_type] :
-            e.byte_type;
+        // A legacy prefix knows its own name (LOCK, BND, FS, ...); the other bytes
+        // are named after their type.
+        const name = e.name ? e.name :
+            (byteTypeNameTable[e.byte_type] ? byteTypeNameTable[e.byte_type] :
+                e.byte_type);
         return $('<div>').addClass(`opv86-opcode-byte`).text(name);
     });
     // Say what happened when the decode did not reach the end of the
