@@ -249,6 +249,11 @@ function CanonicalizeValidIn3264(str: string):
   if (str === 'V/V' || str === 'VV' || str === 'V') {
     return {valid32: true, valid64: true};
   }
+  if (str === 'Valid') {
+    // The value of the 64-Bit Mode column is used in this column.
+    // Required by: RDMSR and WRMSR in 325383-092US (June 2026).
+    return {valid32: true, valid64: true};
+  }
   if (str.startsWith('V/N.') || str === 'V/I') {
     // Valid in 64 bit mode only. The trailing part of 'V/N.E.' can be lost by
     // the text extraction.
@@ -308,6 +313,9 @@ function GetNonEmptyText(s: SDMTextStream): string {
 function MakeRows(tokens: SDMText[]): SDMText[][] {
   // Convert list of tokens into list of rows of tokens.
   const textRows = [];
+  if (!tokens.length) {
+    return textRows;
+  }
   let row = [];
   let currentTop = tokens[0].attr.top;
   for (let t of tokens) {
@@ -354,9 +362,9 @@ function MakeCols(tokens: SDMText[], colLeftList: number[]): SDMText[][] {
   // Convert list of tokens into list of columns
   // colLeftList: 'left' values for each columns. Should be monotonically
   // increasing.
-  const textCols = [];
-  let row = [];
-  let currentTop = tokens[0].attr.top;
+  // A column can have no token at all, so make the list of the columns first
+  // to avoid leaving a hole in it.
+  const textCols = colLeftList.map(() => []);
   const getColIndex = (t) => {
     for (let i = 0; i < colLeftList.length; i++) {
       if (t.attr.left < colLeftList[i] - 5) {
@@ -367,8 +375,9 @@ function MakeCols(tokens: SDMText[], colLeftList: number[]): SDMText[][] {
   };
   for (const t of tokens) {
     const colIndex = getColIndex(t);
-    if (!textCols[colIndex]) {
-      textCols[colIndex] = [];
+    if (colIndex < 0) {
+      // The token is on the left of the first column. Ignore it as before.
+      continue;
     }
     textCols[colIndex].push(t);
   }
@@ -586,6 +595,16 @@ function CanonicalizeOpcode(s: string): string[] {
   const reImm = /^((i(b|w|d|o))|\/ib|imm(8|16|32|64))/;
   const reRemovePunctuator = /\**/g;
   s = s.trim().replace(reRemovePunctuator, '');
+  // A comma is put after an opcode byte by mistake.
+  // Required by: PAVGB ('66 0F E0, /r') in 325383-092US (June 2026).
+  // The conditions in the parentheses contain commas as well (e.g.
+  // '(mod!=11, /5, memory only)' of RSTORSSP), so leave them as they are.
+  {
+    const parenIndex = s.indexOf('(');
+    const head = (parenIndex === -1) ? s : s.substr(0, parenIndex);
+    const tail = (parenIndex === -1) ? '' : s.substr(parenIndex);
+    s = head.replace(/([0-9A-F]{2}),(\s|$)/g, '$1$2') + tail;
+  }
   if (s.startsWith('NP')) {
     canonicalized.push(s.substr(0, 2));
     s = s.substr(2).trim();
@@ -598,7 +617,10 @@ function CanonicalizeOpcode(s: string): string[] {
     // The prefix can be splitted into multiple tokens (e.g. 'VEX.256.66.0F'
     // and '.WIG'), so accept the spaces in front of each component.
     // ':' is used as a separator as well, like 'VEX.128.F2.MAP7:W0.F8'.
-    const reVEXPrefix = /^(E?VEX(\s*[.:]\s*\w+)+)/;
+    // A component can be splitted into two tokens as well, like
+    // 'VEX.128.66.0F' + '38.WIG'.
+    // Required by: VPMOVZXBW in 325383-092US (June 2026).
+    const reVEXPrefix = /^(E?VEX(\s*[.:]\s*\w+|\s+\w+\.\w+)+)/;
     const match = s.match(reVEXPrefix);
     canonicalized.push(match[1].replace(/\s/g, ''));
     s = s.substr(match[0].length).trim();
@@ -671,13 +693,23 @@ function CanonicalizeOpcode(s: string): string[] {
     canonicalized.push('+' + match[1]);
     s = s.substr(match[0].length).trim();
   }
+  if (s === '/') {
+    // The 'r' of '/r' is missing in the text extracted from the PDF, though it
+    // is rendered in the page.
+    // Required by: VMOVD ('VEX.128.66.0F.W0 6E /') in 325383-092US (June 2026).
+    s = '/r';
+  }
   while (s[0] === '/' && !reImm.test(s)) {
     // /digit (0-7), /r, or /vsib. Both of them can appear in one opcode,
     // like 'EVEX.512.66.0F38.W0 C6 /1 /vsib'.
-    const reModRM = /^(\/\s*(r|vsib|[0-7]))/;
+    // '/is4' is the register specifier in imm8[7:4] of the VEX encoded
+    // instructions with 4 operands.
+    // Required by: VBLENDVPD and the other VEX instructions in 325383-092US
+    // (June 2026), which are written as 'VEX.128.66.0F3A.W0 4B /r /is4'.
+    const reModRM = /^(\/\s*(r|vsib|is4|[0-7]))/;
     const match = s.match(reModRM);
     if (!match) {
-      throw new Error(`/[0-7], /r or /vsib is expected. input: ${s}`);
+      throw new Error(`/[0-7], /r, /vsib or /is4 is expected. input: ${s}`);
     }
     canonicalized.push(match[1].replace(/ /g, ''));
     s = s.substr(match[0].length).trim();
@@ -751,17 +783,65 @@ function TestCanonicalizeOpcode() {
   assert.deepEqual(CanonicalizeOpcode('F2 REX.W A7'), ['F2', 'REX.W', 'A7']);
 }
 
+function SplitOpEnAndValidIn64(opEn: string, validIn64: string):
+    {opEn: string, validIn64: string} {
+  // The Op/En column and the 64-Bit Mode column can be extracted as one token,
+  // and the mode column is left empty in that case.
+  // Required by: PSHUFW ('RMI Valid'), IMUL ('RMI Valid'), SHLD and SHRD
+  // ('MRC Valid') in 325383-092US (June 2026).
+  const reOpEnWithValidIn64 = /^(\w+)\s+(Valid|Invalid|N\.E\.)$/;
+  const match = opEn.trim().match(reOpEnWithValidIn64);
+  if (!match) {
+    return {opEn: opEn, validIn64: validIn64};
+  }
+  return {opEn: match[1], validIn64: match[2]};
+}
+
+function SplitOpEnAndValidIn3264(opEn: string, validIn3264: string):
+    {opEn: string, validIn3264: string} {
+  // The Op/En column and the 64/32 bit Mode Support column can be extracted as
+  // one token, and the mode column is left empty in that case.
+  // Required by: ADDSUBPD, BLENDPD, VPMADD52LUQ and the other SIMD
+  // instructions in 325383-092US (June 2026), whose Op/En column has values
+  // like 'RVM V/V'.
+  const reOpEnWithValidIn3264 = /^(\w+)\s+(V\/V|V\/N\.E\.|V\/I|N\.E\.\/V)$/;
+  const match = opEn.trim().match(reOpEnWithValidIn3264);
+  if (!match) {
+    return {opEn: opEn, validIn3264: validIn3264};
+  }
+  return {opEn: match[1], validIn3264: match[2]};
+}
+
+function MoveMnemonicFromOpcode(opcode: string, instr: string):
+    {opcode: string, instr: string} {
+  // The instruction can be extracted as a part of the opcode when the both are
+  // rendered in the same line. The mnemonic is required to be 3 characters or
+  // longer here, so that the opcode bytes like 'D8' are not moved by mistake.
+  // Required by: LAHF ('9F LAHF') and CRC32 ('F2 0F 38 F0 /r CRC32 r32, r/m8')
+  // in 325383-092US (June 2026).
+  const reOpcodeWithInstr = /^(.*\S)\s+([A-Z][A-Z0-9]{2,}(\s+\S.*)?)$/;
+  const match = opcode.match(reOpcodeWithInstr);
+  if (!match) {
+    return {opcode: opcode, instr: instr};
+  }
+  return {opcode: match[1], instr: `${match[2]} ${instr}`.trim()};
+}
+
 function Parser_OpInstr_OpEn_6432_CPUID_Desc(table: SDMText[][][]) {
-  return table.map(tr => {
+  // A row without the opcode is not an instruction. It appears when the table
+  // is continued to the next page.
+  // Required by: PSHUFW, VPRORVD and VRCP14SD in 325383-092US (June 2026).
+  return table.filter(tr => tr[0] && tr[0].length).map(tr => {
     const opInstrRows = MakeRows(tr[0]);
     const opRow = opInstrRows[0];
     const InstrRows = opInstrRows.splice(1);
     // The opcode can be wrapped into the next row, and in that case the ModRM
     // bit pattern is placed in the second row.
-    // Required by: VBCSTNEBF162PS in 325383-092US (June 2026), which is
-    // written as 'VEX.128.F3.0F38.W0 B1' + '!(11):rrr:bbb'.
+    // Required by: VBCSTNEBF162PS ('VEX.128.F3.0F38.W0 B1' +
+    // '!(11):rrr:bbb') and ROUNDPS ('66 0F 3A 08' + '/r ib') in 325383-092US
+    // (June 2026).
     while (InstrRows.length &&
-           /^(!\(11\)|11):/.test(
+           /^(!\(11\)|11):|^\//.test(
                InstrRows[0].map(t => GetText(t).trim()).join(' '))) {
       opRow.push(...InstrRows.shift());
     }
@@ -769,6 +849,16 @@ function Parser_OpInstr_OpEn_6432_CPUID_Desc(table: SDMText[][][]) {
     console.log(opcode);
     let instr = InstrRows.flat().map(t => GetText(t).trim()).join(' ');
     console.log(instr);
+    // The immediate specifier of the opcode can be wrapped into the row of the
+    // instruction and merged with the mnemonic.
+    // Required by: VPERMILPS in 325383-092US (June 2026), whose last row has
+    // 'EVEX.512.66.0F3A.W0 04 /r' and 'ibVPERMILPS zmm1 {k1}{z},'.
+    const reImmWithMnemonic = /^(ib|iw|id|io)([A-Z][A-Z0-9]{2,})/;
+    const immWithMnemonic = instr.match(reImmWithMnemonic);
+    if (immWithMnemonic) {
+      instr = instr.substr(immWithMnemonic[1].length);
+      opcode = `${opcode} ${immWithMnemonic[1]}`;
+    }
     // The mnemonic can be hyphenated at the end of the opcode row, since the
     // opcode and the instruction are in the same column.
     // Required by: AESDECWIDE256KL, AESENCWIDE256KL, AESDECWIDE128KL and
@@ -792,10 +882,13 @@ function Parser_OpInstr_OpEn_6432_CPUID_Desc(table: SDMText[][][]) {
     // A value in the Op/En column can be wrapped into multiple tokens.
     // Required by: VMASKMOVPS in 325383-092US (June 2026), whose 'RVM' is
     // splitted into 'RV' and 'M'.
-    const op_en = tr[1].map(t => GetText(t).trim()).join('');
-    let valid_in_3264_str = GetText(tr[2][0]);
-    let cpuid_str = GetText(tr[3][0]);
-    const description = CanonicalizeDescription(tr[4]);
+    const cellFirstText = (c: SDMText[]) => (c && c.length) ? GetText(c[0]) : '';
+    const opEnAndValidIn3264 = SplitOpEnAndValidIn3264(
+        tr[1].map(t => GetText(t).trim()).join(''), cellFirstText(tr[2]));
+    const op_en = opEnAndValidIn3264.opEn;
+    let valid_in_3264_str = opEnAndValidIn3264.validIn3264;
+    let cpuid_str = cellFirstText(tr[3]);
+    const description = CanonicalizeDescription(tr[4] || []);
     console.log({
       opcode: opcode,
       opcode_parsed: CanonicalizeOpcode(opcode),
@@ -892,6 +985,16 @@ function makeOpBytes(op_parsed: string[]): SDMInstrOpByte[] {
       // A condition on the preceding ModRM byte. See CanonicalizeOpcode.
       assert(opcode_bytes.length > 0);
       opcode_bytes[opcode_bytes.length - 1].components.push(op_parsed[i++]);
+      continue;
+    }
+    if (op_parsed[i] == '/is4') {
+      // The register specifier in imm8[7:4]. See CanonicalizeOpcode.
+      opcode_bytes.push({
+        components: [op_parsed[i++]],
+        byte_type: 'imm',
+        byte_size_min: 1,
+        byte_size_max: 1,
+      });
       continue;
     }
     if (reModRM.test(op_parsed[i])) {
@@ -1251,22 +1354,33 @@ const parserMap = {
           const opInstrRows = MakeRows(tr[0]);
           const opRow = opInstrRows[0];
           const InstrRows = opInstrRows.splice(1);
-          const opcode = opRow.map(t => GetText(t).trim()).join(' ');
+          // The header says that the opcode and the instruction are in the
+          // same column, but they can be laid out in two columns and end up in
+          // the same row here.
+          // Required by: CRC32 in 325383-092US (June 2026).
+          const opcodeAndInstr = MoveMnemonicFromOpcode(
+              opRow.map(t => GetText(t).trim()).join(' '),
+              InstrRows.flat().map(t => GetText(t).trim()).join(' '));
+          const opcode = opcodeAndInstr.opcode;
           console.log(opcode);
-          const instr = InstrRows.flat().map(t => GetText(t).trim()).join(' ');
+          const instr = opcodeAndInstr.instr;
           console.log(instr);
-          const op_en = GetText(tr[1][0]);
+          const cellFirstText = (c: SDMText[]) =>
+              (c && c.length) ? GetText(c[0]) : '';
+          const opEnAndValidIn64 = SplitOpEnAndValidIn64(
+              cellFirstText(tr[1]), cellFirstText(tr[2]));
+          const op_en = opEnAndValidIn64.opEn;
           let valid_in_64_str;
           let compat_leg_str;
-          if (GetText(tr[2][0]) === 'Valid N.E.') {
+          if (opEnAndValidIn64.validIn64 === 'Valid N.E.') {
             // hack for 'MOV', 'r/m64, imm32'
             valid_in_64_str = 'Valid';
             compat_leg_str = 'N.E.';
           } else {
-            valid_in_64_str = GetText(tr[2][0]);
-            compat_leg_str = GetText(tr[3][0]);
+            valid_in_64_str = opEnAndValidIn64.validIn64;
+            compat_leg_str = cellFirstText(tr[3]);
           }
-          const description = CanonicalizeDescription(tr[4]);
+          const description = CanonicalizeDescription(tr[4] || []);
           const opcode_parsed = CanonicalizeOpcode(opcode);
           console.log({
             opcode: opcode,
@@ -1323,26 +1437,29 @@ const parserMap = {
             s.next();
             opcode.push(es.trim());
           }
-          const opcodeStr = opcode.join(' ');
+          let opcodeStr = opcode.join(' ');
           console.log(opcodeStr);
-          const instr = [];
+          let instr = [];
           while (s.peek().attr.left < opEnLeft - 50) {
             instr.push(GetText(s.next()).trim());
+          }
+          {
+            // The opcode and the instruction can be extracted as one token.
+            // Required by: LAHF ('9F LAHF') in 325383-092US (June 2026).
+            const opcodeAndInstr =
+                MoveMnemonicFromOpcode(opcodeStr, instr.join(' '));
+            opcodeStr = opcodeAndInstr.opcode;
+            instr = opcodeAndInstr.instr.length ? [opcodeAndInstr.instr] : [];
           }
 
           console.log(instr);
           let op_en = GetNonEmptyText(s);
           let valid_in_64_str;
           let compat_leg_str;
-          const reOpEnWithValidIn64 = /^(\w+)\s+(Valid|Invalid|N\.E\.)$/;
-          if (reOpEnWithValidIn64.test(op_en.trim())) {
-            // The Op/En column and the 64-Bit Mode column can be extracted as
-            // one token.
-            // Required by: IMUL ('RMI Valid'), SHLD and SHRD ('MRC Valid') in
-            // 325383-092US (June 2026).
-            const match = op_en.trim().match(reOpEnWithValidIn64);
-            op_en = match[1];
-            valid_in_64_str = match[2];
+          const opEnAndValidIn64 = SplitOpEnAndValidIn64(op_en, '');
+          if (opEnAndValidIn64.validIn64 !== '') {
+            op_en = opEnAndValidIn64.opEn;
+            valid_in_64_str = opEnAndValidIn64.validIn64;
             compat_leg_str = s.next().text;
           } else {
             if (GetText(s.peek()) === 'Valid N.E.') {
@@ -1427,6 +1544,16 @@ function MakeHeaderColumns(headers: SDMText[]): InstrTableColumn[] {
   for (const c of columns) {
     c.title = c.title.replace(/\s/g, '').toLowerCase();
   }
+  // '/' of 'Opcode/Instruction' can be far enough from 'Opcode' to be treated
+  // as another column. Merge it into the column on its left.
+  // Required by: RDMSR in 325383-092US (June 2026).
+  for (let i = columns.length - 1; i > 0; i--) {
+    if (columns[i].title !== '/') {
+      continue;
+    }
+    columns[i - 1].title += columns[i].title;
+    columns.splice(i, 1);
+  }
   return columns;
 }
 
@@ -1434,16 +1561,23 @@ function ParseInstrTableCells(
     table: SDMText[][][], role: {[name: string]: number}): SDMInstr[] {
   // Build the instructions from the table, using role[] to find the column of
   // each role. A role which is not in role[] is not in the table.
-  return table.map(tr => {
+  // See the comment in Parser_OpInstr_OpEn_6432_CPUID_Desc.
+  return table.filter(tr => tr[role['opcode']] && tr[role['opcode']].length)
+      .map(tr => {
     const cell = (name: string) =>
         (role[name] === undefined) ? [] : (tr[role[name]] || []);
     const cellText = (name: string) =>
         cell(name).map(t => GetText(t).trim()).join(' ').trim();
+    const cellFirstText = (name: string) =>
+        cell(name).length ? GetText(cell(name)[0]) : '';
     let opcode: string;
     let instr: string;
     if (role['instr'] !== undefined) {
       opcode = cellText('opcode');
       instr = cellText('instr');
+    } else if (!cell('opcode').length) {
+      opcode = '';
+      instr = '';
     } else {
       // The opcode and the instruction are stacked in the same column.
       const rows = MakeRows(cell('opcode'));
@@ -1478,13 +1612,19 @@ function ParseInstrTableCells(
       e.cpuid_feature_flag = cellText('cpuid');
     }
     if (role['valid3264'] !== undefined) {
-      const validIn3264 = CanonicalizeValidIn3264(GetText(cell('valid3264')[0]));
+      const opEnAndValidIn3264 = SplitOpEnAndValidIn3264(
+          cellText('op_en'), cellFirstText('valid3264'));
+      if (role['op_en'] !== undefined) {
+        e.op_en = opEnAndValidIn3264.opEn;
+      }
+      const validIn3264 =
+          CanonicalizeValidIn3264(opEnAndValidIn3264.validIn3264);
       e.valid_in_64bit_mode = validIn3264.valid64;
       e.valid_in_compatibility_mode = validIn3264.valid32;
       e.valid_in_legacy_mode = false;
     } else if (role['valid64'] !== undefined) {
-      e.valid_in_64bit_mode = CanonicalizeValidIn64(GetText(cell('valid64')[0]));
-      const compatLeg = CanonicalizeCompatLeg(GetText(cell('compatleg')[0]));
+      e.valid_in_64bit_mode = CanonicalizeValidIn64(cellFirstText('valid64'));
+      const compatLeg = CanonicalizeCompatLeg(cellFirstText('compatleg'));
       e.valid_in_compatibility_mode = compatLeg;
       e.valid_in_legacy_mode = compatLeg;
     }
