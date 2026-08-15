@@ -298,6 +298,11 @@ class SDMTextStream {
     return this.nextIndex < this.s.length;
   }
   getFollowing(count: number = undefined): SDMText[] {
+    if (count === undefined) {
+      // splice() removes nothing if the count is undefined, so handle the
+      // case of taking all the remaining tokens separately.
+      return this.s.slice(this.nextIndex);
+    }
     return this.s.concat().splice(this.nextIndex, count);
   }
 }
@@ -436,8 +441,13 @@ function IsEndOfInstrTable(t: SDMText) {
     // 'Description in outside of table, not in the table header'
     return true;
   }
+  // A section header is like 'ENCODEKEY256—Encode 256-Bit Key With Key
+  // Locker', so an uppercase letter is required after the em dash. A
+  // description can contain an em dash as well.
+  // Required by: ENCODEKEY256 in 325383-092US (June 2026), whose description
+  // ends with 'store it in XMM0—3.'.
   return s === 'Instruction Operand Encoding' || s === 'NOTES:' ||
-      s === 'NOTE:' || s === 'NOTE' || s.indexOf('—') !== -1 ||
+      s === 'NOTE:' || s === 'NOTE' || /—[A-Z]/.test(s) ||
       s.match(/^\d-\d+/) !== null;
 }
 
@@ -783,6 +793,62 @@ function TestCanonicalizeOpcode() {
   assert.deepEqual(CanonicalizeOpcode('F2 REX.W A7'), ['F2', 'REX.W', 'A7']);
 }
 
+function GetTextWithoutPadding(t: SDMText): string {
+  // Same as GetText, but without the spaces which are added around an italic
+  // text to separate it from the neighbours.
+  if (t.i) {
+    return t.i.toString();
+  }
+  return GetText(t);
+}
+
+function JoinTokensInRow(tokens: SDMText[]): string {
+  // Concatenate the tokens of a row with a space, except after a '/' which is
+  // the beginning of a ModRM notation splitted into multiple tokens.
+  // Required by: PINSRW in 325383-092US (June 2026), whose opcode is rendered
+  // as 'NP 0F C4 /' + an italic 'r' + 'ib'.
+  let joined = '';
+  for (const t of tokens) {
+    const text = GetTextWithoutPadding(t).trim();
+    if (!text.length) {
+      continue;
+    }
+    joined += (!joined.length || joined.endsWith('/')) ? text : ` ${text}`;
+  }
+  return joined;
+}
+
+function JoinWrappedText(parts: string[]): string {
+  // A word can be wrapped after '_', and no space should be inserted there.
+  // Required by: VCVTNEEPH2PS in 325383-092US (June 2026), whose CPUID Feature
+  // Flag 'AVX_NE_CONVERT' is splitted into 'AVX_NE_' and 'CONVERT'.
+  let joined = '';
+  for (const p of parts) {
+    if (!p.length) {
+      continue;
+    }
+    joined += (!joined.length || joined.endsWith('_')) ? p : ` ${p}`;
+  }
+  return joined;
+}
+
+function SplitValidIn3264AndCpuid(validIn3264: string, cpuid: string):
+    {validIn3264: string, cpuid: string} {
+  // The 64/32 bit Mode Support column and the first line of the CPUID Feature
+  // Flag column can be extracted as one token. The value of the mode column
+  // never contains a space, so the rest belongs to the CPUID column.
+  // Required by: VPMADD52LUQ in 325383-092US (June 2026), whose cell is
+  // 'V/V (AVX512_IFMA'.
+  const match = validIn3264.trim().match(/^(\S+)\s+(\S.*)$/);
+  if (!match) {
+    return {validIn3264: validIn3264, cpuid: cpuid};
+  }
+  return {
+    validIn3264: match[1],
+    cpuid: JoinWrappedText([match[2].trim(), cpuid])
+  };
+}
+
 function SplitOpEnAndValidIn64(opEn: string, validIn64: string):
     {opEn: string, validIn64: string} {
   // The Op/En column and the 64-Bit Mode column can be extracted as one token,
@@ -845,7 +911,7 @@ function Parser_OpInstr_OpEn_6432_CPUID_Desc(table: SDMText[][][]) {
                InstrRows[0].map(t => GetText(t).trim()).join(' '))) {
       opRow.push(...InstrRows.shift());
     }
-    let opcode = opRow.map(t => GetText(t).trim()).join(' ');
+    let opcode = JoinTokensInRow(opRow);
     console.log(opcode);
     let instr = InstrRows.flat().map(t => GetText(t).trim()).join(' ');
     console.log(instr);
@@ -887,8 +953,28 @@ function Parser_OpInstr_OpEn_6432_CPUID_Desc(table: SDMText[][][]) {
         tr[1].map(t => GetText(t).trim()).join(''), cellFirstText(tr[2]));
     const op_en = opEnAndValidIn3264.opEn;
     let valid_in_3264_str = opEnAndValidIn3264.validIn3264;
-    let cpuid_str = cellFirstText(tr[3]);
-    const description = CanonicalizeDescription(tr[4] || []);
+    // The CPUID Feature Flag cell usually wraps over two or three lines
+    // (e.g. '(AVX512VL AND' + 'AVX512BW) OR' + 'AVX10.1'), so join all of the
+    // tokens in the cell instead of taking the first line only.
+    // Required by: ANDPD, PADDB, MOVDQA, KNOTW and most of the AVX-512
+    // instructions in 325383-092US (June 2026).
+    let cpuid_str =
+        JoinWrappedText((tr[3] || []).map(t => GetText(t).trim()));
+    let description = CanonicalizeDescription(tr[4] || []);
+    // The CPUID Feature Flag cell and the first line of the description can be
+    // extracted as one token when the flag is short.
+    // Required by: UMWAIT in 325383-092US (June 2026), whose cell is
+    // 'WAITPKG A hint that allows the processor to stop instruction'.
+    // The flag has no lowercase letter, and the description is a sentence
+    // which starts with a capitalized word or an article.
+    const reCpuidWithDescription =
+        /^([^a-z]*[A-Z0-9_)])\s+((?:A|An|The)\s+[a-z].*|[A-Z][a-z].*)$/;
+    const cpuidWithDescription = cpuid_str.match(reCpuidWithDescription);
+    if (cpuidWithDescription) {
+      cpuid_str = cpuidWithDescription[1];
+      description = CanonicalizeDescriptionText(
+          `${cpuidWithDescription[2]} ${description}`.trim());
+    }
     console.log({
       opcode: opcode,
       opcode_parsed: CanonicalizeOpcode(opcode),
@@ -899,6 +985,10 @@ function Parser_OpInstr_OpEn_6432_CPUID_Desc(table: SDMText[][][]) {
       cpuid_str: cpuid_str,
       description: description,
     });
+    const validIn3264AndCpuid =
+        SplitValidIn3264AndCpuid(valid_in_3264_str, cpuid_str);
+    valid_in_3264_str = validIn3264AndCpuid.validIn3264;
+    cpuid_str = validIn3264AndCpuid.cpuid;
     const validIn3264 = CanonicalizeValidIn3264(valid_in_3264_str);
     const opcode_parsed = CanonicalizeOpcode(opcode);
     return {
@@ -1099,9 +1189,13 @@ function TestMakeOpBytes() {
                    }]);
 }
 
+function CanonicalizeDescriptionText(s: string): string {
+  // Join the words which are hyphenated at the end of a line.
+  return s.split('- ').join('').split(' -').join('-');
+}
 function CanonicalizeDescription(descText: SDMText[]): string {
   const rows = MakeRows(descText).map(r => r.map(t => GetText(t).trim()));
-  return rows.flat().join(' ').split('- ').join('').split(' -').join('-');
+  return CanonicalizeDescriptionText(rows.flat().join(' '));
 }
 function TestCanonicalizeDescription() {
   assert.deepEqual(
@@ -1987,12 +2081,18 @@ function ParseInstr(pages: SDMPage[], startPage: number): SDMInstr[] {
       }
       // Fall back to the generic parser if the header layout is not known.
       const parseInstrTable = parserMap[headerKey] || ParseInstrTableByColumns;
+      // Remove the footnote markers before looking for the end of the table,
+      // so that a marker which belongs to the next section header is not left
+      // in the last row of the table.
+      // Required by: UMWAIT in 325383-092US (June 2026), whose page has a
+      // marker right before 'Instruction Operand Encoding'.
+      const following = RemoveFootnoteMarkers(s.getFollowing());
       let count = 0;
-      while (!IsEndOfInstrTable(s.peek(count))) {
+      while (count < following.length && !IsEndOfInstrTable(following[count])) {
         count++;
       }
       console.error(`Using parser ${headerKey}`);
-      const tokens = RemoveFootnoteMarkers(s.getFollowing(count));
+      const tokens = following.slice(0, count);
       console.error(
           JSON.stringify(tableHeader, null, ''),
           JSON.stringify(tokens, null, ''));
