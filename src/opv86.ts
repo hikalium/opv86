@@ -112,101 +112,28 @@ function appendOpListElement(
   return oplistRow[0];
 }
 
-const opTable = {
-  'c7': {
-    entry_type: 'op',
-    following_phases: [
-      'modrm',
-      ['imm', 4],
-    ],
-    instr: 'MOV r/m32 imm32',
-    description: 'Move imm32 to r/m32.',
-  }
+// The table which the decoder works on. It is built once, from the same
+// instruction list as the one shown below the box.
+let decoderTable: DecoderTable = null;
+
+// The short name shown under each byte of the decoder output.
+const byteTypeNameTable = {
+  'prefix': 'prefix',
+  'rex-prefix': 'REX',
+  'vex-prefix': 'VEX',
+  'evex-prefix': 'EVEX',
+  'opcode': 'op',
+  'modrm': 'modrm',
+  'sib': 'sib',
+  'disp': 'disp',
+  'imm': 'imm',
+  'unknown': '?',
 };
 
-function parseInstr(bin: number[]): ParsedInstr {
-  const parsed = [];
-  let rexFound: Boolean = false;
-  let table = opTable;
-  let phaseList = [ParserPhase.Op];
-  let instr = '?';
-  let description = '?';
-  for (const v of bin) {
-    const phase = phaseList.shift();
-    if (phase == ParserPhase.ModRM) {
-      parsed.push({
-        byte_value: v,
-        byte_type: ByteType.ModRM,
-      });
-      const mod = v >> 6;
-      const rm = v &7;
-      if(mod == 0 && rm == 5) {
-        for(let i = 0; i < 4; i++){
-          phaseList.unshift(ParserPhase.Disp);
-        }
-      }
-      continue;
-    }
-    if (phase == ParserPhase.Disp) {
-      parsed.push({
-        byte_value: v,
-        byte_type: ByteType.Disp,
-      });
-      continue;
-    }
-    if (phase == ParserPhase.Imm) {
-      parsed.push({
-        byte_value: v,
-        byte_type: ByteType.Imm,
-      });
-      continue;
-    }
-    if (phase == ParserPhase.Op) {
-      if ((v & 0xF0) == 0x40) {
-        rexFound = true;
-        parsed.push({
-          byte_value: v,
-          byte_type: ByteType.REXPrefix,
-        });
-        phaseList.unshift(ParserPhase.Op);
-        continue;
-      }
-      parsed.push({
-        byte_value: v,
-        byte_type: ByteType.Opcode,
-      });
-      const e = opTable[('00' + v.toString(16)).substr(-2)];
-      if (e) {
-        instr = e.instr;
-        description = e.description;
-        for (const fp of e.following_phases) {
-          if (fp === 'modrm') {
-            phaseList.push(ParserPhase.ModRM);
-          }
-          if (fp instanceof Array && fp[0] == 'imm') {
-            for (let i = 0; i < fp[1]; i++) {
-              phaseList.push(ParserPhase.Imm);
-            }
-          }
-        }
-      }
-      continue;
-    }
-    parsed.push({
-      byte_value: v,
-      byte_type: ByteType.Unknown,
-    });
-  }
-  return {
-    bytes: parsed,
-    instr: instr,
-    description: description,
-  };
-}
 function updateDecoderOutput(filter: string) {
   const decoderOutputContainerDiv = $('#decoder-output');
   filter = filter.replace(/ /g, '');
-  if (!filter.match(/^[0-9a-fA-F]+$/)) {
+  if (!filter.match(/^[0-9a-fA-F]+$/) || decoderTable === null) {
     decoderOutputContainerDiv.hide();
     return;
   }
@@ -215,38 +142,46 @@ function updateDecoderOutput(filter: string) {
   decoderOutputBinDiv.empty();
 
   const bin = filter.match(/.{1,2}/g).map(s => parseInt(s, 16));
-  const parsed = parseInstr(bin);
-  const opcodeByteElements = parsed.bytes.map(e => {
+  const decoded = decodeInstr(bin, decoderTable);
+  const opcodeByteElements = decoded.bytes.map(e => {
     return $('<div>')
         .addClass(`opv86-opcode-byte-${e.byte_type}`)
         .addClass(`opv86-opcode-byte`)
         .text(('00' + e.byte_value.toString(16).toUpperCase()).substr(-2));
   });
-  const opcodeByteElementsDescription = parsed.bytes.map(e => {
-    if(e.byte_type == "rex-prefix") {
-      return $('<div>').addClass(`opv86-opcode-byte`).text("REX");
-    }
-    if(e.byte_type == "opcode") {
-      return $('<div>').addClass(`opv86-opcode-byte`).text("op");
-    }
-    if(e.byte_type == "unknown") {
-      return $('<div>').addClass(`opv86-opcode-byte`).text("?");
-    }
-    return $('<div>').addClass(`opv86-opcode-byte`).text(e.byte_type);
+  const opcodeByteElementsDescription = decoded.bytes.map(e => {
+    const name = byteTypeNameTable[e.byte_type] ? byteTypeNameTable[e.byte_type] :
+                                                  e.byte_type;
+    return $('<div>').addClass(`opv86-opcode-byte`).text(name);
   });
+
+  // Say what happened when the decode did not reach the end of the
+  // instruction, instead of showing a wrong result as if it was a right one.
+  let instrText = decoded.instr;
+  if (!decoded.matched) {
+    instrText = `? (${decoded.note})`;
+  } else if (decoded.truncated) {
+    instrText = `${decoded.instr} (incomplete: ${decoded.note})`;
+  } else if (decoded.note !== '') {
+    instrText = `${decoded.instr} (${decoded.note})`;
+  }
+  let descriptionText = decoded.description;
+  if (decoded.matched && !decoded.truncated) {
+    descriptionText = `${decoded.length} byte(s): ${decoded.description}`;
+  }
 
   const oplistRow = $('<div>').addClass('opv86-oplist-container-decoder');
   oplistRow.append($('<div>')
                        .addClass('opv86-oplist-item-opcode')
                        .append(opcodeByteElements));
   oplistRow.append(
-      $('<div>').addClass('opv86-oplist-item-instr').text(parsed.instr));
+      $('<div>').addClass('opv86-oplist-item-instr').text(instrText));
   oplistRow.append($('<div>')
                        .addClass('opv86-oplist-item-opcode')
                        .append(opcodeByteElementsDescription));
   oplistRow.append($('<div>')
                        .addClass('opv86-oplist-item-description')
-                       .text(parsed.description));
+                       .text(descriptionText));
   decoderOutputBinDiv.append(oplistRow);
 }
 function escapeRegExp(string) {
@@ -306,6 +241,9 @@ function compareOps(a: SDMInstr, b: SDMInstr) {
   const filterValueInput =
       <HTMLInputElement>document.getElementById('filter-value');
   $.getJSON(`data/instr_list.json`, function(data: SDMInstr[]) {
+    // The decoder works on the same list as the one shown below, so build its
+    // table before the list is sorted or filtered.
+    decoderTable = buildDecoderTable(data);
     // The data file is in the SDM page order, so sort it here.
     data.sort(compareOps);
     appendOpListHeaders(opListContainerDiv);

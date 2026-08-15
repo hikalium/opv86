@@ -133,8 +133,15 @@ a:visited {
 .opv86-opcode-byte-opcode {
   background-color: #d1fb61;
 }
+.opv86-opcode-byte-prefix {
+  background-color: #cdf1ff;
+}
 .opv86-opcode-byte-rex-prefix {
   background-color: #9fe5ff;
+}
+.opv86-opcode-byte-sib {
+  background-color: #ffedb4;
+  border-radius: 8px;
 }
 .opv86-opcode-byte-vex-prefix {
   font-size: 10px;

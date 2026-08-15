@@ -17,26 +17,15 @@ interface Result {
   ops: Op[];
 }
 
-enum ParserPhase {
-  Op,
-  ModRM,
-  Disp,
-  Imm,
-}
 enum ByteType {
   Unknown = 'unknown',
+  Prefix = 'prefix',
   Opcode = 'opcode',
   REXPrefix = 'rex-prefix',
+  VEXPrefix = 'vex-prefix',
+  EVEXPrefix = 'evex-prefix',
   ModRM = 'modrm',
+  SIB = 'sib',
   Imm = 'imm',
   Disp = 'disp',
-}
-interface ParsedInstrByte {
-  byte_value: number;
-  byte_type: ByteType;
-}
-interface ParsedInstr {
-  bytes: ParsedInstrByte[];
-  instr: string;
-  description: string;
 }
