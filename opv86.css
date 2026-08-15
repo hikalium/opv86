@@ -67,13 +67,24 @@ a:visited {
   height: 20px;
   grid-column: span 1;
 }
-/* A component which occupies no byte, like 'NP' and '(EAX = 0)' of GETSEC.
-   It is wider than a byte and is kept in one line. */
+/* A component which occupies no byte, like 'NP' and '(EAX = 0)' of GETSEC. */
 .opv86-opcode-pseudo-byte {
   text-align: center;
   display: inline;
   height: 20px;
   grid-column: span 2;
+}
+/* Keep every component of an opcode in one line. The font of a text which is
+   wider than its box is shrunk in appendOpListElement(), and the few which are
+   still too wide even at the smallest size (e.g. the ModRM byte of RSTORSSP,
+   which carries '(mod!=11, /5, memory only)') extend to the right instead of
+   overflowing below the row. */
+.opv86-opcode-byte,
+.opv86-opcode-pseudo-byte,
+.opv86-opcode-word,
+.opv86-opcode-dword,
+.opv86-opcode-p16ofs32,
+.opv86-opcode-qword {
   white-space: nowrap;
 }
 .opv86-opcode-word {

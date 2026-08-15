@@ -8,6 +8,26 @@ function appendOpListHeaders(oplist) {
         .text('Description'));
     oplist.append(oplistRow);
 }
+// The opcode area is a grid of 60px columns with a 4px gap between them.
+// See .opv86-oplist-item-opcode in opv86.css.
+const OPCODE_COLUMN_WIDTH_PX = 60;
+const OPCODE_COLUMN_GAP_PX = 4;
+// Source Code Pro is a monospace font whose advance width is 0.6em.
+const OPCODE_CHAR_WIDTH_PER_FONT_SIZE = 0.6;
+function fontSizeToFitOpcodeBox(text, columnSpan, baseSizePx) {
+    // A text which is wider than its box is wrapped and overflows below the row.
+    // Shrink the font of such a text so that it fits, in the same way as the VEX
+    // prefix does with .opv86-opcode-byte-vex-prefix. The box is never widened,
+    // because its width shows how many bytes the component occupies.
+    const boxWidthPx = columnSpan * OPCODE_COLUMN_WIDTH_PX +
+        (columnSpan - 1) * OPCODE_COLUMN_GAP_PX;
+    const fitSizePx = Math.floor(boxWidthPx / (text.length * OPCODE_CHAR_WIDTH_PER_FONT_SIZE));
+    if (fitSizePx >= baseSizePx) {
+        return baseSizePx;
+    }
+    // Keep it readable even if the text is very long.
+    return Math.max(fitSizePx, 6);
+}
 function appendOpListElement(oplist, op, index) {
     const oplistRow = $('<div>')
         .addClass('opv86-oplist-container')
@@ -44,10 +64,20 @@ function appendOpListElement(oplist, op, index) {
         6: 'opv86-opcode-p16ofs32',
         8: 'opv86-opcode-qword',
     };
+    // How many columns of the grid each class above spans.
+    const columnSpanTable = {
+        0: 2,
+        1: 1,
+        2: 2,
+        4: 4,
+        6: 6,
+        8: 8,
+    };
     const opcodeByteElements = op.opcode_bytes.map(b => {
         const e = $('<div>');
         e.addClass(`opv86-op-${index}`);
-        e.text(b.components.join(' '));
+        const text = b.components.join(' ');
+        e.text(text);
         if (sizeAttrTable[b.byte_size_min]) {
             e.addClass(sizeAttrTable[b.byte_size_min]);
         }
@@ -56,6 +86,15 @@ function appendOpListElement(oplist, op, index) {
         }
         if (b.byte_type) {
             e.addClass(`opv86-opcode-byte-${b.byte_type}`);
+        }
+        // .opv86-opcode-byte-vex-prefix already uses a smaller font.
+        const baseSizePx = (b.byte_type === 'vex-prefix') ? 10 : 16;
+        const columnSpan = columnSpanTable[b.byte_size_min] ?
+            columnSpanTable[b.byte_size_min] :
+            columnSpanTable[1];
+        const sizePx = fontSizeToFitOpcodeBox(text, columnSpan, baseSizePx);
+        if (sizePx !== baseSizePx) {
+            e.css('font-size', `${sizePx}px`);
         }
         return e;
     });
