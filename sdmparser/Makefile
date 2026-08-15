@@ -71,7 +71,7 @@ op_table.json : sdmparser.js
 	node sdmparser.js --gen-op-table-only
 
 sdmparser.js : sdmparser.ts sdm_instr.ts
-	tsc -target es2019 --outFile sdmparser.js sdmparser.ts sdm_instr.ts
+	tsc -target es2019 --skipLibCheck --outFile sdmparser.js sdmparser.ts sdm_instr.ts
 
 install :
 	-make

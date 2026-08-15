@@ -120,6 +120,29 @@ function ExtractSDMInstrIndex(sdmPages: SDMPage[]): SDMInstrIndex[] {
   return instrIndex;
 }
 
+function FlattenAnchorsInMixedText(data: string): string {
+  // pdftohtml wraps hyperlinks (e.g. footnote markers) with <a> tags, and the
+  // boundary of them can be in the middle of a <text> element, like
+  // `<a>, r</a>8` or `ADC r/m<a>8</a>`. Since the XML parser used here does not
+  // preserve the order of the text around a child element, remove the <a> tags
+  // in such elements to keep the text in the original order.
+  // <text> elements which contain nothing but an anchor are left as is,
+  // because the index of the instructions is extracted from their href.
+  const reTextElement = /(<text[^>]*>)([\s\S]*?)(<\/text>)/g;
+  const reAnchorElement = /<a(?:\s[^>]*)?>[\s\S]*?<\/a>/g;
+  const reAnchorTag = /<\/?a(?:\s[^>]*)?>/g;
+  return data.replace(reTextElement, (whole, open, inner, close) => {
+    if (inner.indexOf('<a') === -1) {
+      return whole;
+    }
+    if (inner.replace(reAnchorElement, '').replace(/<[^>]*>/g, '').trim() ===
+        '') {
+      return whole;
+    }
+    return open + inner.replace(reAnchorTag, '') + close;
+  });
+}
+
 function ParseXMLToSDMPages(data: string): SDMPage[] {
   // returns array of SDMPage. Index of the array equals physical page number in
   // SDM.
@@ -142,6 +165,7 @@ function ParseXMLToSDMPages(data: string): SDMPage[] {
     tagValueProcessor: (val, tagName) => he.decode(val),  // default is a=>a
     stopNodes: ['parse-me-as-string']
   };
+  data = FlattenAnchorsInMixedText(data);
   if (!parser.validate(data)) {
     console.error(
         'Not a valid xml. Please generate with `pdftohtml -xml 325383-sdm-vol-2abcd.pdf`')
@@ -158,8 +182,9 @@ function ParseXMLToSDMPages(data: string): SDMPage[] {
         continue;
       t.attr.top = parseInt(t.attr.top);
       t.attr.left = parseInt(t.attr.left);
+      // height is kept to detect superscript footnote markers.
+      t.attr.height = parseInt(t.attr.height);
       delete t.attr.width;
-      delete t.attr.height;
       delete t.attr.font;
     }
   }
@@ -198,12 +223,16 @@ function CanonicalizeCompatLeg(str: string): boolean {
     return true;
   }
   if (str === 'Invalid') {
-    return true;
+    return false;
   }
   if (str === 'N.E.') {
     return false;
   }
   if (str === 'NA') {
+    return false;
+  }
+  if (str === 'N/A') {
+    // CMOVcc
     return false;
   }
   throw new Error(`${str} is not valid for CompatLeg`);
@@ -220,6 +249,8 @@ function GetText(t: SDMText): string {
     return ' ' + t.i + ' ';
   if (t.text)
     return t.text;
+  if (t.a && t.a.text !== undefined)
+    return t.a.text.toString();
   return '';
 }
 
@@ -280,6 +311,28 @@ function MakeRows(tokens: SDMText[]): SDMText[][] {
     });
   }
   return textRows;
+}
+function RemoveFootnoteMarkers(tokens: SDMText[]): SDMText[] {
+  // Footnote markers in the instruction tables are printed as superscript
+  // numbers, and they appear as separate tokens which are raised and smaller
+  // than the text of the row (e.g. 'ADD r/m8' + '1' + ', imm8').
+  // Remove them since they are not a part of the instruction.
+  if (!tokens.length) {
+    return tokens;
+  }
+  const markers = new Set();
+  for (const row of MakeRows(tokens)) {
+    const baseTop = Math.max(...row.map(t => t.attr.top));
+    const baseHeight = Math.max(...row.map(t => t.attr.height));
+    for (const t of row) {
+      if (!/^\d{1,2}$/.test(GetText(t).trim()))
+        continue;
+      if (!(t.attr.top < baseTop && t.attr.height < baseHeight))
+        continue;
+      markers.add(t);
+    }
+  }
+  return tokens.filter(t => !markers.has(t));
 }
 function MakeCols(tokens: SDMText[], colLeftList: number[]): SDMText[][] {
   // Convert list of tokens into list of columns
@@ -968,6 +1021,38 @@ const parserMap = {
             1);
         return Parser_OpInstr_OpEn_6432_CPUID_Desc(table);
       },
+  'opcode/#instruction#op/#en#64/32bit#mode#support#cpuidfeature#flag#description':
+      (headers: SDMText[], tokens: SDMText[]): SDMInstr[] => {
+        // PADDB. Same layout as CLWB, but 'CPUID Feature' and 'Flag' are
+        // splitted in a different way.
+        return parserMap
+            ['opcode/#instruction#op/#en#64/32bit#mode#support#cpuid#featureflag#description'](
+                headers, tokens);
+      },
+  'opcode/#instruction#op/en#64/32bit#mode#support#cpuid#featureflag#description':
+      (headers: SDMText[], tokens: SDMText[]): SDMInstr[] => {
+        // MOVSD (SSE2)
+        console.error(headers.filter(e => e !== undefined)
+                          .map(e => `${GetText(e)}@${e.attr.left}`)
+                          .join(', '));
+        const opcodeLeft = headers[0].attr.left;
+        const opEnLeft = headers[2].attr.left;
+        const validIn3264Left = headers[3].attr.left;
+        const cpuidFeatureLeft = headers[6].attr.left;
+        const descriptionLeft = headers[8].attr.left;
+        //
+        const table = MakeTable(
+            tokens,
+            [
+              opcodeLeft,
+              opEnLeft,
+              validIn3264Left,
+              cpuidFeatureLeft,
+              descriptionLeft,
+            ],
+            1);
+        return Parser_OpInstr_OpEn_6432_CPUID_Desc(table);
+      },
   'opcode/#instruction#op/#en#64-bit#mode#compat/#legmode#description':
       (headers: SDMText[], tokens: SDMText[]): SDMInstr[] => {
         console.error(headers.filter(e => e !== undefined)
@@ -1290,8 +1375,8 @@ function TestParser() {
         ],
         op_en: 'ZO',
         valid_in_64bit_mode: true,
-        valid_in_compatibility_mode: true,
-        valid_in_legacy_mode: true,
+        valid_in_compatibility_mode: false,
+        valid_in_legacy_mode: false,
         description: 'Fast call to privilege level 0 system procedures.'
       }]);
 }
@@ -1303,6 +1388,7 @@ const HeaderTexts = {
   'Opcode*': true,
   'Opcode***': true,
   'Op/': true,
+  'Op /': true,
   'Op / En': true,
   '64/32': true,
   '64/32 bit': true,
@@ -1391,7 +1477,7 @@ function ParseInstr(pages: SDMPage[], startPage: number): SDMInstr[] {
         count++;
       }
       console.error(`Using parser ${headerKey}`);
-      const tokens = s.getFollowing(count);
+      const tokens = RemoveFootnoteMarkers(s.getFollowing(count));
       console.error(
           JSON.stringify(tableHeader, null, ''),
           JSON.stringify(tokens, null, ''));
