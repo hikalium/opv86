@@ -2,18 +2,25 @@ PARSERFLAGS:=
 
 default: run
 
-.PHONY : pdf/325383-sdm-vol-2abcd.xml
+.PHONY : pdf/325383-sdm-vol-2abcd.xml pdf/325384-sdm-vol-3abcd.xml
 
 run : sdmparser.js
 	npm i
 	-node sdmparser.js $(PARSERFLAGS)
 
-update_pdf : pdf/325383-sdm-vol-2abcd.xml
+# Volume 2 has the instruction set reference, and volume 3 has the VMX, SEAM
+# and SGX instructions which are not in volume 2.
+update_pdf : pdf/325383-sdm-vol-2abcd.xml pdf/325384-sdm-vol-3abcd.xml
 
 pdf/325383-sdm-vol-2abcd.xml:
 	sudo apt install ca-certificates
 	sudo apt install pdftohtml
 	cd pdf && wget -O 325383-sdm-vol-2abcd.pdf --user-agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.60 Safari/537.36" https://cdrdv2.intel.com/v1/dl/getContent/671110 && pdftohtml -nodrm -xml 325383-sdm-vol-2abcd.pdf
+
+pdf/325384-sdm-vol-3abcd.xml:
+	sudo apt install ca-certificates
+	sudo apt install pdftohtml
+	cd pdf && wget -O 325384-sdm-vol-3abcd.pdf --user-agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.60 Safari/537.36" https://cdrdv2.intel.com/v1/dl/getContent/671447 && pdftohtml -nodrm -xml 325384-sdm-vol-3abcd.pdf
 
 debug : sdmparser.js
 	node --inspect-brk sdmparser.js $(PARSERFLAGS)
@@ -131,7 +138,18 @@ test : sdmparser.js
 		VPSHRD VPTESTMB VRCP14SD VREDUCESD \
 		VRNDSCALESS VSCALEFPD VSHA512MSG1 VSM4RNDS4 \
 		VZEROALL WRMSRNS XBEGIN XRSTOR \
-		XTEST 'GETSEC[SMCTRL]' VP4DPWSSDS VRSQRT28PD
+		XTEST 'GETSEC[SMCTRL]' VP4DPWSSDS VRSQRT28PD \
+		INVEPT INVVPID VMCALL VMCLEAR \
+		VMFUNC VMLAUNCH VMPTRLD VMPTRST \
+		VMREAD VMRESUME VMWRITE VMXOFF \
+		VMXON SEAMCALL TDCALL ENCLS \
+		ENCLU EADD EAUG EBLOCK \
+		ECREATE EDBGRD EDBGWR EEXTEND \
+		EINIT ELDB EMODPR EMODT \
+		EPA EREMOVE ETRACK EUPDATESVN \
+		EWB EACCEPT EACCEPTCOPY EDECCSSA \
+		EENTER EEXIT EGETKEY EMODPE \
+		EREPORT ERESUME EVERIFYREPORT2
 	@echo "All tests passed."
 
 format :

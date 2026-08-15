@@ -146,9 +146,16 @@ function ExtractSDMInstrIndex(sdmPages: SDMPage[]): SDMInstrIndex[] {
               physical_page: parseInt(e.attr.href.split('#')[1]),
             };
           });
+  // A section title which contains an em dash is not always an instruction
+  // (e.g. 'Event 0—Divide Error Exception (#DE)' and 'Function 00H—...' of
+  // volume 3), so require the name to look like a mnemonic.
+  const reMnemonicOfIndex = /^[A-Z][A-Za-z0-9_\[\]]*$/;
   const instrIndex = [];
   let lastPage = 0;
   for (const e of index) {
+    if (!e.mnemonics.some(m => reMnemonicOfIndex.test(m))) {
+      continue;
+    }
     if (lastPage > e.physical_page)
       break;
     lastPage = e.physical_page;
@@ -480,6 +487,12 @@ function IsEndOfInstrTable(t: SDMText) {
   // description can contain an em dash as well.
   // Required by: ENCODEKEY256 in 325383-092US (June 2026), whose description
   // ends with 'store it in XMM0—3.'.
+  // A table which follows the instruction table can have its own caption.
+  // Required by: ENCLU[EVERIFYREPORT2] in 325384-092US (June 2026), whose page
+  // has a table captioned 'EVERIFYREPORT2 Instruction Layout'.
+  if (s.endsWith('Instruction Layout')) {
+    return true;
+  }
   return s === 'Instruction Operand Encoding' || s === 'NOTES:' ||
       s === 'NOTE:' || s === 'NOTE' || /—[A-Z]/.test(s) ||
       s.match(/^\d-\d+/) !== null;
@@ -801,6 +814,18 @@ function CanonicalizeOpcode(s: string): string[] {
   }
 
   {
+    // The opcode column of an SGX leaf function holds the value of the
+    // register which selects the leaf, without parentheses.
+    // Required by: ENCLS[EADD] ('EAX = 01H') and the other SGX leaves in
+    // 325384-092US (June 2026).
+    const reLeafSelector = /^((E?[A-D]X)\s*=\s*[0-9A-F]+H)$/;
+    const match = s.match(reLeafSelector);
+    if (match) {
+      canonicalized.push(match[1].replace(/\s+/g, ' '));
+      s = '';
+    }
+  }
+  {
     // A precondition of the register written in the parentheses.
     // Required by: GETSEC[CAPABILITIES] ('NP 0F 37 (EAX = 0)') and the other
     // GETSEC leaves in 325383-092US (June 2026).
@@ -863,7 +888,21 @@ function JoinWrappedText(parts: string[]): string {
     if (!p.length) {
       continue;
     }
-    joined += (!joined.length || joined.endsWith('_')) ? p : ` ${p}`;
+    if (!joined.length) {
+      joined = p;
+      continue;
+    }
+    if (joined.endsWith('_')) {
+      joined += p;
+      continue;
+    }
+    if (joined.endsWith('-')) {
+      // A word hyphenated at the end of a line, e.g. the CPUID feature flag
+      // 'EVERIFYREPORT2' written as 'EVERI-' + 'FYRE-' + 'PORT2'.
+      joined = joined.substr(0, joined.length - 1) + p;
+      continue;
+    }
+    joined += ` ${p}`;
   }
   return joined;
 }
@@ -1103,9 +1142,7 @@ function makeOpBytes(op_parsed: string[]): SDMInstrOpByte[] {
       opcode_bytes[opcode_bytes.length - 1].components.push(op_parsed[i++]);
       continue;
     }
-    if (op_parsed[i].startsWith('(E') || op_parsed[i].startsWith('(A') ||
-        op_parsed[i].startsWith('(B') || op_parsed[i].startsWith('(C') ||
-        op_parsed[i].startsWith('(D')) {
+    if (/^\(?E?[A-D]X\s*=/.test(op_parsed[i])) {
       // A precondition of a register (see CanonicalizeOpcode). It occupies no
       // byte of the instruction, so make it a pseudo byte of its own instead
       // of appending it to the preceding opcode byte, which is shown in one
@@ -1844,7 +1881,10 @@ function ParseInstrTableByColumns(
   const found: {[name: string]: InstrTableColumn} = {
     opcode: findColumn(/^opcode/),
     instr: findColumn(/^instruction$/),
-    op_en: findColumn(/^op(\/?en)?$|^op\/?en64\/32/),
+    // 'Op/En' can be merged with the column on its right, either the mode
+    // column (volume 2) or the description column (the VMX reference of
+    // volume 3).
+    op_en: findColumn(/^op(\/?en)?$|^op\/?en(64\/32|description)/),
     valid3264: findColumn(/^64\/32/),
     valid64: findColumn(/^64-?bit(mode)?$/),
     compatleg: findColumn(/^compat/),
@@ -1859,6 +1899,20 @@ function ParseInstrTableByColumns(
     const next = columns[columns.indexOf(found.op_en) + 1];
     if (next && /^(bit)?mode/.test(next.title)) {
       found.valid3264 = next;
+    }
+  }
+  if (!found.description && found.op_en &&
+      /^op\/?endescription$/.test(found.op_en.title)) {
+    // 'Op/En' and 'Description' are extracted as one token, so the header
+    // gives no position for the description column. Take it from the body: it
+    // is the leftmost token which is clearly on the right of the Op/En column.
+    // Required by: INVEPT and the other VMX instructions in 325384-092US
+    // (June 2026), whose table has the Opcode/Instruction, Op/En and
+    // Description columns only.
+    const lefts =
+        tokens.map(t => t.attr.left).filter(l => l > found.op_en.left + 20);
+    if (lefts.length) {
+      found.description = {title: 'description', left: Math.min(...lefts)};
     }
   }
   if (!found.compatleg) {
@@ -2246,6 +2300,9 @@ function TestJoinWrappedText() {
   // VCVTNEEPH2PS: a word wrapped after '_'.
   assert.equal(JoinWrappedText(['AVX_NE_', 'CONVERT']), 'AVX_NE_CONVERT');
   assert.equal(JoinWrappedText(['AVX512F', '', 'OR AVX10.1']), 'AVX512F OR AVX10.1');
+  // ENCLU[EVERIFYREPORT2]: a flag hyphenated into three lines.
+  assert.equal(
+      JoinWrappedText(['EVERI-', 'FYRE-', 'PORT2']), 'EVERIFYREPORT2');
 }
 
 function TestSplitMergedCells() {
@@ -2468,6 +2525,8 @@ const HeaderTexts = {
   'Op /': true,
   'Op/En': true,
   'Op/ En': true,
+  // 'Op/En' and 'Description' are one token in the VMX instruction reference.
+  'Op/En Description': true,
   'Op / En': true,
   // 'Op/En' is splitted into two lines in the KORTEST/KTEST pages.
   'Op/E': true,
@@ -2609,8 +2668,9 @@ const optionDefinitions = [
     name: 'file',
     alias: 'f',
     type: String,
+    multiple: true,
     description:
-        'Path to source SDM xml file (can be generated from pdf with `pdftohtml -xml`).'
+        'Paths to the source SDM xml files (can be generated from pdf with `pdftohtml -xml`). All of them are parsed into one list.'
   },
   {
     name: 'mnemonic',
@@ -2661,7 +2721,7 @@ function DedupInstrList(instList: SDMInstr[]): SDMInstr[] {
   // Remove the entries parsed from the same row of the same page.
   const found = {};
   return instList.filter((e) => {
-    const key = `${e.page}#${e.opcode}#${e.instr}`;
+    const key = `${e.document}#${e.page}#${e.opcode}#${e.instr}`;
     if (found[key]) {
       return false;
     }
@@ -2670,12 +2730,21 @@ function DedupInstrList(instList: SDMInstr[]): SDMInstr[] {
   });
 }
 
-function parseSDM(sdmPages, instrIndex, requestedMnemonicList, filepath) {
+function ParseSDMDocument(
+    sdmPages, instrIndex, requestedMnemonicList, documentName: string,
+    result: {
+      instList: SDMInstr[],
+      passCount: number,
+      failCount: number,
+      matchedInstrMap: {},
+      failedReasons: {}
+    }) {
+  // Parses one volume of the SDM and appends the instructions to result.
   let passCount = 0;
   let failCount = 0;
   let instList = [];
-  const matchedInstrMap = {};
-  const failedReasons = {};
+  const matchedInstrMap = result.matchedInstrMap;
+  const failedReasons = result.failedReasons;
   for (const e of instrIndex) {
     let requestedInstrPage = false;
     for (const m of e.mnemonics) {
@@ -2687,7 +2756,10 @@ function parseSDM(sdmPages, instrIndex, requestedMnemonicList, filepath) {
     if (!requestedInstrPage)
       continue;
     try {
-      const instrs = ParseInstr(sdmPages, e.physical_page);
+      const instrs = ParseInstr(sdmPages, e.physical_page).map(instr => {
+        instr.document = documentName;
+        return instr;
+      });
       console.log(instrs);
       instList = instList.concat(instrs);
       passCount++;
@@ -2697,6 +2769,31 @@ function parseSDM(sdmPages, instrIndex, requestedMnemonicList, filepath) {
       failCount++;
     }
   }
+  console.error(`${documentName}: parsed ${passCount}, failed ${failCount}`);
+  result.instList = result.instList.concat(instList);
+  result.passCount += passCount;
+  result.failCount += failCount;
+}
+
+function parseSDM(filepaths: string[], requestedMnemonicList) {
+  const result = {
+    instList: <SDMInstr[]>[],
+    passCount: 0,
+    failCount: 0,
+    matchedInstrMap: {},
+    failedReasons: {},
+  };
+  for (const filepath of filepaths) {
+    // The document name is the basename without the extension, which is also
+    // the name of the PDF the UI links to.
+    const documentName = path.basename(filepath).replace(/\.[^.]*$/, '');
+    console.error(`Parsing ${filepath} as ${documentName}...`);
+    const sdmPages = ParseXMLToSDMPages(fs.readFileSync(filepath, 'utf-8'));
+    const instrIndex: SDMInstrIndex[] = ExtractSDMInstrIndex(sdmPages);
+    ParseSDMDocument(
+        sdmPages, instrIndex, requestedMnemonicList, documentName, result);
+  }
+  const {passCount, failCount, matchedInstrMap, failedReasons} = result;
   if (passCount + failCount == 0) {
     console.error('No instr parsed...');
     return 1;
@@ -2709,7 +2806,7 @@ function parseSDM(sdmPages, instrIndex, requestedMnemonicList, filepath) {
       }
     }
   }
-  instList = DedupInstrList(instList);
+  const instList = DedupInstrList(result.instList);
   fs.writeFileSync('instr_list.json', JSON.stringify(instList, null, ' '));
   if (failCount) {
     console.error('Failed reasons:');
@@ -2760,13 +2857,18 @@ process.exit((() => {
     console.log(opmap);
     return 0;
   }
-  let filepath;
+  let filepaths: string[];
   if (options.file === undefined) {
-    filepath = 'pdf/325383-sdm-vol-2abcd.xml'
+    // Volume 2 has the instruction set reference, and volume 3 has the VMX,
+    // SEAM and SGX instructions which are not in volume 2.
+    filepaths = [
+      'pdf/325383-sdm-vol-2abcd.xml',
+      'pdf/325384-sdm-vol-3abcd.xml',
+    ];
     console.error(
-        `--file option is not set. Using default path (${filepath}).`);
+        `--file option is not set. Using default paths (${filepaths.join(', ')}).`);
   } else {
-    filepath = options.file;
+    filepaths = options.file;
   }
   let requestedMnemonicList: Record<string, boolean>;
   if (options.mnemonic) {
@@ -2777,12 +2879,16 @@ process.exit((() => {
     console.error(
         `Parsing following mnemonic(s): ${options.mnemonic.join(', ')}`);
   }
-  const data = fs.readFileSync(filepath, 'utf-8');
-  const sdmPages = ParseXMLToSDMPages(data);
-  const instrIndex: SDMInstrIndex[] = ExtractSDMInstrIndex(sdmPages);
   if (options.list) {
-    console.log(JSON.stringify(instrIndex, null, ' '));
+    const index = [];
+    for (const filepath of filepaths) {
+      const sdmPages = ParseXMLToSDMPages(fs.readFileSync(filepath, 'utf-8'));
+      for (const e of ExtractSDMInstrIndex(sdmPages)) {
+        index.push(e);
+      }
+    }
+    console.log(JSON.stringify(index, null, ' '));
     return 0;
   }
-  return parseSDM(sdmPages, instrIndex, requestedMnemonicList, filepath);
+  return parseSDM(filepaths, requestedMnemonicList);
 })());

@@ -40,11 +40,16 @@ function appendOpListElement(
     const opDescription = $('<div>').addClass('opv86-description-panel');
     opDescription.append($('<h3>').text(op.instr))
     opDescription.append($('<p>').text(op.description))
-    if (op.page !== undefined) {
+    if (op.page !== undefined && op.document !== undefined) {
+      // Each instruction knows which volume of the SDM it came from, since
+      // the VMX, SEAM and SGX instructions are only in volume 3.
+      const volume = op.document.indexOf('-vol-') === -1 ?
+          '' :
+          ` Vol.${op.document.split('-vol-')[1].charAt(0)}`;
       opDescription.append($('<p>').append($(
-          `<a target="_blank" href='./sdmparser/pdf/325383-sdm-vol-2abcd.pdf#page=${
-              op.page}'>Source: p.${
-              op.page} of Intel SDM (click to open PDF)</a>`)));
+          `<a target="_blank" href='./sdmparser/pdf/${op.document}.pdf#page=${
+              op.page}'>Source: p.${op.page} of Intel SDM${
+              volume} (click to open PDF)</a>`)));
     }
     opDescription.append($('<h4>').text('Parsed info'));
     opDescription.append($('<pre>').text(JSON.stringify(op, null, '  ')));
