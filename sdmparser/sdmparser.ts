@@ -4,7 +4,10 @@ const assert = require('assert').strict;
 const parser = require('fast-xml-parser');
 const he = require('he');
 
-const reMnemonic = /^[A-Z]\w+$/;
+// The name of a leaf function in the brackets is a part of the mnemonic.
+// Required by: GETSEC[CAPABILITIES] and the other GETSEC leaves in
+// 325383-092US (June 2026).
+const reMnemonic = /^[A-Z]\w+(\[\w+\])?$/;
 
 interface SDMDataAttr {
   source_file: string;
@@ -378,11 +381,23 @@ function MakeTable(
   const textCols = MakeCols(tokens, colLeftList);
   console.error(JSON.stringify(textCols, null, ' '));
   const keyCol = textCols[keyColIndex];
+  // A value in the key column can be wrapped into multiple tokens, and they
+  // should not be treated as the keys of the different rows. The rows of these
+  // tables are at least 20px apart, so merge the tokens closer than that.
+  // Required by: VMASKMOVPS in 325383-092US (June 2026), whose 'RVM' is
+  // splitted into 'RV' (top=175) and 'M' (top=191).
+  const keyTops = [];
+  for (const t of keyCol) {
+    if (keyTops.length && t.attr.top - keyTops[keyTops.length - 1] < 20) {
+      continue;
+    }
+    keyTops.push(t.attr.top);
+  }
   const table = [];
-  for (let keyTokenIndex = 0; keyTokenIndex < keyCol.length; keyTokenIndex++) {
-    const keyTokenTop = keyCol[keyTokenIndex].attr.top;
-    const nextKeyTokenTop = (keyCol[keyTokenIndex + 1] !== undefined) ?
-        keyCol[keyTokenIndex + 1].attr.top :
+  for (let keyTokenIndex = 0; keyTokenIndex < keyTops.length; keyTokenIndex++) {
+    const keyTokenTop = keyTops[keyTokenIndex];
+    const nextKeyTokenTop = (keyTops[keyTokenIndex + 1] !== undefined) ?
+        keyTops[keyTokenIndex + 1] :
         null;
     console.error(`${keyTokenIndex}: ${keyTokenTop} => ${nextKeyTokenTop}`);
     const tableRow = [];
@@ -502,6 +517,19 @@ function CanonicalizeInstr(s: string): string[] {
     'm16&16',
     // implicit operands. e.g. '<XMM0>'
     '<[\\w-]+>',
+    // A register followed by the implicit operands without a separator.
+    // Required by: ENCODEKEY256 in 325383-092US (June 2026), which is written
+    // as 'ENCODEKEY256 r32, r32 <XMM0-6>'.
+    'r(8|16|32|64)\\s*<[\\w-]+>',
+    // A pair of the opmask registers.
+    // Required by: VP2INTERSECTD/VP2INTERSECTQ in 325383-092US (June 2026),
+    // which are written as 'VP2INTERSECTD k1+1, xmm2, xmm3/m128/m32bcst'.
+    'k\\d\\+1',
+    // Typos in the SDM.
+    // Required by: VMOVDQU32 ('xmm2/mm128') and VPAND ('ymm3/.m256') in
+    // 325383-092US (June 2026).
+    'xmm2/mm128',
+    'ymm3/\\.m256',
   ];
   const reRemovePunctuator = /\s*\**\s*$/;
   const reRemoveSpaces = /\s/g;
@@ -570,7 +598,7 @@ function CanonicalizeOpcode(s: string): string[] {
     // The prefix can be splitted into multiple tokens (e.g. 'VEX.256.66.0F'
     // and '.WIG'), so accept the spaces in front of each component.
     // ':' is used as a separator as well, like 'VEX.128.F2.MAP7:W0.F8'.
-    const reVEXPrefix = /^(E?VEX(\s*[.:]\w+)+)/;
+    const reVEXPrefix = /^(E?VEX(\s*[.:]\s*\w+)+)/;
     const match = s.match(reVEXPrefix);
     canonicalized.push(match[1].replace(/\s/g, ''));
     s = s.substr(match[0].length).trim();
@@ -665,6 +693,17 @@ function CanonicalizeOpcode(s: string): string[] {
     }
   }
   {
+    // A condition on the ModRM byte written in the parentheses.
+    // Required by: ENDBR64/ENDBR32 ('F3 0F 1E /1 (mod=11)') and RSTORSSP
+    // ('F3 0F 01 /5 (mod!=11, /5, memory only)') in 325383-092US (June 2026).
+    const reModRMCondition = /^(\(mod\s*!?=\s*11[^)]*\))/;
+    const match = s.match(reModRMCondition);
+    if (match) {
+      canonicalized.push(match[1]);
+      s = s.substr(match[0].length).trim();
+    }
+  }
+  {
     const match = s.match(reImm);
     if (match) {
       canonicalized.push(match[1]);
@@ -685,6 +724,17 @@ function CanonicalizeOpcode(s: string): string[] {
     }
   }
 
+  {
+    // A precondition of the register written in the parentheses.
+    // Required by: GETSEC[CAPABILITIES] ('NP 0F 37 (EAX = 0)') and the other
+    // GETSEC leaves in 325383-092US (June 2026).
+    const rePrecondition = /^(\((E?[A-D]X)\s*=\s*\w+\))/;
+    const match = s.match(rePrecondition);
+    if (match) {
+      canonicalized.push(match[1].replace(/\s+/g, ' '));
+      s = s.substr(match[0].length).trim();
+    }
+  }
   if (s.length) {
     throw new Error(`Extra input: ${s}`);
   }
@@ -706,11 +756,43 @@ function Parser_OpInstr_OpEn_6432_CPUID_Desc(table: SDMText[][][]) {
     const opInstrRows = MakeRows(tr[0]);
     const opRow = opInstrRows[0];
     const InstrRows = opInstrRows.splice(1);
-    const opcode = opRow.map(t => GetText(t).trim()).join(' ');
+    // The opcode can be wrapped into the next row, and in that case the ModRM
+    // bit pattern is placed in the second row.
+    // Required by: VBCSTNEBF162PS in 325383-092US (June 2026), which is
+    // written as 'VEX.128.F3.0F38.W0 B1' + '!(11):rrr:bbb'.
+    while (InstrRows.length &&
+           /^(!\(11\)|11):/.test(
+               InstrRows[0].map(t => GetText(t).trim()).join(' '))) {
+      opRow.push(...InstrRows.shift());
+    }
+    let opcode = opRow.map(t => GetText(t).trim()).join(' ');
     console.log(opcode);
-    const instr = InstrRows.flat().map(t => GetText(t).trim()).join(' ');
+    let instr = InstrRows.flat().map(t => GetText(t).trim()).join(' ');
     console.log(instr);
-    const op_en = GetText(tr[1][0]);
+    // The mnemonic can be hyphenated at the end of the opcode row, since the
+    // opcode and the instruction are in the same column.
+    // Required by: AESDECWIDE256KL, AESENCWIDE256KL, AESDECWIDE128KL and
+    // AESENCWIDE128KL in 325383-092US (June 2026), whose opcode row ends with
+    // 'AES-' and the instruction row starts with 'DECWIDE256KL'.
+    const reHyphenatedMnemonic = /\s([A-Z][A-Z0-9]*)-$/;
+    const hyphenated = opcode.match(reHyphenatedMnemonic);
+    if (hyphenated) {
+      opcode = opcode.substr(0, opcode.length - hyphenated[0].length).trim();
+      instr = hyphenated[1] + instr;
+    }
+    // '/r' of the opcode can be placed at the end of the last row of the
+    // instruction, since the both are in the same column.
+    // Required by: VREDUCESD in 325383-092US (June 2026), which is written as
+    // 'EVEX.LLIG.66.0F3A.W1 57' + 'VREDUCESD xmm1 {k1}{z}, xmm2,
+    // xmm3/m64{sae}, imm8/r'.
+    if (instr.endsWith('/r')) {
+      instr = instr.substr(0, instr.length - '/r'.length).trim();
+      opcode = `${opcode} /r`;
+    }
+    // A value in the Op/En column can be wrapped into multiple tokens.
+    // Required by: VMASKMOVPS in 325383-092US (June 2026), whose 'RVM' is
+    // splitted into 'RV' and 'M'.
+    const op_en = tr[1].map(t => GetText(t).trim()).join('');
     let valid_in_3264_str = GetText(tr[2][0]);
     let cpuid_str = GetText(tr[3][0]);
     const description = CanonicalizeDescription(tr[4]);
@@ -794,6 +876,20 @@ function makeOpBytes(op_parsed: string[]): SDMInstrOpByte[] {
       continue;
     }
     if (op_parsed[i].startsWith('+')) {
+      assert(opcode_bytes.length > 0);
+      opcode_bytes[opcode_bytes.length - 1].components.push(op_parsed[i++]);
+      continue;
+    }
+    if (op_parsed[i].startsWith('(E') || op_parsed[i].startsWith('(A') ||
+        op_parsed[i].startsWith('(B') || op_parsed[i].startsWith('(C') ||
+        op_parsed[i].startsWith('(D')) {
+      // A precondition of the register. See CanonicalizeOpcode.
+      assert(opcode_bytes.length > 0);
+      opcode_bytes[opcode_bytes.length - 1].components.push(op_parsed[i++]);
+      continue;
+    }
+    if (op_parsed[i].startsWith('(mod')) {
+      // A condition on the preceding ModRM byte. See CanonicalizeOpcode.
       assert(opcode_bytes.length > 0);
       opcode_bytes[opcode_bytes.length - 1].components.push(op_parsed[i++]);
       continue;
@@ -1238,10 +1334,15 @@ const parserMap = {
           let op_en = GetNonEmptyText(s);
           let valid_in_64_str;
           let compat_leg_str;
-          if (op_en === 'RMI Valid') {
-            // hack for IMUL
-            op_en = 'RMI';
-            valid_in_64_str = 'Valid';
+          const reOpEnWithValidIn64 = /^(\w+)\s+(Valid|Invalid|N\.E\.)$/;
+          if (reOpEnWithValidIn64.test(op_en.trim())) {
+            // The Op/En column and the 64-Bit Mode column can be extracted as
+            // one token.
+            // Required by: IMUL ('RMI Valid'), SHLD and SHRD ('MRC Valid') in
+            // 325383-092US (June 2026).
+            const match = op_en.trim().match(reOpEnWithValidIn64);
+            op_en = match[1];
+            valid_in_64_str = match[2];
             compat_leg_str = s.next().text;
           } else {
             if (GetText(s.peek()) === 'Valid N.E.') {
@@ -1329,6 +1430,69 @@ function MakeHeaderColumns(headers: SDMText[]): InstrTableColumn[] {
   return columns;
 }
 
+function ParseInstrTableCells(
+    table: SDMText[][][], role: {[name: string]: number}): SDMInstr[] {
+  // Build the instructions from the table, using role[] to find the column of
+  // each role. A role which is not in role[] is not in the table.
+  return table.map(tr => {
+    const cell = (name: string) =>
+        (role[name] === undefined) ? [] : (tr[role[name]] || []);
+    const cellText = (name: string) =>
+        cell(name).map(t => GetText(t).trim()).join(' ').trim();
+    let opcode: string;
+    let instr: string;
+    if (role['instr'] !== undefined) {
+      opcode = cellText('opcode');
+      instr = cellText('instr');
+    } else {
+      // The opcode and the instruction are stacked in the same column.
+      const rows = MakeRows(cell('opcode'));
+      opcode = rows[0].map(t => GetText(t).trim()).join(' ');
+      instr = rows.splice(1).flat().map(t => GetText(t).trim()).join(' ');
+    }
+    let description = CanonicalizeDescription(cell('description'));
+    // The instruction and the beginning of the description can be extracted as
+    // one token when the instruction column is narrow.
+    // Required by: the GETSEC leaves in 325383-092US (June 2026), whose
+    // instruction cell is like
+    // 'GETSEC[CAPABILITIES] Report the SMX capabilities.'.
+    const reInstrWithDescription = /^(GETSEC\[\w+\])\s+(\S.*)$/;
+    const instrWithDescription = instr.match(reInstrWithDescription);
+    if (instrWithDescription) {
+      instr = instrWithDescription[1];
+      description = `${instrWithDescription[2]} ${description}`.trim();
+    }
+    const opcode_parsed = CanonicalizeOpcode(opcode);
+    const e: SDMInstr = {
+      opcode: opcode,
+      opcode_parsed: opcode_parsed,
+      opcode_bytes: makeOpBytes(opcode_parsed),
+      instr: instr,
+      instr_parsed: CanonicalizeInstr(instr),
+      description: description,
+    };
+    if (role['op_en'] !== undefined) {
+      e.op_en = cellText('op_en');
+    }
+    if (role['cpuid'] !== undefined) {
+      e.cpuid_feature_flag = cellText('cpuid');
+    }
+    if (role['valid3264'] !== undefined) {
+      const validIn3264 = CanonicalizeValidIn3264(GetText(cell('valid3264')[0]));
+      e.valid_in_64bit_mode = validIn3264.valid64;
+      e.valid_in_compatibility_mode = validIn3264.valid32;
+      e.valid_in_legacy_mode = false;
+    } else if (role['valid64'] !== undefined) {
+      e.valid_in_64bit_mode = CanonicalizeValidIn64(GetText(cell('valid64')[0]));
+      const compatLeg = CanonicalizeCompatLeg(GetText(cell('compatleg')[0]));
+      e.valid_in_compatibility_mode = compatLeg;
+      e.valid_in_legacy_mode = compatLeg;
+    }
+    console.log(e);
+    return e;
+  });
+}
+
 function ParseInstrTableByColumns(
     headers: SDMText[], tokens: SDMText[]): SDMInstr[] {
   // Parse an instruction table by looking at the title of each column, instead
@@ -1336,40 +1500,79 @@ function ParseInstrTableByColumns(
   const columns = MakeHeaderColumns(headers);
   console.error(columns);
   const findColumn = (re: RegExp) => columns.find(c => re.test(c.title));
-  const opcodeCol = findColumn(/^opcode/);
-  const opEnCol = findColumn(/^op(\/?en)?$|^op\/?en64\/32/);
-  let validIn3264Col = findColumn(/^64\/32/);
-  if (!validIn3264Col && opEnCol && /^op\/?en64\/32/.test(opEnCol.title)) {
+  const found: {[name: string]: InstrTableColumn} = {
+    opcode: findColumn(/^opcode/),
+    instr: findColumn(/^instruction$/),
+    op_en: findColumn(/^op(\/?en)?$|^op\/?en64\/32/),
+    valid3264: findColumn(/^64\/32/),
+    valid64: findColumn(/^64-?bit(mode)?$/),
+    compatleg: findColumn(/^compat/),
+    cpuid: findColumn(/^cpuid/),
+    description: findColumn(/^description$/),
+  };
+  if (!found.valid3264 && found.op_en &&
+      /^op\/?en64\/32/.test(found.op_en.title)) {
     // 'Op / En' and '64/32 bit' can be in the same token. In that case, the
     // rest of the title of the mode column ('Mode Support') is in the next
     // column, which is the column we are looking for.
-    const next = columns[columns.indexOf(opEnCol) + 1];
+    const next = columns[columns.indexOf(found.op_en) + 1];
     if (next && /^(bit)?mode/.test(next.title)) {
-      validIn3264Col = next;
+      found.valid3264 = next;
     }
   }
-  const cpuidCol = findColumn(/^cpuid/);
-  const descriptionCol = findColumn(/^description$/);
-  if (!opcodeCol || !opEnCol || !validIn3264Col || !cpuidCol ||
-      !descriptionCol) {
+  if (!found.compatleg) {
+    // '64-Bit Mode' and 'Compat/' can be in the same token as well.
+    // Required by: FSTP in 325383-092US (June 2026), whose header is
+    // 'Opcode#Instruction#64-Bit Mode Compat/#Leg Mode#Description'.
+    const i = columns.findIndex(c => /^64-?bit.*compat/.test(c.title));
+    if (i >= 0 && columns[i + 1] && /^leg/.test(columns[i + 1].title)) {
+      found.valid64 = columns[i];
+      found.compatleg = columns[i + 1];
+    }
+  }
+  for (const role of Object.keys(found)) {
+    if (!found[role]) {
+      delete found[role];
+    }
+  }
+  if (!found.compatleg && found.valid64) {
+    // 'Compat/Leg Mode' is required to interpret the '64-Bit Mode' column.
+    delete found.valid64;
+  }
+  if (!found.opcode || !found.description) {
+    // Some tables have neither of the mode columns, and in that case the modes
+    // are left unknown.
+    // Required by: the GETSEC leaves in 325383-092US (June 2026), whose table
+    // has the Opcode, Instruction and Description columns only.
     throw new Error(`Parser not implemented for the columns: ${
         columns.map(c => c.title).join('#')}`);
   }
-  if (!/instruction/.test(opcodeCol.title)) {
+  if (!found.instr && !/instruction/.test(found.opcode.title)) {
     throw new Error(`Opcode and Instruction should be in the same column: ${
-        opcodeCol.title}`);
+        found.opcode.title}`);
   }
-  const table = MakeTable(
-      tokens,
-      [
-        opcodeCol.left,
-        opEnCol.left,
-        validIn3264Col.left,
-        cpuidCol.left,
-        descriptionCol.left,
-      ],
-      1);
-  return Parser_OpInstr_OpEn_6432_CPUID_Desc(table);
+  // Sort the columns by their position to make the list for MakeTable, and
+  // remember which column each role is in.
+  const used = Object.keys(found).map(role => ({role: role, col: found[role]}));
+  used.sort((lhs, rhs) => lhs.col.left - rhs.col.left);
+  const role = {};
+  used.forEach((e, i) => role[e.role] = i);
+  // Use the column which has exactly one value for each row as the key.
+  let keyColIndex = role['op_en'];
+  for (const name of ['valid3264', 'valid64', 'instr', 'description']) {
+    if (keyColIndex !== undefined) {
+      break;
+    }
+    keyColIndex = role[name];
+  }
+  const table = MakeTable(tokens, used.map(e => e.col.left), keyColIndex);
+  if (role['instr'] === undefined && role['op_en'] !== undefined &&
+      role['valid3264'] !== undefined && role['cpuid'] !== undefined &&
+      role['description'] !== undefined && Object.keys(role).length === 5) {
+    // Keep using the existing parser for the most common layout.
+    return Parser_OpInstr_OpEn_6432_CPUID_Desc(table);
+  }
+  return ParseInstrTableCells(table, role);
 }
 
 function TestParser() {
@@ -1538,6 +1741,7 @@ const HeaderTexts = {
   'Op/': true,
   'Op /': true,
   'Op/En': true,
+  'Op/ En': true,
   'Op / En': true,
   // 'Op/En' is splitted into two lines in the KORTEST/KTEST pages.
   'Op/E': true,
@@ -1561,6 +1765,13 @@ const HeaderTexts = {
   'Leg Mode': true,
   'CPUID Feature': true,
   'CPUID Feature Flag': true,
+  // 'CPUID Feature Flag' hyphenated at the end of the line.
+  // Required by: PREFETCHW in 325383-092US (June 2026).
+  'CPUID Fea-': true,
+  'ture Flag': true,
+  // 'Opcode' and '/' of 'Opcode/Instruction' extracted as separate tokens.
+  // Required by: RDMSR in 325383-092US (June 2026).
+  '/': true,
   'CPUID': true,
   // 'Op / En' and '64/32 bit' are sometimes merged into one token.
   'Op / En 64/32 bit': true,
@@ -1698,6 +1909,22 @@ function runTest() {
   console.log('PASS');
 }
 
+function DedupInstrList(instList: SDMInstr[]): SDMInstr[] {
+  // One page can be referenced from multiple entries of the index (e.g. an
+  // instruction is listed both in the table of contents of the volume and the
+  // one of the chapter), and the page is parsed once for each of them.
+  // Remove the entries parsed from the same row of the same page.
+  const found = {};
+  return instList.filter((e) => {
+    const key = `${e.page}#${e.opcode}#${e.instr}`;
+    if (found[key]) {
+      return false;
+    }
+    found[key] = true;
+    return true;
+  });
+}
+
 function parseSDM(sdmPages, instrIndex, requestedMnemonicList, filepath) {
   let passCount = 0;
   let failCount = 0;
@@ -1737,6 +1964,7 @@ function parseSDM(sdmPages, instrIndex, requestedMnemonicList, filepath) {
       }
     }
   }
+  instList = DedupInstrList(instList);
   fs.writeFileSync('instr_list.json', JSON.stringify(instList, null, ' '));
   if (failCount) {
     console.error('Failed reasons:');
