@@ -192,7 +192,8 @@ function ParseXMLToSDMPages(data: string): SDMPage[] {
 }
 
 function CanonicalizeValidIn64(str: string): boolean {
-  str = str.split('*').join('').trim();
+  // The text extraction can put extra spaces in the value (e.g. 'N. E.').
+  str = str.split('*').join('').replace(/\s/g, '');
   if (str === 'Invalid') {
     return false;
   }
@@ -239,7 +240,10 @@ function CanonicalizeCompatLeg(str: string): boolean {
 }
 function CanonicalizeValidIn3264(str: string):
     {valid32: boolean, valid64: boolean} {
-  if (str === 'V/V') {
+  // The CPUID feature flag in the next column can be merged into this value by
+  // the text extraction (e.g. 'V/V (AVX512VL'), so use the first word only.
+  str = str.trim().split(/\s+/)[0];
+  if (str === 'V/V' || str === 'VV' || str === 'V') {
     return {valid32: true, valid64: true};
   }
   if (str === 'V/N.E.' || str === 'V/I') {
@@ -477,7 +481,7 @@ function CanonicalizeInstr(s: string): string[] {
     // MMX registers. e.g. 'mm', 'mm2/m64'
     'mm\\d*(/m\\d+)?',
     // VSIB addressing. e.g. 'vm32x'
-    'vm(32|64)(x|y|z)',
+    'vm(32|64)(x|y|z)(\\s*\\{k\\d\\})?',
     'bnd\\d*(/m(32|64|128))?',
     'mib',
     'mem',
@@ -546,8 +550,11 @@ function CanonicalizeOpcode(s: string): string[] {
   const canonicalized = [];
   // '.w' in lowercase is used for ADCX/ADOX.
   const reREXPrefix = /^(REX(\.R|\.W|\.w)?)(\s*\+\s*)?/;
-  const reOpByte = /^[0-9A-F]{2}(\s|$|\/|\+)/;
-  const reImm = /^((i(b|w|d|o))|\/ib)/;  // /ib for VEX
+  // Lowercase is accepted only if the byte contains a digit, so that it is not
+  // confused with the code offsets (cb, cw, ...) and the immediates (ib, ...).
+  const reOpByte = /^([0-9A-F]{2}|[0-9][a-f]|[a-f][0-9])(\s|$|\/|\+)/;
+  // /ib for VEX, immN for the tables which spell the immediate size out
+  const reImm = /^((i(b|w|d|o))|\/ib|imm(8|16|32|64))/;
   const reRemovePunctuator = /\**/g;
   s = s.trim().replace(reRemovePunctuator, '');
   if (s.startsWith('NP')) {
@@ -559,8 +566,13 @@ function CanonicalizeOpcode(s: string): string[] {
     s = s.substr(3).trim();
   }
   if (s.startsWith('VEX.') || s.startsWith('EVEX.')) {
-    canonicalized.push(s.substr(0, s.indexOf(' ')));
-    s = s.substr(canonicalized[canonicalized.length - 1].length).trim();
+    // The prefix can be splitted into multiple tokens (e.g. 'VEX.256.66.0F'
+    // and '.WIG'), so accept the spaces in front of each component.
+    // ':' is used as a separator as well, like 'VEX.128.F2.MAP7:W0.F8'.
+    const reVEXPrefix = /^(E?VEX(\s*[.:]\w+)+)/;
+    const match = s.match(reVEXPrefix);
+    canonicalized.push(match[1].replace(/\s/g, ''));
+    s = s.substr(match[0].length).trim();
   }
   {
     const match = s.match(reREXPrefix);
@@ -572,9 +584,19 @@ function CanonicalizeOpcode(s: string): string[] {
   for (;;) {
     console.error(`s = ${s}`);
     if (reOpByte.test(s)) {
-      canonicalized.push(s.substr(0, 2));
+      canonicalized.push(s.substr(0, 2).toUpperCase());
       s = s.substr(2).trim();
       continue;
+    }
+    {
+      // The REX prefix can be placed after a mandatory prefix byte,
+      // like '66 REX.w 0F 38 F6 /r' of ADCX.
+      const match = s.match(reREXPrefix);
+      if (match) {
+        canonicalized.push(match[1]);
+        s = s.substr(match[0].length).trim();
+        continue;
+      }
     }
     if (s.startsWith('0F3A') || s.startsWith('0F38')) {
       // hack for GF2P8AFFINEINVQB and GF2P8MULB
@@ -620,8 +642,9 @@ function CanonicalizeOpcode(s: string): string[] {
     canonicalized.push('+' + match[1]);
     s = s.substr(match[0].length).trim();
   }
-  if (s[0] === '/') {
-    // /digit (0-7), /r, or /vsib
+  while (s[0] === '/' && !reImm.test(s)) {
+    // /digit (0-7), /r, or /vsib. Both of them can appear in one opcode,
+    // like 'EVEX.512.66.0F38.W0 C6 /1 /vsib'.
     const reModRM = /^(\/\s*(r|vsib|[0-7]))/;
     const match = s.match(reModRM);
     if (!match) {
@@ -784,7 +807,8 @@ function makeOpBytes(op_parsed: string[]): SDMInstrOpByte[] {
       opcode_bytes.push(c);
       continue;
     }
-    if (op_parsed[i] == 'ib' || op_parsed[i] == 'cb' || op_parsed[i] == '/ib') {
+    if (op_parsed[i] == 'ib' || op_parsed[i] == 'cb' ||
+        op_parsed[i] == '/ib' || op_parsed[i] == 'imm8') {
       opcode_bytes.push({
         components: [op_parsed[i++]],
         byte_type: 'imm',
@@ -793,7 +817,8 @@ function makeOpBytes(op_parsed: string[]): SDMInstrOpByte[] {
       });
       continue;
     }
-    if (op_parsed[i] == 'iw' || op_parsed[i] == 'cw') {
+    if (op_parsed[i] == 'iw' || op_parsed[i] == 'cw' ||
+        op_parsed[i] == 'imm16') {
       opcode_bytes.push({
         components: [op_parsed[i++]],
         byte_type: 'imm',
@@ -802,7 +827,8 @@ function makeOpBytes(op_parsed: string[]): SDMInstrOpByte[] {
       });
       continue;
     }
-    if (op_parsed[i] == 'id' || op_parsed[i] == 'cd') {
+    if (op_parsed[i] == 'id' || op_parsed[i] == 'cd' ||
+        op_parsed[i] == 'imm32') {
       opcode_bytes.push({
         components: [op_parsed[i++]],
         byte_type: 'imm',
@@ -820,7 +846,7 @@ function makeOpBytes(op_parsed: string[]): SDMInstrOpByte[] {
       });
       continue;
     }
-    if (op_parsed[i] == 'io') {
+    if (op_parsed[i] == 'io' || op_parsed[i] == 'imm64') {
       opcode_bytes.push({
         components: [op_parsed[i++]],
         byte_type: 'imm',
@@ -1507,10 +1533,14 @@ const HeaderTexts = {
   'Opcode*/': true,
   'Opcode***': true,
   'Opcode/Instruction': true,
+  'Op': true,
   'Op/': true,
   'Op /': true,
   'Op/En': true,
   'Op / En': true,
+  // 'Op/En' is splitted into two lines in the KORTEST/KTEST pages.
+  'Op/E': true,
+  'n': true,
   '64/32': true,
   '64/32 bit': true,
   '64/32 Bit': true,
