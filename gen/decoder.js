@@ -22,7 +22,8 @@ function toHex2(v) {
     return ('0' + v.toString(16)).substr(-2);
 }
 function isBranchMnemonic(mnemonic) {
-    return mnemonic === 'CALL' || mnemonic === 'RET' || /^J[A-Z]+$/.test(mnemonic);
+    return mnemonic === 'CALL' || mnemonic === 'RET' ||
+        /^J[A-Z]+$/.test(mnemonic);
 }
 function legacyPrefixName(v, mnemonic, hasModRM, isMandatory) {
     // Names the legacy prefixes the way objdump shows them. Which one a byte is
@@ -101,8 +102,7 @@ function operandSizeOf(operands, description) {
     for (const text of [operands.join(' '), description]) {
         const t = text.toLowerCase();
         const is16 = /\b(r16|m16|imm16|rel16|ax|cx|dx|bx|sp|bp|si|di)\b/.test(t);
-        const is32 = /\b(r32|m32|imm32|rel32|eax|ecx|edx|ebx|esp|ebp|esi|edi)\b/
-            .test(t);
+        const is32 = /\b(r32|m32|imm32|rel32|eax|ecx|edx|ebx|esp|ebp|esi|edi)\b/.test(t);
         const is64 = /\b(r64|m64|imm64|rax|rcx|rdx|rsp|rbp|rsi|rdi)\b/.test(t);
         if (is16 && !is32 && !is64)
             return 16;
@@ -221,11 +221,11 @@ function buildDecoderTable(instrList) {
         // (e.g. 'REP STOS m8'), but the mnemonic of that row is STOS.
         let mnemonicIndex = 0;
         if (words.length > 1 &&
-            ['REP', 'REPE', 'REPZ', 'REPNE', 'REPNZ', 'LOCK'].indexOf(words[0].toUpperCase()) !== -1) {
+            ['REP', 'REPE', 'REPZ', 'REPNE', 'REPNZ',
+                'LOCK'].indexOf(words[0].toUpperCase()) !== -1) {
             mnemonicIndex = 1;
         }
-        e.mnemonic =
-            words[mnemonicIndex] ? words[mnemonicIndex].toUpperCase() : '';
+        e.mnemonic = words[mnemonicIndex] ? words[mnemonicIndex].toUpperCase() : '';
         e.instr = instr.instr;
         e.description = instr.description;
         e.opcode = instr.opcode;
@@ -323,8 +323,7 @@ function buildDecoderTable(instrList) {
         if (i < opcodeBytes.length && !hasModRMComponent) {
             e.has_modrm = true;
             e.modrm_value_min = opcodeBytes[i].value;
-            e.modrm_value_max =
-                opcodeBytes[i].value + (opcodeBytes[i].plus ? 7 : 0);
+            e.modrm_value_max = opcodeBytes[i].value + (opcodeBytes[i].plus ? 7 : 0);
             i++;
         }
         // Anything left means that the first byte is not an opcode but a prefix of
@@ -420,10 +419,10 @@ function scoreOpEntry(e, ctx) {
         const reg = (ctx.modrm >> 3) & 7;
         const rm = ctx.modrm & 7;
         if (e.modrm_value_min >= 0) {
-            score += (ctx.modrm >= e.modrm_value_min &&
-                ctx.modrm <= e.modrm_value_max) ?
-                8 :
-                -20;
+            score +=
+                (ctx.modrm >= e.modrm_value_min && ctx.modrm <= e.modrm_value_max) ?
+                    8 :
+                    -20;
         }
         if (e.modrm_reg !== REG_ANY)
             score += e.modrm_reg === reg ? 6 : -20;
@@ -562,7 +561,10 @@ function decodeInstr(bin, table) {
             break; // An instruction is never longer than 15 bytes.
     }
     const ctx = {
-        mandatory_prefix: hasF3 ? 'F3' : hasF2 ? 'F2' : has66 ? '66' : 'NP',
+        mandatory_prefix: hasF3 ? 'F3' :
+            hasF2 ? 'F2' :
+                has66 ? '66' :
+                    'NP',
         operand_size_16: has66,
         rex_w: false,
         encoding: ENC_LEGACY,
@@ -578,7 +580,8 @@ function decodeInstr(bin, table) {
     // counts. objdump prints such an ignored REX as an instruction of its own
     // ('4c 36 94' is 'rex.WR' followed by 'xchg'), but a processor consumes the
     // three bytes as one instruction with the REX ignored.
-    while (i < bin.length && ((bin[i] & 0xf0) === 0x40 || isLegacyPrefixByte(bin[i]))) {
+    while (i < bin.length &&
+        ((bin[i] & 0xf0) === 0x40 || isLegacyPrefixByte(bin[i]))) {
         if (isLegacyPrefixByte(bin[i])) {
             if (bin[i] === 0x66)
                 has66 = true;
@@ -701,9 +704,7 @@ function decodeInstr(bin, table) {
         // and objdump prints 'shll' for it -- but Table A-6 of 325383-092US
         // (p.2419) leaves that column of the group empty, and this decoder follows
         // the document.
-        const digit = (e.has_modrm && ctx.modrm >= 0) ?
-            ` /${(ctx.modrm >> 3) & 7}` :
-            '';
+        const digit = (e.has_modrm && ctx.modrm >= 0) ? ` /${(ctx.modrm >> 3) & 7}` : '';
         return invalid(`no instruction of the SDM matches ${opcodeText}${digit}`, i);
     }
     result.matched = true;

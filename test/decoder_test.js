@@ -362,7 +362,8 @@ const MNEMONIC_ALIASES = {
 };
 
 function mnemonicMatches(sdmMnemonic, objdumpMnemonic) {
-  if (!sdmMnemonic) return false;
+  if (!sdmMnemonic)
+    return false;
   const sdm = sdmMnemonic.toUpperCase();
   let name = objdumpMnemonic.toLowerCase();
   // 'cs', 'bnd' and friends are dropped while the fixture is generated, and
@@ -380,22 +381,29 @@ function mnemonicMatches(sdmMnemonic, objdumpMnemonic) {
   // 'movzbl' and 'movsbq' name the size of both of their operands, and
   // 'movslq' is MOVSXD.
   const movx = name.match(/^mov([zs])[bwl][wlq]$/);
-  if (movx) candidates.push(movx[1] === 'z' ? 'movzx' : 'movsx');
-  if (name === 'movslq') candidates.push('movsxd');
+  if (movx)
+    candidates.push(movx[1] === 'z' ? 'movzx' : 'movsx');
+  if (name === 'movslq')
+    candidates.push('movsxd');
   // 'vpclmullqhqdq' and friends are all forms of VPCLMULQDQ.
   const pclmul = name.match(/^(v?)pclmul[lh]q[lh]qdq$/);
-  if (pclmul) candidates.push(`${pclmul[1]}pclmulqdq`);
+  if (pclmul)
+    candidates.push(`${pclmul[1]}pclmulqdq`);
   // objdump writes the condition of (V)PCMP and of (V)CMPccPS in the name of
   // the instruction: 'vpcmpneqd' is VPCMPD with an immediate of 4, and
   // 'cmpltsd' is CMPSD with an immediate of 1.
   const vpcmp = name.match(/^(vpcmp)[a-z]+?(u?[bwdq])$/);
-  if (vpcmp) candidates.push(`${vpcmp[1]}${vpcmp[2]}`);
+  if (vpcmp)
+    candidates.push(`${vpcmp[1]}${vpcmp[2]}`);
   const cmpcc = name.match(/^(v?cmp)[a-z]+?(p[sd]|s[sd])$/);
-  if (cmpcc) candidates.push(`${cmpcc[1]}${cmpcc[2]}`);
+  if (cmpcc)
+    candidates.push(`${cmpcc[1]}${cmpcc[2]}`);
   for (const c of candidates) {
-    if (c.toUpperCase() === sdm) return true;
+    if (c.toUpperCase() === sdm)
+      return true;
     const aliases = MNEMONIC_ALIASES[c];
-    if (aliases && aliases.indexOf(sdm) !== -1) return true;
+    if (aliases && aliases.indexOf(sdm) !== -1)
+      return true;
   }
   return false;
 }
@@ -490,7 +498,8 @@ function readFixture() {
   const lines = fs.readFileSync(file, 'utf8').split('\n');
   const cases = [];
   for (const line of lines) {
-    if (line === '' || line[0] === '#') continue;
+    if (line === '' || line[0] === '#')
+      continue;
     const parts = line.split(' ');
     cases.push({bytes: parts[0], mnemonic: parts[1]});
   }
@@ -537,7 +546,8 @@ function TestAgainstObjdumpFixture() {
       (mnemonicRate * 100).toFixed(2)}%, threshold ${
       (MNEMONIC_MATCH_RATE_THRESHOLD * 100).toFixed(0)}%)`);
   if (lengthOk !== cases.length) {
-    console.log(`  most common length failures: ${top(lengthFailures).join(', ')}`);
+    console.log(
+        `  most common length failures: ${top(lengthFailures).join(', ')}`);
   }
   if (mnemonicOk !== lengthOk) {
     console.log(

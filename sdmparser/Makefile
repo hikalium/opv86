@@ -152,13 +152,17 @@ test : sdmparser.js
 		EREPORT ERESUME EVERIFYREPORT2
 	@echo "All tests passed."
 
+# Formats every source of the repository, not sdmparser.ts alone: a source
+# which is left unformatted makes the next change to it either unformattable
+# or full of unrelated lines.
 format :
 	sudo apt install clang-format
-	clang-format -i sdmparser.ts
+	make -C .. format
 
 commit :
 	make format
 	make test
+	make -C .. formatcheck
 	git add ../
 	git diff HEAD --color=always | less -R
 	git commit

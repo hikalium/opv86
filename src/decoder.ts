@@ -94,7 +94,8 @@ function toHex2(v: number): string {
 }
 
 function isBranchMnemonic(mnemonic: string): boolean {
-  return mnemonic === 'CALL' || mnemonic === 'RET' || /^J[A-Z]+$/.test(mnemonic);
+  return mnemonic === 'CALL' || mnemonic === 'RET' ||
+      /^J[A-Z]+$/.test(mnemonic);
 }
 
 function legacyPrefixName(
@@ -110,19 +111,29 @@ function legacyPrefixName(
     // The byte is a part of the opcode, not a prefix of its own.
     return toHex2(v).toUpperCase();
   }
-  if (v === 0xf0) return 'LOCK';
-  if (v === 0xf2) return isBranchMnemonic(mnemonic) ? 'BND' : 'REPNE';
-  if (v === 0xf3) return 'REP';
+  if (v === 0xf0)
+    return 'LOCK';
+  if (v === 0xf2)
+    return isBranchMnemonic(mnemonic) ? 'BND' : 'REPNE';
+  if (v === 0xf3)
+    return 'REP';
   if (v === 0x3e) {
     return (isBranchMnemonic(mnemonic) && hasModRM) ? 'NOTRACK' : 'DS';
   }
-  if (v === 0x2e) return 'CS';
-  if (v === 0x36) return 'SS';
-  if (v === 0x26) return 'ES';
-  if (v === 0x64) return 'FS';
-  if (v === 0x65) return 'GS';
-  if (v === 0x66) return 'opsize';
-  if (v === 0x67) return 'addrsize';
+  if (v === 0x2e)
+    return 'CS';
+  if (v === 0x36)
+    return 'SS';
+  if (v === 0x26)
+    return 'ES';
+  if (v === 0x64)
+    return 'FS';
+  if (v === 0x65)
+    return 'GS';
+  if (v === 0x66)
+    return 'opsize';
+  if (v === 0x67)
+    return 'addrsize';
   return 'prefix';
 }
 
@@ -170,12 +181,15 @@ function operandSizeOf(operands: string[], description: string): number {
   for (const text of [operands.join(' '), description]) {
     const t = text.toLowerCase();
     const is16 = /\b(r16|m16|imm16|rel16|ax|cx|dx|bx|sp|bp|si|di)\b/.test(t);
-    const is32 = /\b(r32|m32|imm32|rel32|eax|ecx|edx|ebx|esp|ebp|esi|edi)\b/
-                     .test(t);
+    const is32 =
+        /\b(r32|m32|imm32|rel32|eax|ecx|edx|ebx|esp|ebp|esi|edi)\b/.test(t);
     const is64 = /\b(r64|m64|imm64|rax|rcx|rdx|rsp|rbp|rsi|rdi)\b/.test(t);
-    if (is16 && !is32 && !is64) return 16;
-    if (is32 && !is16 && !is64) return 32;
-    if (is16 || is32 || is64) return 0;
+    if (is16 && !is32 && !is64)
+      return 16;
+    if (is32 && !is16 && !is64)
+      return 32;
+    if (is16 || is32 || is64)
+      return 0;
   }
   return 0;
 }
@@ -193,8 +207,10 @@ function applyModRMComponents(components: string[], e: DecoderOpEntry): void {
     const bits = c.match(/^(!?)\(?11\)?:(rrr|[01]{3}):(bbb|[01]{3})$/);
     if (bits) {
       e.modrm_mod = bits[1] === '!' ? MOD_MEM : MOD_REG;
-      if (bits[2] !== 'rrr') e.modrm_reg = parseInt(bits[2], 2);
-      if (bits[3] !== 'bbb') e.modrm_rm = parseInt(bits[3], 2);
+      if (bits[2] !== 'rrr')
+        e.modrm_reg = parseInt(bits[2], 2);
+      if (bits[3] !== 'bbb')
+        e.modrm_rm = parseInt(bits[3], 2);
       continue;
     }
     if (c.indexOf('mod!=11') !== -1) {
@@ -236,7 +252,8 @@ function applyVexComponent(component: string, e: DecoderOpEntry): string {
       e.vex_l = 2;
     }
   }
-  if (e.mandatory_prefix === '') e.mandatory_prefix = 'NP';
+  if (e.mandatory_prefix === '')
+    e.mandatory_prefix = 'NP';
   return map;
 }
 
@@ -250,11 +267,14 @@ function applyOperandHints(operands: string[], e: DecoderOpEntry): void {
     // An operand written as 'r/m8' or 'xmm2/m128' is addressed by a ModRM
     // byte. The implicit memory operand of the string instructions (the 'm8'
     // of 'STOS m8') is not, so only the '/m' forms count here.
-    if (!e.has_modrm && op.indexOf('/m') !== -1) e.has_modrm = true;
-    if (e.imm_size !== 0) continue;
+    if (!e.has_modrm && op.indexOf('/m') !== -1)
+      e.has_modrm = true;
+    if (e.imm_size !== 0)
+      continue;
     // moffs is an absolute address which follows the opcode. Only its 64-bit
     // mode form, which is 8 bytes long, is decoded here.
-    if (op.indexOf('moffs') === 0) e.imm_size = 8;
+    if (op.indexOf('moffs') === 0)
+      e.imm_size = 8;
     const rel = op.match(/^rel(8|16|32)$/);
     if (rel) {
       e.imm_size = parseInt(rel[1], 10) / 8;
@@ -277,12 +297,11 @@ function buildDecoderTable(instrList: SDMInstr[]): DecoderTable {
     // (e.g. 'REP STOS m8'), but the mnemonic of that row is STOS.
     let mnemonicIndex = 0;
     if (words.length > 1 &&
-        ['REP', 'REPE', 'REPZ', 'REPNE', 'REPNZ', 'LOCK'].indexOf(
-            words[0].toUpperCase()) !== -1) {
+        ['REP', 'REPE', 'REPZ', 'REPNE', 'REPNZ',
+         'LOCK'].indexOf(words[0].toUpperCase()) !== -1) {
       mnemonicIndex = 1;
     }
-    e.mnemonic =
-        words[mnemonicIndex] ? words[mnemonicIndex].toUpperCase() : '';
+    e.mnemonic = words[mnemonicIndex] ? words[mnemonicIndex].toUpperCase() : '';
     e.instr = instr.instr;
     e.description = instr.description;
     e.opcode = instr.opcode;
@@ -300,11 +319,13 @@ function buildDecoderTable(instrList: SDMInstr[]): DecoderTable {
       if (!type) {
         // A component which takes no byte: 'NP', 'NFx' or a precondition on a
         // register like the '(EAX = 0)' of GETSEC.
-        if (components[0] === 'NP') e.mandatory_prefix = 'NP';
+        if (components[0] === 'NP')
+          e.mandatory_prefix = 'NP';
         continue;
       }
       if (type === 'rex-prefix') {
-        if (components[0].toUpperCase() === 'REX.W') e.requires_rex_w = true;
+        if (components[0].toUpperCase() === 'REX.W')
+          e.requires_rex_w = true;
         continue;
       }
       if (type === 'vex-prefix') {
@@ -340,7 +361,8 @@ function buildDecoderTable(instrList: SDMInstr[]): DecoderTable {
         continue;
       }
     }
-    if (unsupported || opcodeBytes.length === 0) continue;
+    if (unsupported || opcodeBytes.length === 0)
+      continue;
     let map = vexMap;
     let i = 0;
     if (e.encoding === ENC_LEGACY) {
@@ -348,7 +370,8 @@ function buildDecoderTable(instrList: SDMInstr[]): DecoderTable {
       // opcode byte of its own.
       while (i < opcodeBytes.length - 1 && !opcodeBytes[i].plus) {
         const v = opcodeBytes[i].value;
-        if (v !== 0x66 && v !== 0xf2 && v !== 0xf3) break;
+        if (v !== 0x66 && v !== 0xf2 && v !== 0xf3)
+          break;
         e.mandatory_prefix = toHex2(v).toUpperCase();
         i++;
       }
@@ -375,8 +398,7 @@ function buildDecoderTable(instrList: SDMInstr[]): DecoderTable {
     if (i < opcodeBytes.length && !hasModRMComponent) {
       e.has_modrm = true;
       e.modrm_value_min = opcodeBytes[i].value;
-      e.modrm_value_max =
-          opcodeBytes[i].value + (opcodeBytes[i].plus ? 7 : 0);
+      e.modrm_value_max = opcodeBytes[i].value + (opcodeBytes[i].plus ? 7 : 0);
       i++;
     }
     // Anything left means that the first byte is not an opcode but a prefix of
@@ -384,7 +406,8 @@ function buildDecoderTable(instrList: SDMInstr[]): DecoderTable {
     // first ('9B DB E2' FCLEX, '9B DD /6' FSAVE, ...). Skip them, so that the
     // 9B is decoded as the WAIT instruction it also is, followed by the x87
     // instruction itself.
-    if (i < opcodeBytes.length) continue;
+    if (i < opcodeBytes.length)
+      continue;
     // 'ib' of an instruction which has no imm16 form is always one byte, but
     // 'id' / 'cd' follow the operand size when the SDM lists an imm16 form of
     // the same opcode as well. Whether it does is checked below, once every
@@ -402,7 +425,8 @@ function buildDecoderTable(instrList: SDMInstr[]): DecoderTable {
     const count = primary.plus ? 8 : 1;
     for (let n = 0; n < count; n++) {
       const key = keyBase + toHex2(primary.value + n);
-      if (!table[key]) table[key] = [];
+      if (!table[key])
+        table[key] = [];
       table[key].push(e);
     }
   }
@@ -418,15 +442,21 @@ function markOperandSizeDependentImm(table: DecoderTable): void {
   for (const key of Object.keys(table)) {
     const entries = table[key];
     for (const e of entries) {
-      if (!e.imm_follows_operand_size) continue;
+      if (!e.imm_follows_operand_size)
+        continue;
       let hasSibling = false;
       for (const other of entries) {
-        if (other === e || !other.imm_follows_operand_size) continue;
-        if (other.modrm_reg !== e.modrm_reg) continue;
-        if (other.requires_rex_w !== e.requires_rex_w) continue;
-        if (other.imm_size !== e.imm_size) hasSibling = true;
+        if (other === e || !other.imm_follows_operand_size)
+          continue;
+        if (other.modrm_reg !== e.modrm_reg)
+          continue;
+        if (other.requires_rex_w !== e.requires_rex_w)
+          continue;
+        if (other.imm_size !== e.imm_size)
+          hasSibling = true;
       }
-      if (!hasSibling) e.imm_follows_operand_size = false;
+      if (!hasSibling)
+        e.imm_follows_operand_size = false;
     }
   }
 }
@@ -447,7 +477,8 @@ interface DecoderContext {
 // mismatch is a penalty and not a rejection: an entry with a roughly right
 // shape still gives the right length, which is better than giving up.
 function scoreOpEntry(e: DecoderOpEntry, ctx: DecoderContext): number {
-  if (e.encoding !== ctx.encoding) return -1000;
+  if (e.encoding !== ctx.encoding)
+    return -1000;
   let score = 0;
   if (e.mandatory_prefix === '') {
     score += 4;
@@ -473,21 +504,27 @@ function scoreOpEntry(e: DecoderOpEntry, ctx: DecoderContext): number {
     const reg = (ctx.modrm >> 3) & 7;
     const rm = ctx.modrm & 7;
     if (e.modrm_value_min >= 0) {
-      score += (ctx.modrm >= e.modrm_value_min &&
-                ctx.modrm <= e.modrm_value_max) ?
+      score +=
+          (ctx.modrm >= e.modrm_value_min && ctx.modrm <= e.modrm_value_max) ?
           8 :
           -20;
     }
-    if (e.modrm_reg !== REG_ANY) score += e.modrm_reg === reg ? 6 : -20;
-    if (e.modrm_rm !== REG_ANY) score += e.modrm_rm === rm ? 2 : -20;
-    if (e.modrm_mod === MOD_REG) score += mod === 3 ? 3 : -20;
-    if (e.modrm_mod === MOD_MEM) score += mod !== 3 ? 3 : -20;
+    if (e.modrm_reg !== REG_ANY)
+      score += e.modrm_reg === reg ? 6 : -20;
+    if (e.modrm_rm !== REG_ANY)
+      score += e.modrm_rm === rm ? 2 : -20;
+    if (e.modrm_mod === MOD_REG)
+      score += mod === 3 ? 3 : -20;
+    if (e.modrm_mod === MOD_MEM)
+      score += mod !== 3 ? 3 : -20;
   }
   if (e.imm_follows_operand_size) {
     score += e.imm_size === (ctx.operand_size_16 ? 2 : 4) ? 3 : 0;
   }
-  if (e.operand_size === 16) score += ctx.operand_size_16 ? 3 : -3;
-  if (e.operand_size === 32) score += ctx.operand_size_16 ? -3 : 2;
+  if (e.operand_size === 16)
+    score += ctx.operand_size_16 ? 3 : -3;
+  if (e.operand_size === 32)
+    score += ctx.operand_size_16 ? -3 : 2;
   return score;
 }
 
@@ -520,9 +557,11 @@ function findOpEntry(table: DecoderTable, key: string, ctx: DecoderContext):
 // both invalid in 64-bit mode (325383-092US, p.123). objdump prints '(bad)'.
 function isInvalidIn64BitMode(
     table: DecoderTable, key: string, e: DecoderOpEntry): boolean {
-  if (e.valid_in_64bit_mode) return false;
+  if (e.valid_in_64bit_mode)
+    return false;
   for (const other of table[key]) {
-    if (other.valid_in_64bit_mode) return false;
+    if (other.valid_in_64bit_mode)
+      return false;
   }
   return true;
 }
@@ -548,7 +587,8 @@ function opcodeTextOf(map: string, opcode: number): string {
 // as unknown.
 function decodeInstr(bin: number[], table: DecoderTable): DecodedInstr {
   const types: ByteType[] = [];
-  for (let i = 0; i < bin.length; i++) types.push(ByteType.Unknown);
+  for (let i = 0; i < bin.length; i++)
+    types.push(ByteType.Unknown);
   const result: DecodedInstr = {
     bytes: [],
     length: 0,
@@ -561,7 +601,8 @@ function decodeInstr(bin: number[], table: DecoderTable): DecodedInstr {
     note: '',
   };
   const names: string[] = [];
-  for (let i = 0; i < bin.length; i++) names.push('');
+  for (let i = 0; i < bin.length; i++)
+    names.push('');
   const finish = (length: number) => {
     for (let i = 0; i < bin.length; i++) {
       result.bytes.push({
@@ -597,17 +638,24 @@ function decodeInstr(bin: number[], table: DecoderTable): DecodedInstr {
   let hasF3 = false;
   const prefixIndices: number[] = [];
   while (i < bin.length && isLegacyPrefixByte(bin[i])) {
-    if (bin[i] === 0x66) has66 = true;
-    if (bin[i] === 0xf2) hasF2 = true;
-    if (bin[i] === 0xf3) hasF3 = true;
+    if (bin[i] === 0x66)
+      has66 = true;
+    if (bin[i] === 0xf2)
+      hasF2 = true;
+    if (bin[i] === 0xf3)
+      hasF3 = true;
     types[i] = ByteType.Prefix;
     names[i] = legacyPrefixName(bin[i], '', false, false);
     prefixIndices.push(i);
     i++;
-    if (i >= 15) break;  // An instruction is never longer than 15 bytes.
+    if (i >= 15)
+      break;  // An instruction is never longer than 15 bytes.
   }
   const ctx: DecoderContext = {
-    mandatory_prefix: hasF3 ? 'F3' : hasF2 ? 'F2' : has66 ? '66' : 'NP',
+    mandatory_prefix: hasF3 ? 'F3' :
+        hasF2               ? 'F2' :
+        has66               ? '66' :
+                              'NP',
     operand_size_16: has66,
     rex_w: false,
     encoding: ENC_LEGACY,
@@ -623,11 +671,15 @@ function decodeInstr(bin: number[], table: DecoderTable): DecodedInstr {
   // counts. objdump prints such an ignored REX as an instruction of its own
   // ('4c 36 94' is 'rex.WR' followed by 'xchg'), but a processor consumes the
   // three bytes as one instruction with the REX ignored.
-  while (i < bin.length && ((bin[i] & 0xf0) === 0x40 || isLegacyPrefixByte(bin[i]))) {
+  while (i < bin.length &&
+         ((bin[i] & 0xf0) === 0x40 || isLegacyPrefixByte(bin[i]))) {
     if (isLegacyPrefixByte(bin[i])) {
-      if (bin[i] === 0x66) has66 = true;
-      if (bin[i] === 0xf2) hasF2 = true;
-      if (bin[i] === 0xf3) hasF3 = true;
+      if (bin[i] === 0x66)
+        has66 = true;
+      if (bin[i] === 0xf2)
+        hasF2 = true;
+      if (bin[i] === 0xf3)
+        hasF3 = true;
       types[i] = ByteType.Prefix;
       names[i] = legacyPrefixName(bin[i], '', false, false);
       prefixIndices.push(i);
@@ -660,9 +712,9 @@ function decodeInstr(bin: number[], table: DecoderTable): DecodedInstr {
       result.note = 'truncated VEX/EVEX prefix';
       return finish(bin.length);
     }
-    const type =
-        first === 0x62 ? ByteType.EVEXPrefix : ByteType.VEXPrefix;
-    for (let n = 0; n < prefixLength; n++) types[i + n] = type;
+    const type = first === 0x62 ? ByteType.EVEXPrefix : ByteType.VEXPrefix;
+    for (let n = 0; n < prefixLength; n++)
+      types[i + n] = type;
     let pp = 0;
     let mmmmm = 1;
     if (first === 0xc5) {
@@ -685,8 +737,10 @@ function decodeInstr(bin: number[], table: DecoderTable): DecodedInstr {
       // With the b bit set on a register form, EVEX.L'L is the rounding mode
       // and the vector length is 512 bits.
       const isRegForm = i + 5 < bin.length && (bin[i + 5] >> 6) === 3;
-      if ((bin[i + 3] & 0x10) !== 0 && isRegForm) ctx.vex_l = 2;
-      if (ctx.vex_l === 3) ctx.vex_l = -1;
+      if ((bin[i + 3] & 0x10) !== 0 && isRegForm)
+        ctx.vex_l = 2;
+      if (ctx.vex_l === 3)
+        ctx.vex_l = -1;
       ctx.encoding = ENC_EVEX;
     }
     ctx.mandatory_prefix = ['NP', '66', 'F3', 'F2'][pp];
@@ -728,8 +782,7 @@ function decodeInstr(bin: number[], table: DecoderTable): DecodedInstr {
   // outside 64-bit mode also loses points for that and would otherwise be
   // reported with the vaguer message.
   if (isInvalidIn64BitMode(table, key, e)) {
-    return invalid(
-        `${opcodeText} (${e.instr}) is not valid in 64-bit mode`, i);
+    return invalid(`${opcodeText} (${e.instr}) is not valid in 64-bit mode`, i);
   }
   if (found.score < 0) {
     // Every entry of this opcode breaks a constraint of its own (the reg field
@@ -739,9 +792,8 @@ function decodeInstr(bin: number[], table: DecoderTable): DecodedInstr {
     // and objdump prints 'shll' for it -- but Table A-6 of 325383-092US
     // (p.2419) leaves that column of the group empty, and this decoder follows
     // the document.
-    const digit = (e.has_modrm && ctx.modrm >= 0) ?
-        ` /${(ctx.modrm >> 3) & 7}` :
-        '';
+    const digit =
+        (e.has_modrm && ctx.modrm >= 0) ? ` /${(ctx.modrm >> 3) & 7}` : '';
     return invalid(
         `no instruction of the SDM matches ${opcodeText}${digit}`, i);
   }
@@ -756,8 +808,7 @@ function decodeInstr(bin: number[], table: DecoderTable): DecodedInstr {
   const shownPrefixes: string[] = [];
   for (const p of prefixIndices) {
     const isMandatory = e.mandatory_prefix === toHex2(bin[p]).toUpperCase();
-    const name =
-        legacyPrefixName(bin[p], e.mnemonic, e.has_modrm, isMandatory);
+    const name = legacyPrefixName(bin[p], e.mnemonic, e.has_modrm, isMandatory);
     names[p] = name;
     if (PREFIXES_SHOWN_WITH_INSTR.indexOf(name) !== -1 &&
         e.mnemonic.indexOf(name) === -1) {
@@ -779,8 +830,10 @@ function decodeInstr(bin: number[], table: DecoderTable): DecodedInstr {
     const mod = modrm >> 6;
     const rm = modrm & 7;
     let dispSize = 0;
-    if (mod === 1) dispSize = 1;
-    if (mod === 2) dispSize = 4;
+    if (mod === 1)
+      dispSize = 1;
+    if (mod === 2)
+      dispSize = 4;
     if (mod !== 3 && rm === 4) {
       // The SIB byte, which brings a disp32 of its own when it has no base
       // (mod == 00 and base == 101).
@@ -792,7 +845,8 @@ function decodeInstr(bin: number[], table: DecoderTable): DecodedInstr {
       const sib = bin[i];
       types[i] = ByteType.SIB;
       i++;
-      if (mod === 0 && (sib & 7) === 5) dispSize = 4;
+      if (mod === 0 && (sib & 7) === 5)
+        dispSize = 4;
     } else if (mod === 0 && rm === 5) {
       // RIP-relative addressing in 64-bit mode.
       dispSize = 4;
@@ -808,7 +862,8 @@ function decodeInstr(bin: number[], table: DecoderTable): DecodedInstr {
     }
   }
   let immSize = e.imm_size;
-  if (e.imm_follows_operand_size) immSize = ctx.operand_size_16 ? 2 : 4;
+  if (e.imm_follows_operand_size)
+    immSize = ctx.operand_size_16 ? 2 : 4;
   for (let n = 0; n < immSize; n++) {
     if (i >= bin.length) {
       result.truncated = true;

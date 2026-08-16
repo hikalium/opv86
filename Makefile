@@ -14,10 +14,30 @@ default:
 	make gen/decoder.js
 	make -C sdmparser install
 
+# Every source clang-format is run on. The style is in .clang-format, and is
+# the same one sdmparser has been using.
+FORMAT_SRCS=src/decoder.ts src/opv86.ts src/opinterface.ts \
+	sdmparser/sdmparser.ts sdmparser/sdm_instr.ts \
+	test/decoder_test.js test/gen_objdump_fixture.js
+# Overridable, so that a checkout without clang-format installed can point at
+# one of its own (e.g. make CLANG_FORMAT='npx clang-format').
+CLANG_FORMAT=clang-format
+
 .PHONY : test
 test:
 	make -C sdmparser test
 	make decodertest
+	make formatcheck
+
+.PHONY : format
+format :
+	${CLANG_FORMAT} -i ${FORMAT_SRCS}
+
+# Fails when a source is not what `make format` would write, so that a change
+# is never committed half formatted.
+.PHONY : formatcheck
+formatcheck :
+	${CLANG_FORMAT} --dry-run --Werror ${FORMAT_SRCS}
 
 # Checks the decoder against the objdump output committed in test/.
 .PHONY : decodertest

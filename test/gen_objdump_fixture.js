@@ -39,13 +39,16 @@ function disassemble(path) {
 function parseObjdumpOutput(lines) {
   const cases = [];
   for (const line of lines) {
-    const m = line.match(/^\s*[0-9a-f]+:\t([0-9a-f]{2}(?: [0-9a-f]{2})*)\s*(.*)$/);
-    if (!m) continue;
+    const m =
+        line.match(/^\s*[0-9a-f]+:\t([0-9a-f]{2}(?: [0-9a-f]{2})*)\s*(.*)$/);
+    if (!m)
+      continue;
     const bytes = m[1].replace(/ /g, '');
     const text = m[2].trim();
     if (text === '') {
       // A continuation line: it belongs to the instruction above it.
-      if (cases.length !== 0) cases[cases.length - 1].bytes += bytes;
+      if (cases.length !== 0)
+        cases[cases.length - 1].bytes += bytes;
       continue;
     }
     cases.push({bytes: bytes, text: text});
@@ -57,7 +60,8 @@ function mnemonicOf(text) {
   const words = text.split(/\s+/);
   for (const w of words) {
     const word = w.toLowerCase();
-    if (PREFIX_WORD_PATTERN.test(word)) continue;
+    if (PREFIX_WORD_PATTERN.test(word))
+      continue;
     return word;
   }
   return '';
@@ -81,11 +85,15 @@ function main() {
     const perMnemonic = {};
     let kept = 0;
     for (const c of parseObjdumpOutput(disassemble(source))) {
-      if (c.text.indexOf('(bad)') !== -1) continue;
+      if (c.text.indexOf('(bad)') !== -1)
+        continue;
       const mnemonic = mnemonicOf(c.text);
-      if (mnemonic === '' || !mnemonic.match(/^[a-z][a-z0-9._]*$/)) continue;
-      if (seen[c.bytes]) continue;
-      if ((perMnemonic[mnemonic] | 0) >= CASES_PER_MNEMONIC) continue;
+      if (mnemonic === '' || !mnemonic.match(/^[a-z][a-z0-9._]*$/))
+        continue;
+      if (seen[c.bytes])
+        continue;
+      if ((perMnemonic[mnemonic] | 0) >= CASES_PER_MNEMONIC)
+        continue;
       seen[c.bytes] = true;
       perMnemonic[mnemonic] = (perMnemonic[mnemonic] | 0) + 1;
       kept++;

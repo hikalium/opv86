@@ -22,16 +22,15 @@ function fontSizeToFitOpcodeBox(
   // because its width shows how many bytes the component occupies.
   const boxWidthPx = columnSpan * OPCODE_COLUMN_WIDTH_PX +
       (columnSpan - 1) * OPCODE_COLUMN_GAP_PX;
-  const fitSizePx = Math.floor(
-      boxWidthPx / (text.length * OPCODE_CHAR_WIDTH_PER_FONT_SIZE));
+  const fitSizePx =
+      Math.floor(boxWidthPx / (text.length * OPCODE_CHAR_WIDTH_PER_FONT_SIZE));
   if (fitSizePx >= baseSizePx) {
     return baseSizePx;
   }
   // Keep it readable even if the text is very long.
   return Math.max(fitSizePx, 6);
 }
-function appendOpListElement(
-    oplist, op: SDMInstr, index: number): HTMLElement {
+function appendOpListElement(oplist, op: SDMInstr, index: number): HTMLElement {
   const oplistRow = $('<div>')
                         .addClass('opv86-oplist-container')
                         .addClass(`opv86-oplist-row-${index}`);
@@ -46,10 +45,10 @@ function appendOpListElement(
       const volume = op.document.indexOf('-vol-') === -1 ?
           '' :
           ` Vol.${op.document.split('-vol-')[1].charAt(0)}`;
-      opDescription.append($('<p>').append($(
-          `<a target="_blank" href='./sdmparser/pdf/${op.document}.pdf#page=${
-              op.page}'>Source: p.${op.page} of Intel SDM${
-              volume} (click to open PDF)</a>`)));
+      opDescription.append(
+          $('<p>').append($(`<a target="_blank" href='./sdmparser/pdf/${
+              op.document}.pdf#page=${op.page}'>Source: p.${
+              op.page} of Intel SDM${volume} (click to open PDF)</a>`)));
     }
     opDescription.append($('<h4>').text('Parsed info'));
     opDescription.append($('<pre>').text(JSON.stringify(op, null, '  ')));
@@ -164,7 +163,8 @@ function makeDecoderRow(
   const opcodeByteElementsDescription = bytes.map(e => {
     // A legacy prefix knows its own name (LOCK, BND, FS, ...); the other bytes
     // are named after their type.
-    const name = e.name ? e.name :
+    const name = e.name ?
+        e.name :
         (byteTypeNameTable[e.byte_type] ? byteTypeNameTable[e.byte_type] :
                                           e.byte_type);
     return $('<div>').addClass(`opv86-opcode-byte`).text(name);
@@ -245,8 +245,7 @@ function updateDecoderOutput(filter: string) {
   // decodeAll() stops after a fixed number of instructions, so say how much of
   // the input is not shown instead of letting it look like the whole of it.
   const last = decoded[decoded.length - 1];
-  const shownBytes =
-      last ? last.offset + Math.max(last.decoded.length, 1) : 0;
+  const shownBytes = last ? last.offset + Math.max(last.decoded.length, 1) : 0;
   if (shownBytes < bin.length) {
     fragment.append(
         $('<div>')
@@ -262,9 +261,12 @@ function escapeRegExp(string) {
       /[.*+?^${}()|[\]\\]/g, '\\$&');  // $& means the whole matched string
 }
 function isMatchedWithFilter(op: SDMInstr, filter: string) {
-  if (filter.length == 0) return true;
-  if (op.matcher_opcode.indexOf(filter) != -1) return true;
-  if (op.matcher_instr.indexOf(filter) != -1) return true;
+  if (filter.length == 0)
+    return true;
+  if (op.matcher_opcode.indexOf(filter) != -1)
+    return true;
+  if (op.matcher_instr.indexOf(filter) != -1)
+    return true;
   return false;
 }
 function appendMatcherToOp(op: SDMInstr) {
@@ -302,8 +304,10 @@ function compareOps(a: SDMInstr, b: SDMInstr) {
   // and sensible order.
   const mnemonicA = (a.instr_parsed[0] || '').toUpperCase();
   const mnemonicB = (b.instr_parsed[0] || '').toUpperCase();
-  if (mnemonicA !== mnemonicB) return mnemonicA < mnemonicB ? -1 : 1;
-  if (a.opcode !== b.opcode) return a.opcode < b.opcode ? -1 : 1;
+  if (mnemonicA !== mnemonicB)
+    return mnemonicA < mnemonicB ? -1 : 1;
+  if (a.opcode !== b.opcode)
+    return a.opcode < b.opcode ? -1 : 1;
   return 0;
 }
 

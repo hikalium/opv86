@@ -1,6 +1,6 @@
 enum SDMInstrOpByteType {
-  Opcode = "opcode",
-  Imm = "imm",
+  Opcode = 'opcode',
+  Imm = 'imm',
 }
 
 interface SDMInstrOpByte {
