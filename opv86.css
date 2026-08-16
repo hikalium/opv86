@@ -8,9 +8,8 @@ pre {
   padding-bottom: 16px;
   font-size: 12px;
 }
-#decoder-output-bin {
-  height: 64px;
-}
+/* The decoder output grows with the number of instructions the input holds,
+   so it has no fixed height. */
 .opv86-main-hex-input {
   font-family: 'Source Code Pro', monospace;
   font-size: 24px;
@@ -174,12 +173,39 @@ a:visited {
   background-color: #ffffee;
   padding-bottom: 32px;
 }
+/* One instruction of the decoded input. The six children fill the three
+   columns twice: the offset, the bytes and the instruction on the first line,
+   then nothing, what each byte is and the description on the second. */
 .opv86-oplist-container-decoder {
   display: grid;
-  grid-template-columns: 860px auto;
+  grid-template-columns: 64px 840px auto;
   padding-top: 1px;
   padding-bottom: 1px;
   border-bottom: 0.5px solid #d0d0d0;
+}
+.opv86-decoder-offset {
+  color: #808080;
+}
+/* An instruction is never longer than 15 bytes, so the row never wraps. */
+.opv86-decoder-bytes {
+  background-color: #ffffff;
+
+  display: grid;
+  grid-template-columns: repeat(15, 52px);
+  column-gap: 4px;
+}
+/* The names are longer than the two hex digits above them ('addrsize' is the
+   longest one), so they are written in a smaller font to stay in their box. */
+.opv86-decoder-byte-names {
+  font-size: 10px;
+}
+/* An encoding which is not an instruction of the SDM, shown as '(bad)'. */
+.opv86-decoder-bad {
+  color: #c00000;
+}
+.opv86-opcode-byte-bad {
+  background-color: #ffc0c0;
+  color: #c00000;
 }
 .opv86-oplist-container {
   display: grid;

@@ -11,12 +11,16 @@ const path = require('path');
 const rootDir = path.join(__dirname, '..');
 
 // The lowest length pass rate on the fixture which is still considered a pass.
-// The rate measured when the fixture was written is 99.46%, and the threshold
-// is set a little below it so that a real regression fails the test.
+// The measured rate is 99.22%, and the threshold is set a little below it so
+// that a real regression fails the test. What is left is mostly the encodings
+// which the SDM does not define and which this decoder calls '(bad)' while
+// objdump decodes them anyway (the '/6' of the shift group, the '8F' XOP
+// prefix of AMD, ...); the fixture comes from `objdump -D`, which reads the
+// data sections as code as well.
 const LENGTH_PASS_RATE_THRESHOLD = 0.98;
 // The same for the mnemonic, which is a looser check: objdump and the SDM do
 // not always use the same name for an instruction. The measured rate is
-// 98.98%.
+// 99.01%.
 const MNEMONIC_MATCH_RATE_THRESHOLD = 0.96;
 
 // gen/decoder.js is a plain script (tsc --outFile without modules), so it is
@@ -28,8 +32,8 @@ function loadDecoder() {
     process.exit(1);
   }
   const code = fs.readFileSync(file, 'utf8');
-  return new Function(
-      `${code}\nreturn {buildDecoderTable, decodeInstr, ByteType};`)();
+  const exported = 'buildDecoderTable, decodeInstr, decodeAll, ByteType';
+  return new Function(`${code}\nreturn {${exported}};`)();
 }
 
 const decoder = loadDecoder();
@@ -200,11 +204,14 @@ function TestVexAndEvex() {
 }
 
 function TestUnknownAndTruncated() {
-  // An opcode which is in no entry of the SDM list is reported as such
-  // instead of being decoded as something else.
+  // An opcode which is in no entry of the SDM list is '(bad)' instead of being
+  // decoded as something else, and it takes one byte so that the byte after it
+  // starts a new instruction.
   let d = decode('0f04');
   assert.equal(d.matched, false);
-  assert.ok(d.note.indexOf('not in the SDM instruction list') !== -1);
+  assert.equal(d.bad, true);
+  assert.equal(d.instr, '(bad)');
+  assert.ok(d.note.indexOf('0F 04 is not an opcode') !== -1);
   // A byte sequence which ends in the middle of an instruction is reported as
   // truncated, and the bytes it does have keep their type.
   d = decode('488b05b1df');
@@ -217,14 +224,75 @@ function TestUnknownAndTruncated() {
   d = decode('9090');
   assert.equal(d.length, 1);
   assert.equal(typesOf(d), 'opcode,unknown');
-  // ff /7 is not documented: the closest entry of the group is shown, and the
-  // note says that it is only the closest one.
+  // ff /7 is left empty by Table A-6 of the SDM, so it is '(bad)' and only the
+  // opcode byte is consumed.
   d = decode('ffff');
-  assert.equal(d.matched, true);
+  assert.equal(d.bad, true);
+  assert.equal(d.length, 1);
+  assert.ok(d.note.indexOf('matches FF /7') !== -1);
+  // A documented member of the same group is decoded as usual.
+  d = decode('ffc8');
+  assert.equal(d.bad, false);
   assert.equal(d.length, 2);
-  assert.ok(d.note.indexOf('closest') !== -1);
-  // A documented member of the same group has no such note.
-  assert.equal(decode('ffc8').note, '');
+  assert.equal(d.mnemonic, 'DEC');
+}
+
+// The encodings which the SDM does not define are '(bad)', as they are in
+// objdump, instead of being shown as the entry which happens to be closest.
+function TestBadEncodings() {
+  // '8f 77 e8': 8F is the POP group, whose only member is /0. objdump prints
+  // '(bad)' and then decodes '77 e8' as 'ja'.
+  let d = decode('8f77e8');
+  assert.equal(d.bad, true);
+  assert.equal(d.length, 1);
+  assert.equal(d.instr, '(bad)');
+  assert.ok(d.note.indexOf('matches 8F /6') !== -1);
+  assert.equal(typesOf(d), 'bad,unknown,unknown');
+  // '66 8f 77': the prefixes in front of the opcode are consumed with it, so
+  // that the decode resynchronizes where objdump does ('data16 (bad)').
+  d = decode('668f77e8');
+  assert.equal(d.bad, true);
+  assert.equal(d.length, 2);
+  assert.equal(typesOf(d), 'bad,bad,unknown,unknown');
+  // 'd4 0a' (AAM): both forms of D4 are invalid in 64-bit mode.
+  d = decode('d40a');
+  assert.equal(d.bad, true);
+  assert.equal(d.length, 1);
+  assert.ok(d.note.indexOf('not valid in 64-bit mode') !== -1);
+  // '49 16': 16 is PUSH SS, which exists only outside 64-bit mode. The REX in
+  // front of the opcode is consumed with it, and the message says why.
+  d = decode('4916');
+  assert.equal(d.bad, true);
+  assert.equal(d.length, 2);
+  assert.ok(d.note.indexOf('16 (PUSH SS) is not valid in 64-bit mode') !== -1);
+  // '66 e9 dd 00' (jmpw): 'E9 cw' is invalid in 64-bit mode as well, but its
+  // sibling 'E9 cd' is not, so the opcode itself is not bad.
+  d = decode('66e9dd00');
+  assert.equal(d.bad, false);
+  assert.equal(d.mnemonic, 'JMP');
+  // A VEX/EVEX map which no instruction of the SDM uses (mmmmm = 00100b).
+  d = decode('c4e47800');
+  assert.equal(d.bad, true);
+  assert.equal(d.length, 3);
+  assert.ok(d.note.indexOf('VEX/EVEX map 4') !== -1);
+}
+
+// A byte sequence which holds more than one instruction is split at the
+// instruction boundaries, and a '(bad)' byte does not shift the ones after it.
+function TestDecodeAll() {
+  // 'f3 0f 1e fa 55 48 89 e5 8f 77 e8 12 00 00 00 c9 c3', which objdump reads
+  // as: endbr64 / push / mov / (bad) / ja / adc / add / leave / ret.
+  const bin = 'f30f1efa554889e58f77e812000000c9c3'.match(/.{2}/g).map(
+      s => parseInt(s, 16));
+  const all = decoder.decodeAll(bin, table);
+  assert.deepEqual(all.map(r => r.offset), [0, 4, 5, 8, 9, 11, 13, 15, 16]);
+  assert.deepEqual(
+      all.map(r => r.decoded.mnemonic),
+      ['ENDBR64', 'PUSH', 'MOV', '', 'JA', 'ADC', 'ADD', 'LEAVE', 'RET']);
+  assert.equal(all[3].decoded.bad, true);
+  // Every byte of the input belongs to exactly one of the instructions.
+  const last = all[all.length - 1];
+  assert.equal(last.offset + last.decoded.length, bin.length);
 }
 
 // objdump prints the AT&T names, which carry a size suffix ('movl') and which
@@ -495,6 +563,8 @@ function runTest() {
   TestGroupsAndThreeByteOpcodes();
   TestVexAndEvex();
   TestUnknownAndTruncated();
+  TestBadEncodings();
+  TestDecodeAll();
   TestMnemonicMatches();
   TestAgainstObjdumpFixture();
   console.log('PASS');

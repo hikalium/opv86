@@ -462,6 +462,35 @@ function findOpEntry(table, key, ctx) {
     }
     return { entry: best, score: bestScore };
 }
+// Whether every entry which shares this opcode is one which the SDM marks as
+// invalid in 64-bit mode. An opcode which has a 64-bit form as well is not:
+// 'E9 cw' (JMP rel16) is invalid in 64-bit mode, but '66 e9 dd 00' still
+// decodes through its sibling 'E9 cd'.
+// Required by: 'd4 0a' (AAM), whose only two forms 'D4 0A' and 'D4 ib' are
+// both invalid in 64-bit mode (325383-092US, p.123). objdump prints '(bad)'.
+function isInvalidIn64BitMode(table, key, e) {
+    if (e.valid_in_64bit_mode)
+        return false;
+    for (const other of table[key]) {
+        if (other.valid_in_64bit_mode)
+            return false;
+    }
+    return true;
+}
+// Writes an opcode the way the SDM does, e.g. '8F', '0F 1C' or '0F 38 F6', for
+// the message which says why an encoding is not an instruction.
+function opcodeTextOf(map, opcode) {
+    const escape = {
+        '': '',
+        '0f': '0F ',
+        '0f38': '0F 38 ',
+        '0f3a': '0F 3A ',
+        'map5': 'MAP5 ',
+        'map6': 'MAP6 ',
+    };
+    const prefix = escape[map] !== undefined ? escape[map] : `${map} `;
+    return prefix + toHex2(opcode).toUpperCase();
+}
 // Decodes the first instruction of bin. Every byte of bin is returned in
 // bytes[], and the ones which are not part of the instruction (either because
 // the instruction ends before them, or because the decode gave up) are marked
@@ -475,6 +504,7 @@ function decodeInstr(bin, table) {
         length: 0,
         matched: false,
         truncated: false,
+        bad: false,
         mnemonic: '',
         instr: '?',
         description: '',
@@ -493,6 +523,24 @@ function decodeInstr(bin, table) {
         }
         result.length = length;
         return result;
+    };
+    // Gives up on the bytes read so far, because the SDM has no instruction
+    // which they can be the beginning of. Everything up to and including the
+    // opcode byte is consumed and the next byte starts a new instruction, which
+    // is what objdump does as well ('66 8f 77 e8' is 'data16 (bad)' followed by
+    // 'ja', not one three-byte instruction).
+    const invalid = (note, length) => {
+        result.bad = true;
+        result.matched = false;
+        result.instr = '(bad)';
+        result.mnemonic = '';
+        result.description = '';
+        result.note = note;
+        for (let n = 0; n < length; n++) {
+            types[n] = ByteType.Bad;
+            names[n] = '';
+        }
+        return finish(Math.max(length, 1));
     };
     let i = 0;
     let has66 = false;
@@ -608,8 +656,7 @@ function decodeInstr(bin, table) {
         map = { 1: '0f', 2: '0f38', 3: '0f3a', 5: 'map5', 6: 'map6' }[mmmmm];
         i += prefixLength;
         if (map === undefined) {
-            result.note = `unsupported VEX/EVEX map ${mmmmm}`;
-            return finish(i);
+            return invalid(`no instruction of the SDM uses VEX/EVEX map ${mmmmm}`, i);
         }
     }
     else {
@@ -636,14 +683,28 @@ function decodeInstr(bin, table) {
     const key = `${ctx.encoding}:${map}:${toHex2(opcode)}`;
     const found = findOpEntry(table, key, ctx);
     const e = found.entry;
+    const opcodeText = opcodeTextOf(map, opcode);
     if (!e) {
-        result.note = `${key} is not in the SDM instruction list`;
-        return finish(i);
+        return invalid(`${opcodeText} is not an opcode of the SDM`, i);
+    }
+    // Checked before the score below, because an opcode which exists only
+    // outside 64-bit mode also loses points for that and would otherwise be
+    // reported with the vaguer message.
+    if (isInvalidIn64BitMode(table, key, e)) {
+        return invalid(`${opcodeText} (${e.instr}) is not valid in 64-bit mode`, i);
     }
     if (found.score < 0) {
-        // Every entry of this opcode breaks a constraint (the reg field of the
-        // ModRM byte, the mandatory prefix, ...), so the one below is a guess.
-        result.note = 'no entry of the SDM fits exactly, showing the closest one';
+        // Every entry of this opcode breaks a constraint of its own (the reg field
+        // of the ModRM byte, the mandatory prefix, ...), so these bytes are not an
+        // instruction of the SDM. Such an encoding may still do something on a
+        // real processor -- 'c1 77 b6' is the undocumented '/6' of the shift group
+        // and objdump prints 'shll' for it -- but Table A-6 of 325383-092US
+        // (p.2419) leaves that column of the group empty, and this decoder follows
+        // the document.
+        const digit = (e.has_modrm && ctx.modrm >= 0) ?
+            ` /${(ctx.modrm >> 3) & 7}` :
+            '';
+        return invalid(`no instruction of the SDM matches ${opcodeText}${digit}`, i);
     }
     result.matched = true;
     result.op = e;
@@ -723,6 +784,24 @@ function decodeInstr(bin, table) {
         i++;
     }
     return finish(i);
+}
+// How many instructions decodeAll() returns at most, so that a long input does
+// not fill the page with rows.
+const MAX_DECODED_INSTRS = 64;
+// Decodes bin as a stream of instructions, the way a disassembler does. An
+// encoding which is not an instruction of the SDM takes the bytes up to its
+// opcode byte and the next one starts right after it, so that the rest of the
+// stream is still decoded at the right boundaries.
+function decodeAll(bin, table) {
+    const result = [];
+    let offset = 0;
+    while (offset < bin.length && result.length < MAX_DECODED_INSTRS) {
+        const decoded = decodeInstr(bin.slice(offset), table);
+        result.push({ offset: offset, decoded: decoded });
+        // A decode which consumed nothing would loop forever.
+        offset += Math.max(decoded.length, 1);
+    }
+    return result;
 }
 function appendOpListHeaders(oplist) {
     oplist.empty();
@@ -851,8 +930,62 @@ const byteTypeNameTable = {
     'sib': 'sib',
     'disp': 'disp',
     'imm': 'imm',
+    'bad': 'bad',
     'unknown': '?',
 };
+// One row of the decoder output, which shows the bytes of a single instruction
+// of the input with what each of them is.
+function makeDecoderRow(offset, decoded) {
+    const bytes = decoded.bytes.slice(0, Math.max(decoded.length, 1));
+    const opcodeByteElements = bytes.map(e => {
+        return $('<div>')
+            .addClass(`opv86-opcode-byte-${e.byte_type}`)
+            .addClass(`opv86-opcode-byte`)
+            .text(('00' + e.byte_value.toString(16).toUpperCase()).substr(-2));
+    });
+    const opcodeByteElementsDescription = bytes.map(e => {
+        // A legacy prefix knows its own name (LOCK, BND, FS, ...); the other bytes
+        // are named after their type.
+        const name = e.name ? e.name :
+            (byteTypeNameTable[e.byte_type] ? byteTypeNameTable[e.byte_type] :
+                e.byte_type);
+        return $('<div>').addClass(`opv86-opcode-byte`).text(name);
+    });
+    // Say what happened when the decode did not reach the end of the
+    // instruction, instead of showing a wrong result as if it was a right one.
+    let instrText = decoded.instr;
+    if (decoded.truncated) {
+        instrText = `${decoded.instr} (incomplete: ${decoded.note})`;
+    }
+    else if (!decoded.bad && decoded.note !== '') {
+        instrText = `${decoded.instr} (${decoded.note})`;
+    }
+    const descriptionText = decoded.bad ?
+        decoded.note :
+        (decoded.matched && !decoded.truncated) ?
+            `${decoded.length} byte(s): ${decoded.description}` :
+            decoded.description;
+    const oplistRow = $('<div>').addClass('opv86-oplist-container-decoder');
+    oplistRow.append($('<div>')
+        .addClass('opv86-decoder-offset')
+        .text(`+${('000' + offset.toString(16)).substr(-4)}`));
+    oplistRow.append($('<div>')
+        .addClass('opv86-decoder-bytes')
+        .append(opcodeByteElements));
+    oplistRow.append($('<div>')
+        .addClass('opv86-oplist-item-instr')
+        .addClass(decoded.bad ? 'opv86-decoder-bad' : '')
+        .text(instrText));
+    oplistRow.append($('<div>').addClass('opv86-decoder-offset'));
+    oplistRow.append($('<div>')
+        .addClass('opv86-decoder-bytes')
+        .addClass('opv86-decoder-byte-names')
+        .append(opcodeByteElementsDescription));
+    oplistRow.append($('<div>')
+        .addClass('opv86-oplist-item-description')
+        .text(descriptionText));
+    return oplistRow;
+}
 function updateDecoderOutput(filter) {
     const decoderOutputContainerDiv = $('#decoder-output');
     filter = filter.replace(/ /g, '');
@@ -864,49 +997,23 @@ function updateDecoderOutput(filter) {
     const decoderOutputBinDiv = $('#decoder-output-bin');
     decoderOutputBinDiv.empty();
     const bin = filter.match(/.{1,2}/g).map(s => parseInt(s, 16));
-    const decoded = decodeInstr(bin, decoderTable);
-    const opcodeByteElements = decoded.bytes.map(e => {
-        return $('<div>')
-            .addClass(`opv86-opcode-byte-${e.byte_type}`)
-            .addClass(`opv86-opcode-byte`)
-            .text(('00' + e.byte_value.toString(16).toUpperCase()).substr(-2));
-    });
-    const opcodeByteElementsDescription = decoded.bytes.map(e => {
-        // A legacy prefix knows its own name (LOCK, BND, FS, ...); the other bytes
-        // are named after their type.
-        const name = e.name ? e.name :
-            (byteTypeNameTable[e.byte_type] ? byteTypeNameTable[e.byte_type] :
-                e.byte_type);
-        return $('<div>').addClass(`opv86-opcode-byte`).text(name);
-    });
-    // Say what happened when the decode did not reach the end of the
-    // instruction, instead of showing a wrong result as if it was a right one.
-    let instrText = decoded.instr;
-    if (!decoded.matched) {
-        instrText = `? (${decoded.note})`;
+    // The input may hold more than one instruction, so it is split at the
+    // instruction boundaries and shown one per row, like a disassembler does.
+    const decoded = decodeAll(bin, decoderTable);
+    const fragment = $(document.createDocumentFragment());
+    for (const r of decoded) {
+        fragment.append(makeDecoderRow(r.offset, r.decoded));
     }
-    else if (decoded.truncated) {
-        instrText = `${decoded.instr} (incomplete: ${decoded.note})`;
+    // decodeAll() stops after a fixed number of instructions, so say how much of
+    // the input is not shown instead of letting it look like the whole of it.
+    const last = decoded[decoded.length - 1];
+    const shownBytes = last ? last.offset + Math.max(last.decoded.length, 1) : 0;
+    if (shownBytes < bin.length) {
+        fragment.append($('<div>')
+            .addClass('opv86-decoder-offset')
+            .text(`(${bin.length - shownBytes} more byte(s) not shown)`));
     }
-    else if (decoded.note !== '') {
-        instrText = `${decoded.instr} (${decoded.note})`;
-    }
-    let descriptionText = decoded.description;
-    if (decoded.matched && !decoded.truncated) {
-        descriptionText = `${decoded.length} byte(s): ${decoded.description}`;
-    }
-    const oplistRow = $('<div>').addClass('opv86-oplist-container-decoder');
-    oplistRow.append($('<div>')
-        .addClass('opv86-oplist-item-opcode')
-        .append(opcodeByteElements));
-    oplistRow.append($('<div>').addClass('opv86-oplist-item-instr').text(instrText));
-    oplistRow.append($('<div>')
-        .addClass('opv86-oplist-item-opcode')
-        .append(opcodeByteElementsDescription));
-    oplistRow.append($('<div>')
-        .addClass('opv86-oplist-item-description')
-        .text(descriptionText));
-    decoderOutputBinDiv.append(oplistRow);
+    decoderOutputBinDiv.append(fragment);
 }
 function escapeRegExp(string) {
     // from
@@ -1007,6 +1114,9 @@ var ByteType;
     ByteType["SIB"] = "sib";
     ByteType["Imm"] = "imm";
     ByteType["Disp"] = "disp";
+    // A byte which no instruction of the SDM can start with, shown as '(bad)'
+    // in the same way as objdump does.
+    ByteType["Bad"] = "bad";
 })(ByteType || (ByteType = {}));
 var SDMInstrOpByteType;
 (function (SDMInstrOpByteType) {

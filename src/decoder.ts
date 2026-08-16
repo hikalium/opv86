@@ -76,6 +76,11 @@ interface DecodedInstr {
   length: number;
   matched: boolean;
   truncated: boolean;
+  // True when the bytes are not an instruction of the SDM at all. Such an
+  // encoding is shown as '(bad)' and only the bytes up to and including the
+  // opcode byte are consumed, so that the decode resynchronizes on the next
+  // byte in the same way as objdump does.
+  bad: boolean;
   mnemonic: string;
   instr: string;
   description: string;
@@ -507,6 +512,36 @@ function findOpEntry(table: DecoderTable, key: string, ctx: DecoderContext):
   return {entry: best, score: bestScore};
 }
 
+// Whether every entry which shares this opcode is one which the SDM marks as
+// invalid in 64-bit mode. An opcode which has a 64-bit form as well is not:
+// 'E9 cw' (JMP rel16) is invalid in 64-bit mode, but '66 e9 dd 00' still
+// decodes through its sibling 'E9 cd'.
+// Required by: 'd4 0a' (AAM), whose only two forms 'D4 0A' and 'D4 ib' are
+// both invalid in 64-bit mode (325383-092US, p.123). objdump prints '(bad)'.
+function isInvalidIn64BitMode(
+    table: DecoderTable, key: string, e: DecoderOpEntry): boolean {
+  if (e.valid_in_64bit_mode) return false;
+  for (const other of table[key]) {
+    if (other.valid_in_64bit_mode) return false;
+  }
+  return true;
+}
+
+// Writes an opcode the way the SDM does, e.g. '8F', '0F 1C' or '0F 38 F6', for
+// the message which says why an encoding is not an instruction.
+function opcodeTextOf(map: string, opcode: number): string {
+  const escape: {[key: string]: string} = {
+    '': '',
+    '0f': '0F ',
+    '0f38': '0F 38 ',
+    '0f3a': '0F 3A ',
+    'map5': 'MAP5 ',
+    'map6': 'MAP6 ',
+  };
+  const prefix = escape[map] !== undefined ? escape[map] : `${map} `;
+  return prefix + toHex2(opcode).toUpperCase();
+}
+
 // Decodes the first instruction of bin. Every byte of bin is returned in
 // bytes[], and the ones which are not part of the instruction (either because
 // the instruction ends before them, or because the decode gave up) are marked
@@ -519,6 +554,7 @@ function decodeInstr(bin: number[], table: DecoderTable): DecodedInstr {
     length: 0,
     matched: false,
     truncated: false,
+    bad: false,
     mnemonic: '',
     instr: '?',
     description: '',
@@ -536,6 +572,24 @@ function decodeInstr(bin: number[], table: DecoderTable): DecodedInstr {
     }
     result.length = length;
     return result;
+  };
+  // Gives up on the bytes read so far, because the SDM has no instruction
+  // which they can be the beginning of. Everything up to and including the
+  // opcode byte is consumed and the next byte starts a new instruction, which
+  // is what objdump does as well ('66 8f 77 e8' is 'data16 (bad)' followed by
+  // 'ja', not one three-byte instruction).
+  const invalid = (note: string, length: number) => {
+    result.bad = true;
+    result.matched = false;
+    result.instr = '(bad)';
+    result.mnemonic = '';
+    result.description = '';
+    result.note = note;
+    for (let n = 0; n < length; n++) {
+      types[n] = ByteType.Bad;
+      names[n] = '';
+    }
+    return finish(Math.max(length, 1));
   };
   let i = 0;
   let has66 = false;
@@ -640,8 +694,7 @@ function decodeInstr(bin: number[], table: DecoderTable): DecodedInstr {
     map = {1: '0f', 2: '0f38', 3: '0f3a', 5: 'map5', 6: 'map6'}[mmmmm];
     i += prefixLength;
     if (map === undefined) {
-      result.note = `unsupported VEX/EVEX map ${mmmmm}`;
-      return finish(i);
+      return invalid(`no instruction of the SDM uses VEX/EVEX map ${mmmmm}`, i);
     }
   } else {
     if (first === 0x0f) {
@@ -667,14 +720,30 @@ function decodeInstr(bin: number[], table: DecoderTable): DecodedInstr {
   const key = `${ctx.encoding}:${map}:${toHex2(opcode)}`;
   const found = findOpEntry(table, key, ctx);
   const e = found.entry;
+  const opcodeText = opcodeTextOf(map, opcode);
   if (!e) {
-    result.note = `${key} is not in the SDM instruction list`;
-    return finish(i);
+    return invalid(`${opcodeText} is not an opcode of the SDM`, i);
+  }
+  // Checked before the score below, because an opcode which exists only
+  // outside 64-bit mode also loses points for that and would otherwise be
+  // reported with the vaguer message.
+  if (isInvalidIn64BitMode(table, key, e)) {
+    return invalid(
+        `${opcodeText} (${e.instr}) is not valid in 64-bit mode`, i);
   }
   if (found.score < 0) {
-    // Every entry of this opcode breaks a constraint (the reg field of the
-    // ModRM byte, the mandatory prefix, ...), so the one below is a guess.
-    result.note = 'no entry of the SDM fits exactly, showing the closest one';
+    // Every entry of this opcode breaks a constraint of its own (the reg field
+    // of the ModRM byte, the mandatory prefix, ...), so these bytes are not an
+    // instruction of the SDM. Such an encoding may still do something on a
+    // real processor -- 'c1 77 b6' is the undocumented '/6' of the shift group
+    // and objdump prints 'shll' for it -- but Table A-6 of 325383-092US
+    // (p.2419) leaves that column of the group empty, and this decoder follows
+    // the document.
+    const digit = (e.has_modrm && ctx.modrm >= 0) ?
+        ` /${(ctx.modrm >> 3) & 7}` :
+        '';
+    return invalid(
+        `no instruction of the SDM matches ${opcodeText}${digit}`, i);
   }
   result.matched = true;
   result.op = e;
@@ -750,4 +819,30 @@ function decodeInstr(bin: number[], table: DecoderTable): DecodedInstr {
     i++;
   }
   return finish(i);
+}
+
+// One instruction of a stream of bytes, with the offset it starts at.
+interface DecodedInstrAtOffset {
+  offset: number;
+  decoded: DecodedInstr;
+}
+
+// How many instructions decodeAll() returns at most, so that a long input does
+// not fill the page with rows.
+const MAX_DECODED_INSTRS = 64;
+
+// Decodes bin as a stream of instructions, the way a disassembler does. An
+// encoding which is not an instruction of the SDM takes the bytes up to its
+// opcode byte and the next one starts right after it, so that the rest of the
+// stream is still decoded at the right boundaries.
+function decodeAll(bin: number[], table: DecoderTable): DecodedInstrAtOffset[] {
+  const result: DecodedInstrAtOffset[] = [];
+  let offset = 0;
+  while (offset < bin.length && result.length < MAX_DECODED_INSTRS) {
+    const decoded = decodeInstr(bin.slice(offset), table);
+    result.push({offset: offset, decoded: decoded});
+    // A decode which consumed nothing would loop forever.
+    offset += Math.max(decoded.length, 1);
+  }
+  return result;
 }

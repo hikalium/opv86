@@ -132,8 +132,64 @@ const byteTypeNameTable = {
   'sib': 'sib',
   'disp': 'disp',
   'imm': 'imm',
+  'bad': 'bad',
   'unknown': '?',
 };
+
+// One row of the decoder output, which shows the bytes of a single instruction
+// of the input with what each of them is.
+function makeDecoderRow(offset: number, decoded: DecodedInstr): JQuery {
+  const bytes = decoded.bytes.slice(0, Math.max(decoded.length, 1));
+  const opcodeByteElements = bytes.map(e => {
+    return $('<div>')
+        .addClass(`opv86-opcode-byte-${e.byte_type}`)
+        .addClass(`opv86-opcode-byte`)
+        .text(('00' + e.byte_value.toString(16).toUpperCase()).substr(-2));
+  });
+  const opcodeByteElementsDescription = bytes.map(e => {
+    // A legacy prefix knows its own name (LOCK, BND, FS, ...); the other bytes
+    // are named after their type.
+    const name = e.name ? e.name :
+        (byteTypeNameTable[e.byte_type] ? byteTypeNameTable[e.byte_type] :
+                                          e.byte_type);
+    return $('<div>').addClass(`opv86-opcode-byte`).text(name);
+  });
+
+  // Say what happened when the decode did not reach the end of the
+  // instruction, instead of showing a wrong result as if it was a right one.
+  let instrText = decoded.instr;
+  if (decoded.truncated) {
+    instrText = `${decoded.instr} (incomplete: ${decoded.note})`;
+  } else if (!decoded.bad && decoded.note !== '') {
+    instrText = `${decoded.instr} (${decoded.note})`;
+  }
+  const descriptionText = decoded.bad ?
+      decoded.note :
+      (decoded.matched && !decoded.truncated) ?
+      `${decoded.length} byte(s): ${decoded.description}` :
+      decoded.description;
+
+  const oplistRow = $('<div>').addClass('opv86-oplist-container-decoder');
+  oplistRow.append($('<div>')
+                       .addClass('opv86-decoder-offset')
+                       .text(`+${('000' + offset.toString(16)).substr(-4)}`));
+  oplistRow.append($('<div>')
+                       .addClass('opv86-decoder-bytes')
+                       .append(opcodeByteElements));
+  oplistRow.append($('<div>')
+                       .addClass('opv86-oplist-item-instr')
+                       .addClass(decoded.bad ? 'opv86-decoder-bad' : '')
+                       .text(instrText));
+  oplistRow.append($('<div>').addClass('opv86-decoder-offset'));
+  oplistRow.append($('<div>')
+                       .addClass('opv86-decoder-bytes')
+                       .addClass('opv86-decoder-byte-names')
+                       .append(opcodeByteElementsDescription));
+  oplistRow.append($('<div>')
+                       .addClass('opv86-oplist-item-description')
+                       .text(descriptionText));
+  return oplistRow;
+}
 
 function updateDecoderOutput(filter: string) {
   const decoderOutputContainerDiv = $('#decoder-output');
@@ -147,50 +203,25 @@ function updateDecoderOutput(filter: string) {
   decoderOutputBinDiv.empty();
 
   const bin = filter.match(/.{1,2}/g).map(s => parseInt(s, 16));
-  const decoded = decodeInstr(bin, decoderTable);
-  const opcodeByteElements = decoded.bytes.map(e => {
-    return $('<div>')
-        .addClass(`opv86-opcode-byte-${e.byte_type}`)
-        .addClass(`opv86-opcode-byte`)
-        .text(('00' + e.byte_value.toString(16).toUpperCase()).substr(-2));
-  });
-  const opcodeByteElementsDescription = decoded.bytes.map(e => {
-    // A legacy prefix knows its own name (LOCK, BND, FS, ...); the other bytes
-    // are named after their type.
-    const name = e.name ? e.name :
-        (byteTypeNameTable[e.byte_type] ? byteTypeNameTable[e.byte_type] :
-                                          e.byte_type);
-    return $('<div>').addClass(`opv86-opcode-byte`).text(name);
-  });
-
-  // Say what happened when the decode did not reach the end of the
-  // instruction, instead of showing a wrong result as if it was a right one.
-  let instrText = decoded.instr;
-  if (!decoded.matched) {
-    instrText = `? (${decoded.note})`;
-  } else if (decoded.truncated) {
-    instrText = `${decoded.instr} (incomplete: ${decoded.note})`;
-  } else if (decoded.note !== '') {
-    instrText = `${decoded.instr} (${decoded.note})`;
+  // The input may hold more than one instruction, so it is split at the
+  // instruction boundaries and shown one per row, like a disassembler does.
+  const decoded = decodeAll(bin, decoderTable);
+  const fragment = $(document.createDocumentFragment());
+  for (const r of decoded) {
+    fragment.append(makeDecoderRow(r.offset, r.decoded));
   }
-  let descriptionText = decoded.description;
-  if (decoded.matched && !decoded.truncated) {
-    descriptionText = `${decoded.length} byte(s): ${decoded.description}`;
+  // decodeAll() stops after a fixed number of instructions, so say how much of
+  // the input is not shown instead of letting it look like the whole of it.
+  const last = decoded[decoded.length - 1];
+  const shownBytes =
+      last ? last.offset + Math.max(last.decoded.length, 1) : 0;
+  if (shownBytes < bin.length) {
+    fragment.append(
+        $('<div>')
+            .addClass('opv86-decoder-offset')
+            .text(`(${bin.length - shownBytes} more byte(s) not shown)`));
   }
-
-  const oplistRow = $('<div>').addClass('opv86-oplist-container-decoder');
-  oplistRow.append($('<div>')
-                       .addClass('opv86-oplist-item-opcode')
-                       .append(opcodeByteElements));
-  oplistRow.append(
-      $('<div>').addClass('opv86-oplist-item-instr').text(instrText));
-  oplistRow.append($('<div>')
-                       .addClass('opv86-oplist-item-opcode')
-                       .append(opcodeByteElementsDescription));
-  oplistRow.append($('<div>')
-                       .addClass('opv86-oplist-item-description')
-                       .text(descriptionText));
-  decoderOutputBinDiv.append(oplistRow);
+  decoderOutputBinDiv.append(fragment);
 }
 function escapeRegExp(string) {
   // from

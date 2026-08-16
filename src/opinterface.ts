@@ -28,4 +28,7 @@ enum ByteType {
   SIB = 'sib',
   Imm = 'imm',
   Disp = 'disp',
+  // A byte which no instruction of the SDM can start with, shown as '(bad)'
+  // in the same way as objdump does.
+  Bad = 'bad',
 }
