@@ -980,7 +980,10 @@ function makeDecoderRow(offset, decoded, byteColumns) {
     const bytesColumns = `repeat(${byteColumns}, ${DECODER_BYTE_WIDTH_PX}px)`;
     const oplistRow = $('<div>')
         .addClass('opv86-oplist-container-decoder')
-        .css('grid-template-columns', `64px ${decoderBytesWidthPx(byteColumns)}px auto`);
+        .css('grid-template-columns', 
+    // One byte of room is left empty after the bytes, so that they
+    // do not touch the instruction next to them.
+    `64px ${decoderBytesWidthPx(byteColumns + 1)}px auto`);
     oplistRow.append($('<div>')
         .addClass('opv86-decoder-offset')
         .text(`+${('000' + offset.toString(16)).substr(-4)}`));

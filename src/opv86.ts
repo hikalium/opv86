@@ -190,7 +190,9 @@ function makeDecoderRow(
           .addClass('opv86-oplist-container-decoder')
           .css(
               'grid-template-columns',
-              `64px ${decoderBytesWidthPx(byteColumns)}px auto`);
+              // One byte of room is left empty after the bytes, so that they
+              // do not touch the instruction next to them.
+              `64px ${decoderBytesWidthPx(byteColumns + 1)}px auto`);
   oplistRow.append($('<div>')
                        .addClass('opv86-decoder-offset')
                        .text(`+${('000' + offset.toString(16)).substr(-4)}`));
