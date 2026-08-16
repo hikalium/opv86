@@ -2708,10 +2708,84 @@ function runTest() {
   TestFlattenAnchorsInMixedText();
   TestGetTextOfAnchor();
   TestDedupInstrList();
+  TestAddEnclaveLeafOpcodeBytes();
   TestExpandMnemonic();
   TestParser();
   TestParserOfRecentSDM();
   console.log('PASS');
+}
+
+// The page of an SGX leaf function writes only the value which selects the
+// leaf in the opcode column ('EAX = 01H'), because the bytes the leaf is
+// encoded with are those of ENCLS or ENCLU and are on their own page. Put
+// those bytes in front of the selector, so that the entry carries the whole
+// encoding, in the same shape as the GETSEC leaves ('NP 0F 37 (EAX = 0)').
+// The bytes are taken from the page of ENCLS / ENCLU itself rather than
+// written here, so a leaf keeps the column of its page when the parent is not
+// parsed (which only happens when --mnemonic asks for the leaf alone).
+// Required by: ENCLS[EADD] ('EAX = 01H') and the other SGX leaves in
+// 325384-092US (June 2026).
+function AddEnclaveLeafOpcodeBytes(instList: SDMInstr[]): SDMInstr[] {
+  const parentOpcode = {};
+  for (const e of instList) {
+    const match = e.instr.match(/^(ENCL[SUV])$/);
+    if (match)
+      parentOpcode[match[1]] = e.opcode;
+  }
+  return instList.map((e) => {
+    const match = e.instr.match(/^(ENCL[SUV])\[/);
+    if (!match || !parentOpcode[match[1]])
+      return e;
+    // Anything but a bare leaf selector is already a complete opcode.
+    if (!e.opcode.match(/^E?[A-D]X\s*=/))
+      return e;
+    const opcode = `${parentOpcode[match[1]]} (${e.opcode})`;
+    const opcode_parsed = CanonicalizeOpcode(opcode);
+    return Object.assign({}, e, {
+      opcode: opcode,
+      opcode_parsed: opcode_parsed,
+      opcode_bytes: makeOpBytes(opcode_parsed),
+    });
+  });
+}
+
+function TestAddEnclaveLeafOpcodeBytes() {
+  const e = (opcode, instr) => <SDMInstr>{
+    opcode: opcode,
+    opcode_parsed: [],
+    opcode_bytes: [],
+    instr: instr,
+    instr_parsed: [],
+    description: '',
+    page: 0,
+  };
+  const list = AddEnclaveLeafOpcodeBytes([
+    e('NP 0F 01 CF', 'ENCLS'),
+    e('NP 0F 01 D7', 'ENCLU'),
+    e('EAX = 01H', 'ENCLS[EADD]'),
+    e('EAX = 00H', 'ENCLU[EREPORT]'),
+    // A leaf whose parent is not in the list keeps the column of its page.
+    e('EAX = 00H', 'ENCLV[EDECVIRTCHILD]'),
+    // An instruction which is not a leaf is left alone.
+    e('NP 0F 01 CF', 'ENCLS'),
+  ]);
+  assert.deepEqual(list.map(x => x.opcode), [
+    'NP 0F 01 CF',
+    'NP 0F 01 D7',
+    'NP 0F 01 CF (EAX = 01H)',
+    'NP 0F 01 D7 (EAX = 00H)',
+    'EAX = 00H',
+    'NP 0F 01 CF',
+  ]);
+  // The selector is a component of its own which takes no byte, as the
+  // precondition of a GETSEC leaf is.
+  assert.deepEqual(
+      list[2].opcode_parsed, ['NP', '0F', '01', 'CF', '(EAX = 01H)']);
+  assert.deepEqual(list[2].opcode_bytes[4], {
+    components: ['(EAX = 01H)'],
+    byte_size_min: 0,
+    byte_size_max: 0,
+  });
 }
 
 function DedupInstrList(instList: SDMInstr[]): SDMInstr[] {
@@ -2806,7 +2880,8 @@ function parseSDM(filepaths: string[], requestedMnemonicList) {
       }
     }
   }
-  const instList = DedupInstrList(result.instList);
+  const instList =
+      AddEnclaveLeafOpcodeBytes(DedupInstrList(result.instList));
   fs.writeFileSync('instr_list.json', JSON.stringify(instList, null, ' '));
   if (failCount) {
     console.error('Failed reasons:');

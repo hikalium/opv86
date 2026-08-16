@@ -208162,14 +208162,49 @@
   "document": "325384-sdm-vol-3abcd"
  },
  {
-  "opcode": "EAX = 01H",
+  "opcode": "NP 0F 01 CF (EAX = 01H)",
   "opcode_parsed": [
-   "EAX = 01H"
+   "NP",
+   "0F",
+   "01",
+   "CF",
+   "(EAX = 01H)"
   ],
   "opcode_bytes": [
    {
     "components": [
-     "EAX = 01H"
+     "NP"
+    ],
+    "byte_size_min": 0,
+    "byte_size_max": 0
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "01"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "CF"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "(EAX = 01H)"
     ],
     "byte_size_min": 0,
     "byte_size_max": 0
@@ -208189,14 +208224,49 @@
   "document": "325384-sdm-vol-3abcd"
  },
  {
-  "opcode": "EAX = 0DH",
+  "opcode": "NP 0F 01 CF (EAX = 0DH)",
   "opcode_parsed": [
-   "EAX = 0DH"
+   "NP",
+   "0F",
+   "01",
+   "CF",
+   "(EAX = 0DH)"
   ],
   "opcode_bytes": [
    {
     "components": [
-     "EAX = 0DH"
+     "NP"
+    ],
+    "byte_size_min": 0,
+    "byte_size_max": 0
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "01"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "CF"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "(EAX = 0DH)"
     ],
     "byte_size_min": 0,
     "byte_size_max": 0
@@ -208216,14 +208286,49 @@
   "document": "325384-sdm-vol-3abcd"
  },
  {
-  "opcode": "EAX = 09H",
+  "opcode": "NP 0F 01 CF (EAX = 09H)",
   "opcode_parsed": [
-   "EAX = 09H"
+   "NP",
+   "0F",
+   "01",
+   "CF",
+   "(EAX = 09H)"
   ],
   "opcode_bytes": [
    {
     "components": [
-     "EAX = 09H"
+     "NP"
+    ],
+    "byte_size_min": 0,
+    "byte_size_max": 0
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "01"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "CF"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "(EAX = 09H)"
     ],
     "byte_size_min": 0,
     "byte_size_max": 0
@@ -208243,14 +208348,49 @@
   "document": "325384-sdm-vol-3abcd"
  },
  {
-  "opcode": "EAX = 00H",
+  "opcode": "NP 0F 01 CF (EAX = 00H)",
   "opcode_parsed": [
-   "EAX = 00H"
+   "NP",
+   "0F",
+   "01",
+   "CF",
+   "(EAX = 00H)"
   ],
   "opcode_bytes": [
    {
     "components": [
-     "EAX = 00H"
+     "NP"
+    ],
+    "byte_size_min": 0,
+    "byte_size_max": 0
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "01"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "CF"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "(EAX = 00H)"
     ],
     "byte_size_min": 0,
     "byte_size_max": 0
@@ -208270,14 +208410,49 @@
   "document": "325384-sdm-vol-3abcd"
  },
  {
-  "opcode": "EAX = 04H",
+  "opcode": "NP 0F 01 CF (EAX = 04H)",
   "opcode_parsed": [
-   "EAX = 04H"
+   "NP",
+   "0F",
+   "01",
+   "CF",
+   "(EAX = 04H)"
   ],
   "opcode_bytes": [
    {
     "components": [
-     "EAX = 04H"
+     "NP"
+    ],
+    "byte_size_min": 0,
+    "byte_size_max": 0
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "01"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "CF"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "(EAX = 04H)"
     ],
     "byte_size_min": 0,
     "byte_size_max": 0
@@ -208297,14 +208472,49 @@
   "document": "325384-sdm-vol-3abcd"
  },
  {
-  "opcode": "EAX = 05H",
+  "opcode": "NP 0F 01 CF (EAX = 05H)",
   "opcode_parsed": [
-   "EAX = 05H"
+   "NP",
+   "0F",
+   "01",
+   "CF",
+   "(EAX = 05H)"
   ],
   "opcode_bytes": [
    {
     "components": [
-     "EAX = 05H"
+     "NP"
+    ],
+    "byte_size_min": 0,
+    "byte_size_max": 0
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "01"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "CF"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "(EAX = 05H)"
     ],
     "byte_size_min": 0,
     "byte_size_max": 0
@@ -208324,14 +208534,49 @@
   "document": "325384-sdm-vol-3abcd"
  },
  {
-  "opcode": "EAX = 06H",
+  "opcode": "NP 0F 01 CF (EAX = 06H)",
   "opcode_parsed": [
-   "EAX = 06H"
+   "NP",
+   "0F",
+   "01",
+   "CF",
+   "(EAX = 06H)"
   ],
   "opcode_bytes": [
    {
     "components": [
-     "EAX = 06H"
+     "NP"
+    ],
+    "byte_size_min": 0,
+    "byte_size_max": 0
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "01"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "CF"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "(EAX = 06H)"
     ],
     "byte_size_min": 0,
     "byte_size_max": 0
@@ -208351,14 +208596,49 @@
   "document": "325384-sdm-vol-3abcd"
  },
  {
-  "opcode": "EAX = 02H",
+  "opcode": "NP 0F 01 CF (EAX = 02H)",
   "opcode_parsed": [
-   "EAX = 02H"
+   "NP",
+   "0F",
+   "01",
+   "CF",
+   "(EAX = 02H)"
   ],
   "opcode_bytes": [
    {
     "components": [
-     "EAX = 02H"
+     "NP"
+    ],
+    "byte_size_min": 0,
+    "byte_size_max": 0
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "01"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "CF"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "(EAX = 02H)"
     ],
     "byte_size_min": 0,
     "byte_size_max": 0
@@ -208378,14 +208658,49 @@
   "document": "325384-sdm-vol-3abcd"
  },
  {
-  "opcode": "EAX = 07H",
+  "opcode": "NP 0F 01 CF (EAX = 07H)",
   "opcode_parsed": [
-   "EAX = 07H"
+   "NP",
+   "0F",
+   "01",
+   "CF",
+   "(EAX = 07H)"
   ],
   "opcode_bytes": [
    {
     "components": [
-     "EAX = 07H"
+     "NP"
+    ],
+    "byte_size_min": 0,
+    "byte_size_max": 0
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "01"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "CF"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "(EAX = 07H)"
     ],
     "byte_size_min": 0,
     "byte_size_max": 0
@@ -208405,14 +208720,49 @@
   "document": "325384-sdm-vol-3abcd"
  },
  {
-  "opcode": "EAX = 08H",
+  "opcode": "NP 0F 01 CF (EAX = 08H)",
   "opcode_parsed": [
-   "EAX = 08H"
+   "NP",
+   "0F",
+   "01",
+   "CF",
+   "(EAX = 08H)"
   ],
   "opcode_bytes": [
    {
     "components": [
-     "EAX = 08H"
+     "NP"
+    ],
+    "byte_size_min": 0,
+    "byte_size_max": 0
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "01"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "CF"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "(EAX = 08H)"
     ],
     "byte_size_min": 0,
     "byte_size_max": 0
@@ -208432,14 +208782,49 @@
   "document": "325384-sdm-vol-3abcd"
  },
  {
-  "opcode": "EAX = 0EH",
+  "opcode": "NP 0F 01 CF (EAX = 0EH)",
   "opcode_parsed": [
-   "EAX = 0EH"
+   "NP",
+   "0F",
+   "01",
+   "CF",
+   "(EAX = 0EH)"
   ],
   "opcode_bytes": [
    {
     "components": [
-     "EAX = 0EH"
+     "NP"
+    ],
+    "byte_size_min": 0,
+    "byte_size_max": 0
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "01"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "CF"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "(EAX = 0EH)"
     ],
     "byte_size_min": 0,
     "byte_size_max": 0
@@ -208459,14 +208844,49 @@
   "document": "325384-sdm-vol-3abcd"
  },
  {
-  "opcode": "EAX = 0FH",
+  "opcode": "NP 0F 01 CF (EAX = 0FH)",
   "opcode_parsed": [
-   "EAX = 0FH"
+   "NP",
+   "0F",
+   "01",
+   "CF",
+   "(EAX = 0FH)"
   ],
   "opcode_bytes": [
    {
     "components": [
-     "EAX = 0FH"
+     "NP"
+    ],
+    "byte_size_min": 0,
+    "byte_size_max": 0
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "01"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "CF"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "(EAX = 0FH)"
     ],
     "byte_size_min": 0,
     "byte_size_max": 0
@@ -208486,14 +208906,49 @@
   "document": "325384-sdm-vol-3abcd"
  },
  {
-  "opcode": "EAX = 0AH",
+  "opcode": "NP 0F 01 CF (EAX = 0AH)",
   "opcode_parsed": [
-   "EAX = 0AH"
+   "NP",
+   "0F",
+   "01",
+   "CF",
+   "(EAX = 0AH)"
   ],
   "opcode_bytes": [
    {
     "components": [
-     "EAX = 0AH"
+     "NP"
+    ],
+    "byte_size_min": 0,
+    "byte_size_max": 0
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "01"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "CF"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "(EAX = 0AH)"
     ],
     "byte_size_min": 0,
     "byte_size_max": 0
@@ -208513,14 +208968,49 @@
   "document": "325384-sdm-vol-3abcd"
  },
  {
-  "opcode": "EAX = 03H",
+  "opcode": "NP 0F 01 CF (EAX = 03H)",
   "opcode_parsed": [
-   "EAX = 03H"
+   "NP",
+   "0F",
+   "01",
+   "CF",
+   "(EAX = 03H)"
   ],
   "opcode_bytes": [
    {
     "components": [
-     "EAX = 03H"
+     "NP"
+    ],
+    "byte_size_min": 0,
+    "byte_size_max": 0
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "01"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "CF"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "(EAX = 03H)"
     ],
     "byte_size_min": 0,
     "byte_size_max": 0
@@ -208540,14 +209030,49 @@
   "document": "325384-sdm-vol-3abcd"
  },
  {
-  "opcode": "EAX = 0CH",
+  "opcode": "NP 0F 01 CF (EAX = 0CH)",
   "opcode_parsed": [
-   "EAX = 0CH"
+   "NP",
+   "0F",
+   "01",
+   "CF",
+   "(EAX = 0CH)"
   ],
   "opcode_bytes": [
    {
     "components": [
-     "EAX = 0CH"
+     "NP"
+    ],
+    "byte_size_min": 0,
+    "byte_size_max": 0
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "01"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "CF"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "(EAX = 0CH)"
     ],
     "byte_size_min": 0,
     "byte_size_max": 0
@@ -208567,14 +209092,49 @@
   "document": "325384-sdm-vol-3abcd"
  },
  {
-  "opcode": "EAX = 18H",
+  "opcode": "NP 0F 01 CF (EAX = 18H)",
   "opcode_parsed": [
-   "EAX = 18H"
+   "NP",
+   "0F",
+   "01",
+   "CF",
+   "(EAX = 18H)"
   ],
   "opcode_bytes": [
    {
     "components": [
-     "EAX = 18H"
+     "NP"
+    ],
+    "byte_size_min": 0,
+    "byte_size_max": 0
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "01"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "CF"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "(EAX = 18H)"
     ],
     "byte_size_min": 0,
     "byte_size_max": 0
@@ -208594,14 +209154,49 @@
   "document": "325384-sdm-vol-3abcd"
  },
  {
-  "opcode": "EAX = 0BH",
+  "opcode": "NP 0F 01 CF (EAX = 0BH)",
   "opcode_parsed": [
-   "EAX = 0BH"
+   "NP",
+   "0F",
+   "01",
+   "CF",
+   "(EAX = 0BH)"
   ],
   "opcode_bytes": [
    {
     "components": [
-     "EAX = 0BH"
+     "NP"
+    ],
+    "byte_size_min": 0,
+    "byte_size_max": 0
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "01"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "CF"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "(EAX = 0BH)"
     ],
     "byte_size_min": 0,
     "byte_size_max": 0
@@ -208621,14 +209216,49 @@
   "document": "325384-sdm-vol-3abcd"
  },
  {
-  "opcode": "EAX = 05H",
+  "opcode": "NP 0F 01 D7 (EAX = 05H)",
   "opcode_parsed": [
-   "EAX = 05H"
+   "NP",
+   "0F",
+   "01",
+   "D7",
+   "(EAX = 05H)"
   ],
   "opcode_bytes": [
    {
     "components": [
-     "EAX = 05H"
+     "NP"
+    ],
+    "byte_size_min": 0,
+    "byte_size_max": 0
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "01"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "D7"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "(EAX = 05H)"
     ],
     "byte_size_min": 0,
     "byte_size_max": 0
@@ -208648,14 +209278,49 @@
   "document": "325384-sdm-vol-3abcd"
  },
  {
-  "opcode": "EAX = 07H",
+  "opcode": "NP 0F 01 D7 (EAX = 07H)",
   "opcode_parsed": [
-   "EAX = 07H"
+   "NP",
+   "0F",
+   "01",
+   "D7",
+   "(EAX = 07H)"
   ],
   "opcode_bytes": [
    {
     "components": [
-     "EAX = 07H"
+     "NP"
+    ],
+    "byte_size_min": 0,
+    "byte_size_max": 0
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "01"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "D7"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "(EAX = 07H)"
     ],
     "byte_size_min": 0,
     "byte_size_max": 0
@@ -208675,14 +209340,49 @@
   "document": "325384-sdm-vol-3abcd"
  },
  {
-  "opcode": "EAX = 09H",
+  "opcode": "NP 0F 01 D7 (EAX = 09H)",
   "opcode_parsed": [
-   "EAX = 09H"
+   "NP",
+   "0F",
+   "01",
+   "D7",
+   "(EAX = 09H)"
   ],
   "opcode_bytes": [
    {
     "components": [
-     "EAX = 09H"
+     "NP"
+    ],
+    "byte_size_min": 0,
+    "byte_size_max": 0
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "01"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "D7"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "(EAX = 09H)"
     ],
     "byte_size_min": 0,
     "byte_size_max": 0
@@ -208702,14 +209402,49 @@
   "document": "325384-sdm-vol-3abcd"
  },
  {
-  "opcode": "EAX = 02H",
+  "opcode": "NP 0F 01 D7 (EAX = 02H)",
   "opcode_parsed": [
-   "EAX = 02H"
+   "NP",
+   "0F",
+   "01",
+   "D7",
+   "(EAX = 02H)"
   ],
   "opcode_bytes": [
    {
     "components": [
-     "EAX = 02H"
+     "NP"
+    ],
+    "byte_size_min": 0,
+    "byte_size_max": 0
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "01"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "D7"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "(EAX = 02H)"
     ],
     "byte_size_min": 0,
     "byte_size_max": 0
@@ -208729,14 +209464,49 @@
   "document": "325384-sdm-vol-3abcd"
  },
  {
-  "opcode": "EAX = 04H",
+  "opcode": "NP 0F 01 D7 (EAX = 04H)",
   "opcode_parsed": [
-   "EAX = 04H"
+   "NP",
+   "0F",
+   "01",
+   "D7",
+   "(EAX = 04H)"
   ],
   "opcode_bytes": [
    {
     "components": [
-     "EAX = 04H"
+     "NP"
+    ],
+    "byte_size_min": 0,
+    "byte_size_max": 0
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "01"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "D7"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "(EAX = 04H)"
     ],
     "byte_size_min": 0,
     "byte_size_max": 0
@@ -208756,14 +209526,49 @@
   "document": "325384-sdm-vol-3abcd"
  },
  {
-  "opcode": "EAX = 01H",
+  "opcode": "NP 0F 01 D7 (EAX = 01H)",
   "opcode_parsed": [
-   "EAX = 01H"
+   "NP",
+   "0F",
+   "01",
+   "D7",
+   "(EAX = 01H)"
   ],
   "opcode_bytes": [
    {
     "components": [
-     "EAX = 01H"
+     "NP"
+    ],
+    "byte_size_min": 0,
+    "byte_size_max": 0
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "01"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "D7"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "(EAX = 01H)"
     ],
     "byte_size_min": 0,
     "byte_size_max": 0
@@ -208783,14 +209588,49 @@
   "document": "325384-sdm-vol-3abcd"
  },
  {
-  "opcode": "EAX = 06H",
+  "opcode": "NP 0F 01 D7 (EAX = 06H)",
   "opcode_parsed": [
-   "EAX = 06H"
+   "NP",
+   "0F",
+   "01",
+   "D7",
+   "(EAX = 06H)"
   ],
   "opcode_bytes": [
    {
     "components": [
-     "EAX = 06H"
+     "NP"
+    ],
+    "byte_size_min": 0,
+    "byte_size_max": 0
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "01"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "D7"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "(EAX = 06H)"
     ],
     "byte_size_min": 0,
     "byte_size_max": 0
@@ -208810,14 +209650,49 @@
   "document": "325384-sdm-vol-3abcd"
  },
  {
-  "opcode": "EAX = 00H",
+  "opcode": "NP 0F 01 D7 (EAX = 00H)",
   "opcode_parsed": [
-   "EAX = 00H"
+   "NP",
+   "0F",
+   "01",
+   "D7",
+   "(EAX = 00H)"
   ],
   "opcode_bytes": [
    {
     "components": [
-     "EAX = 00H"
+     "NP"
+    ],
+    "byte_size_min": 0,
+    "byte_size_max": 0
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "01"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "D7"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "(EAX = 00H)"
     ],
     "byte_size_min": 0,
     "byte_size_max": 0
@@ -208837,14 +209712,49 @@
   "document": "325384-sdm-vol-3abcd"
  },
  {
-  "opcode": "EAX = 03H",
+  "opcode": "NP 0F 01 D7 (EAX = 03H)",
   "opcode_parsed": [
-   "EAX = 03H"
+   "NP",
+   "0F",
+   "01",
+   "D7",
+   "(EAX = 03H)"
   ],
   "opcode_bytes": [
    {
     "components": [
-     "EAX = 03H"
+     "NP"
+    ],
+    "byte_size_min": 0,
+    "byte_size_max": 0
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "01"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "D7"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "(EAX = 03H)"
     ],
     "byte_size_min": 0,
     "byte_size_max": 0
@@ -208864,14 +209774,49 @@
   "document": "325384-sdm-vol-3abcd"
  },
  {
-  "opcode": "EAX = 08H",
+  "opcode": "NP 0F 01 D7 (EAX = 08H)",
   "opcode_parsed": [
-   "EAX = 08H"
+   "NP",
+   "0F",
+   "01",
+   "D7",
+   "(EAX = 08H)"
   ],
   "opcode_bytes": [
    {
     "components": [
-     "EAX = 08H"
+     "NP"
+    ],
+    "byte_size_min": 0,
+    "byte_size_max": 0
+   },
+   {
+    "components": [
+     "0F"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "01"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "D7"
+    ],
+    "byte_type": "opcode",
+    "byte_size_min": 1,
+    "byte_size_max": 1
+   },
+   {
+    "components": [
+     "(EAX = 08H)"
     ],
     "byte_size_min": 0,
     "byte_size_max": 0
