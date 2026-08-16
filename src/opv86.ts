@@ -294,6 +294,10 @@ function updateFilter(data: SDMInstr[], rows: HTMLElement[], filter: string) {
       lastMatchedRow = rows[i];
     }
   }
+  // How much of the list the filter left, which is not otherwise visible when
+  // the result is longer than the window.
+  $('#oplist-count')
+      .text(`Found ${matchedCount} op${matchedCount === 1 ? '' : 's'}`);
   // Expand the panel if there is only one result.
   if (matchedCount == 1) {
     lastMatchedRow.click();
@@ -335,8 +339,10 @@ function compareOps(a: SDMInstr, b: SDMInstr) {
     const q = new URL(location.href).searchParams.get('q');
     if (q !== null) {
       filterValueInput.value = decodeURIComponent(q);
-      updateFilter(data, rows, q);
     }
+    // Run the filter even when nothing is asked for, so that the count above
+    // the list says how many instructions there are in total.
+    updateFilter(data, rows, filterValueInput.value);
     filterValueInput.addEventListener('keyup', () => {
       const filterValue = filterValueInput.value;
       updateFilter(data, rows, filterValue);
