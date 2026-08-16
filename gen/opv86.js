@@ -933,9 +933,21 @@ const byteTypeNameTable = {
     'bad': 'bad',
     'unknown': '?',
 };
+// The box of one byte of the decoder output, and the gap between two of them.
+// See .opv86-decoder-bytes in opv86.css.
+const DECODER_BYTE_WIDTH_PX = 52;
+const DECODER_BYTE_GAP_PX = 4;
+function decoderBytesWidthPx(byteCount) {
+    return byteCount * DECODER_BYTE_WIDTH_PX +
+        (byteCount - 1) * DECODER_BYTE_GAP_PX;
+}
 // One row of the decoder output, which shows the bytes of a single instruction
-// of the input with what each of them is.
-function makeDecoderRow(offset, decoded) {
+// of the input with what each of them is. byteColumns is how many bytes the
+// longest instruction of the output has: every row reserves that much room, so
+// that the instructions below stay in one column, and no more than that, so
+// that a short instruction is not pushed to the right by the 15 bytes an x86
+// instruction may take at most.
+function makeDecoderRow(offset, decoded, byteColumns) {
     const bytes = decoded.bytes.slice(0, Math.max(decoded.length, 1));
     const opcodeByteElements = bytes.map(e => {
         return $('<div>')
@@ -965,12 +977,16 @@ function makeDecoderRow(offset, decoded) {
         (decoded.matched && !decoded.truncated) ?
             `${decoded.length} byte(s): ${decoded.description}` :
             decoded.description;
-    const oplistRow = $('<div>').addClass('opv86-oplist-container-decoder');
+    const bytesColumns = `repeat(${byteColumns}, ${DECODER_BYTE_WIDTH_PX}px)`;
+    const oplistRow = $('<div>')
+        .addClass('opv86-oplist-container-decoder')
+        .css('grid-template-columns', `64px ${decoderBytesWidthPx(byteColumns)}px auto`);
     oplistRow.append($('<div>')
         .addClass('opv86-decoder-offset')
         .text(`+${('000' + offset.toString(16)).substr(-4)}`));
     oplistRow.append($('<div>')
         .addClass('opv86-decoder-bytes')
+        .css('grid-template-columns', bytesColumns)
         .append(opcodeByteElements));
     oplistRow.append($('<div>')
         .addClass('opv86-oplist-item-instr')
@@ -980,6 +996,7 @@ function makeDecoderRow(offset, decoded) {
     oplistRow.append($('<div>')
         .addClass('opv86-decoder-bytes')
         .addClass('opv86-decoder-byte-names')
+        .css('grid-template-columns', bytesColumns)
         .append(opcodeByteElementsDescription));
     oplistRow.append($('<div>')
         .addClass('opv86-oplist-item-description')
@@ -1000,9 +1017,16 @@ function updateDecoderOutput(filter) {
     // The input may hold more than one instruction, so it is split at the
     // instruction boundaries and shown one per row, like a disassembler does.
     const decoded = decodeAll(bin, decoderTable);
+    // The byte area is only as wide as the longest instruction which is shown,
+    // so that the instructions are not pushed to the right of the page by room
+    // reserved for bytes which are not there.
+    let byteColumns = 1;
+    for (const r of decoded) {
+        byteColumns = Math.max(byteColumns, Math.max(r.decoded.length, 1));
+    }
     const fragment = $(document.createDocumentFragment());
     for (const r of decoded) {
-        fragment.append(makeDecoderRow(r.offset, r.decoded));
+        fragment.append(makeDecoderRow(r.offset, r.decoded, byteColumns));
     }
     // decodeAll() stops after a fixed number of instructions, so say how much of
     // the input is not shown instead of letting it look like the whole of it.

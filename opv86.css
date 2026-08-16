@@ -175,10 +175,12 @@ a:visited {
 }
 /* One instruction of the decoded input. The six children fill the three
    columns twice: the offset, the bytes and the instruction on the first line,
-   then nothing, what each byte is and the description on the second. */
+   then nothing, what each byte is and the description on the second.
+   The width of the middle column follows the longest instruction which is
+   shown, so makeDecoderRow() overrides the one below on every row. */
 .opv86-oplist-container-decoder {
   display: grid;
-  grid-template-columns: 64px 840px auto;
+  grid-template-columns: 64px 160px auto;
   padding-top: 1px;
   padding-bottom: 1px;
   border-bottom: 0.5px solid #d0d0d0;
@@ -186,12 +188,11 @@ a:visited {
 .opv86-decoder-offset {
   color: #808080;
 }
-/* An instruction is never longer than 15 bytes, so the row never wraps. */
 .opv86-decoder-bytes {
   background-color: #ffffff;
 
   display: grid;
-  grid-template-columns: repeat(15, 52px);
+  grid-template-columns: repeat(3, 52px);
   column-gap: 4px;
 }
 /* The names are longer than the two hex digits above them ('addrsize' is the
