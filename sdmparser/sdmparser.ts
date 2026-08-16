@@ -115,8 +115,8 @@ function TestExpandMnemonic() {
   assert.deepEqual(ExpandMnemonic(' XTEST '), ['XTEST']);
   // The groups of the alternatives written in the brackets.
   assert.deepEqual(ExpandMnemonic('VF[,N]MADD[132,213,231]SH'), [
-    'VFMADD132SH', 'VFMADD213SH', 'VFMADD231SH', 'VFNMADD132SH',
-    'VFNMADD213SH', 'VFNMADD231SH'
+    'VFMADD132SH', 'VFMADD213SH', 'VFMADD231SH', 'VFNMADD132SH', 'VFNMADD213SH',
+    'VFNMADD231SH'
   ]);
   assert.deepEqual(ExpandMnemonic('VPDPW[SU,US,UU]D[,S]'), [
     'VPDPWSUD', 'VPDPWSUDS', 'VPDPWUSD', 'VPDPWUSDS', 'VPDPWUUD', 'VPDPWUUDS'
@@ -907,8 +907,8 @@ function JoinWrappedText(parts: string[]): string {
   return joined;
 }
 
-function SplitValidIn3264AndCpuid(validIn3264: string, cpuid: string):
-    {validIn3264: string, cpuid: string} {
+function SplitValidIn3264AndCpuid(
+    validIn3264: string, cpuid: string): {validIn3264: string, cpuid: string} {
   // The 64/32 bit Mode Support column and the first line of the CPUID Feature
   // Flag column can be extracted as one token. The value of the mode column
   // never contains a space, so the rest belongs to the CPUID column.
@@ -924,8 +924,8 @@ function SplitValidIn3264AndCpuid(validIn3264: string, cpuid: string):
   };
 }
 
-function SplitOpEnAndValidIn64(opEn: string, validIn64: string):
-    {opEn: string, validIn64: string} {
+function SplitOpEnAndValidIn64(
+    opEn: string, validIn64: string): {opEn: string, validIn64: string} {
   // The Op/En column and the 64-Bit Mode column can be extracted as one token,
   // and the mode column is left empty in that case.
   // Required by: PSHUFW ('RMI Valid'), IMUL ('RMI Valid'), SHLD and SHRD
@@ -938,8 +938,8 @@ function SplitOpEnAndValidIn64(opEn: string, validIn64: string):
   return {opEn: match[1], validIn64: match[2]};
 }
 
-function SplitOpEnAndValidIn3264(opEn: string, validIn3264: string):
-    {opEn: string, validIn3264: string} {
+function SplitOpEnAndValidIn3264(
+    opEn: string, validIn3264: string): {opEn: string, validIn3264: string} {
   // The Op/En column and the 64/32 bit Mode Support column can be extracted as
   // one token, and the mode column is left empty in that case.
   // Required by: ADDSUBPD, BLENDPD, VPMADD52LUQ and the other SIMD
@@ -953,8 +953,8 @@ function SplitOpEnAndValidIn3264(opEn: string, validIn3264: string):
   return {opEn: match[1], validIn3264: match[2]};
 }
 
-function MoveMnemonicFromOpcode(opcode: string, instr: string):
-    {opcode: string, instr: string} {
+function MoveMnemonicFromOpcode(
+    opcode: string, instr: string): {opcode: string, instr: string} {
   // The instruction can be extracted as a part of the opcode when the both are
   // rendered in the same line. The mnemonic is required to be 3 characters or
   // longer here, so that the opcode bytes like 'D8' are not moved by mistake.
@@ -1027,7 +1027,8 @@ function Parser_OpInstr_OpEn_6432_CPUID_Desc(table: SDMText[][][]) {
     // A value in the Op/En column can be wrapped into multiple tokens.
     // Required by: VMASKMOVPS in 325383-092US (June 2026), whose 'RVM' is
     // splitted into 'RV' and 'M'.
-    const cellFirstText = (c: SDMText[]) => (c && c.length) ? GetText(c[0]) : '';
+    const cellFirstText = (c: SDMText[]) =>
+        (c && c.length) ? GetText(c[0]) : '';
     const opEnAndValidIn3264 = SplitOpEnAndValidIn3264(
         tr[1].map(t => GetText(t).trim()).join(''), cellFirstText(tr[2]));
     const op_en = opEnAndValidIn3264.opEn;
@@ -1037,8 +1038,7 @@ function Parser_OpInstr_OpEn_6432_CPUID_Desc(table: SDMText[][][]) {
     // tokens in the cell instead of taking the first line only.
     // Required by: ANDPD, PADDB, MOVDQA, KNOTW and most of the AVX-512
     // instructions in 325383-092US (June 2026).
-    let cpuid_str =
-        JoinWrappedText((tr[3] || []).map(t => GetText(t).trim()));
+    let cpuid_str = JoinWrappedText((tr[3] || []).map(t => GetText(t).trim()));
     let description = CanonicalizeDescription(tr[4] || []);
     // The CPUID Feature Flag cell and the first line of the description can be
     // extracted as one token when the flag is short.
@@ -1180,8 +1180,8 @@ function makeOpBytes(op_parsed: string[]): SDMInstrOpByte[] {
       opcode_bytes.push(c);
       continue;
     }
-    if (op_parsed[i] == 'ib' || op_parsed[i] == 'cb' ||
-        op_parsed[i] == '/ib' || op_parsed[i] == 'imm8') {
+    if (op_parsed[i] == 'ib' || op_parsed[i] == 'cb' || op_parsed[i] == '/ib' ||
+        op_parsed[i] == 'imm8') {
       opcode_bytes.push({
         components: [op_parsed[i++]],
         byte_type: 'imm',
@@ -1303,7 +1303,8 @@ function JoinDescriptionLines(lines: string[]): string {
 }
 function CanonicalizeDescription(descText: SDMText[]): string {
   const lines = MakeRows(descText).map(
-      r => r.map(t => GetText(t).trim()).filter(t => t.length).join(' ').trim());
+      r =>
+          r.map(t => GetText(t).trim()).filter(t => t.length).join(' ').trim());
   return JoinDescriptionLines(lines);
 }
 function TestCanonicalizeDescription() {
@@ -1529,14 +1530,13 @@ const parserMap = {
             1);
         return Parser_OpInstr_OpEn_6432_CPUID_Desc(table);
       },
-  'opcode/#instruction#op/#en#64/32bit#mode#support#cpuidfeature#flag#description':
-      (headers: SDMText[], tokens: SDMText[]): SDMInstr[] => {
-        // PADDB. Same layout as CLWB, but 'CPUID Feature' and 'Flag' are
-        // splitted in a different way.
-        return parserMap
-            ['opcode/#instruction#op/#en#64/32bit#mode#support#cpuid#featureflag#description'](
-                headers, tokens);
-      },
+  'opcode/#instruction#op/#en#64/32bit#mode#support#cpuidfeature#flag#description': (
+      headers: SDMText[], tokens: SDMText[]): SDMInstr[] => {
+    // PADDB. Same layout as CLWB, but 'CPUID Feature' and 'Flag' are
+    // splitted in a different way.
+    return parserMap['opcode/#instruction#op/#en#64/32bit#mode#support#cpuid#featureflag#description'](
+        headers, tokens);
+  },
   'opcode/#instruction#op/en#64/32bit#mode#support#cpuid#featureflag#description':
       (headers: SDMText[], tokens: SDMText[]): SDMInstr[] => {
         // MOVSD (SSE2)
@@ -1599,8 +1599,8 @@ const parserMap = {
           console.log(instr);
           const cellFirstText = (c: SDMText[]) =>
               (c && c.length) ? GetText(c[0]) : '';
-          const opEnAndValidIn64 = SplitOpEnAndValidIn64(
-              cellFirstText(tr[1]), cellFirstText(tr[2]));
+          const opEnAndValidIn64 =
+              SplitOpEnAndValidIn64(cellFirstText(tr[1]), cellFirstText(tr[2]));
           const op_en = opEnAndValidIn64.opEn;
           let valid_in_64_str;
           let compat_leg_str;
@@ -1796,79 +1796,79 @@ function ParseInstrTableCells(
   // See the comment in Parser_OpInstr_OpEn_6432_CPUID_Desc.
   return table.filter(tr => tr[role['opcode']] && tr[role['opcode']].length)
       .map(tr => {
-    const cell = (name: string) =>
-        (role[name] === undefined) ? [] : (tr[role[name]] || []);
-    const cellText = (name: string) =>
-        cell(name).map(t => GetText(t).trim()).join(' ').trim();
-    const cellFirstText = (name: string) =>
-        cell(name).length ? GetText(cell(name)[0]) : '';
-    let opcode: string;
-    let instr: string;
-    if (role['instr'] !== undefined) {
-      // The instruction can be in the opcode cell even if the table has a
-      // separate column for it.
-      // Required by: GETSEC[SMCTRL] in 325383-092US (June 2026), whose row is
-      // 'NP 0F 37 (EAX = 7) GETSEC[SMCTRL]' in the opcode column.
-      const opcodeAndInstr =
-          MoveMnemonicFromOpcode(cellText('opcode'), cellText('instr'));
-      opcode = opcodeAndInstr.opcode;
-      instr = opcodeAndInstr.instr;
-    } else if (!cell('opcode').length) {
-      opcode = '';
-      instr = '';
-    } else {
-      // The opcode and the instruction are stacked in the same column.
-      const rows = MakeRows(cell('opcode'));
-      opcode = rows[0].map(t => GetText(t).trim()).join(' ');
-      instr = rows.splice(1).flat().map(t => GetText(t).trim()).join(' ');
-    }
-    let description = CanonicalizeDescription(cell('description'));
-    // The instruction and the beginning of the description can be extracted as
-    // one token when the instruction column is narrow.
-    // Required by: the GETSEC leaves in 325383-092US (June 2026), whose
-    // instruction cell is like
-    // 'GETSEC[CAPABILITIES] Report the SMX capabilities.'.
-    const reInstrWithDescription = /^(GETSEC\[\w+\])\s+(\S.*)$/;
-    const instrWithDescription = instr.match(reInstrWithDescription);
-    if (instrWithDescription) {
-      instr = instrWithDescription[1];
-      description = `${instrWithDescription[2]} ${description}`.trim();
-    }
-    const opcode_parsed = CanonicalizeOpcode(opcode);
-    const e: SDMInstr = {
-      opcode: opcode,
-      opcode_parsed: opcode_parsed,
-      opcode_bytes: makeOpBytes(opcode_parsed),
-      instr: instr,
-      instr_parsed: CanonicalizeInstr(instr),
-      description: description,
-    };
-    if (role['op_en'] !== undefined) {
-      e.op_en = cellText('op_en');
-    }
-    if (role['cpuid'] !== undefined) {
-      e.cpuid_feature_flag = cellText('cpuid');
-    }
-    if (role['valid3264'] !== undefined) {
-      const opEnAndValidIn3264 = SplitOpEnAndValidIn3264(
-          cellText('op_en'), cellFirstText('valid3264'));
-      if (role['op_en'] !== undefined) {
-        e.op_en = opEnAndValidIn3264.opEn;
-      }
-      const validIn3264 =
-          CanonicalizeValidIn3264(opEnAndValidIn3264.validIn3264);
-      e.valid_in_64bit_mode = validIn3264.valid64;
-      e.valid_in_compatibility_mode = validIn3264.valid32;
-      e.valid_in_legacy_mode = false;
-    } else if (role['valid64'] !== undefined) {
-      e.valid_in_64bit_mode = CanonicalizeValidIn64(cellFirstText('valid64'));
-      const compatLeg = CanonicalizeCompatLeg(cellFirstText('compatleg'));
-      e.valid_in_compatibility_mode = compatLeg;
-      e.valid_in_legacy_mode = compatLeg;
-    }
-    console.log(e);
-    return e;
-  });
+        const cell = (name: string) =>
+            (role[name] === undefined) ? [] : (tr[role[name]] || []);
+        const cellText = (name: string) =>
+            cell(name).map(t => GetText(t).trim()).join(' ').trim();
+        const cellFirstText = (name: string) =>
+            cell(name).length ? GetText(cell(name)[0]) : '';
+        let opcode: string;
+        let instr: string;
+        if (role['instr'] !== undefined) {
+          // The instruction can be in the opcode cell even if the table has a
+          // separate column for it.
+          // Required by: GETSEC[SMCTRL] in 325383-092US (June 2026), whose row
+          // is 'NP 0F 37 (EAX = 7) GETSEC[SMCTRL]' in the opcode column.
+          const opcodeAndInstr =
+              MoveMnemonicFromOpcode(cellText('opcode'), cellText('instr'));
+          opcode = opcodeAndInstr.opcode;
+          instr = opcodeAndInstr.instr;
+        } else if (!cell('opcode').length) {
+          opcode = '';
+          instr = '';
+        } else {
+          // The opcode and the instruction are stacked in the same column.
+          const rows = MakeRows(cell('opcode'));
+          opcode = rows[0].map(t => GetText(t).trim()).join(' ');
+          instr = rows.splice(1).flat().map(t => GetText(t).trim()).join(' ');
+        }
+        let description = CanonicalizeDescription(cell('description'));
+        // The instruction and the beginning of the description can be extracted
+        // as one token when the instruction column is narrow. Required by: the
+        // GETSEC leaves in 325383-092US (June 2026), whose instruction cell is
+        // like 'GETSEC[CAPABILITIES] Report the SMX capabilities.'.
+        const reInstrWithDescription = /^(GETSEC\[\w+\])\s+(\S.*)$/;
+        const instrWithDescription = instr.match(reInstrWithDescription);
+        if (instrWithDescription) {
+          instr = instrWithDescription[1];
+          description = `${instrWithDescription[2]} ${description}`.trim();
+        }
+        const opcode_parsed = CanonicalizeOpcode(opcode);
+        const e: SDMInstr = {
+          opcode: opcode,
+          opcode_parsed: opcode_parsed,
+          opcode_bytes: makeOpBytes(opcode_parsed),
+          instr: instr,
+          instr_parsed: CanonicalizeInstr(instr),
+          description: description,
+        };
+        if (role['op_en'] !== undefined) {
+          e.op_en = cellText('op_en');
+        }
+        if (role['cpuid'] !== undefined) {
+          e.cpuid_feature_flag = cellText('cpuid');
+        }
+        if (role['valid3264'] !== undefined) {
+          const opEnAndValidIn3264 = SplitOpEnAndValidIn3264(
+              cellText('op_en'), cellFirstText('valid3264'));
+          if (role['op_en'] !== undefined) {
+            e.op_en = opEnAndValidIn3264.opEn;
+          }
+          const validIn3264 =
+              CanonicalizeValidIn3264(opEnAndValidIn3264.validIn3264);
+          e.valid_in_64bit_mode = validIn3264.valid64;
+          e.valid_in_compatibility_mode = validIn3264.valid32;
+          e.valid_in_legacy_mode = false;
+        } else if (role['valid64'] !== undefined) {
+          e.valid_in_64bit_mode =
+              CanonicalizeValidIn64(cellFirstText('valid64'));
+          const compatLeg = CanonicalizeCompatLeg(cellFirstText('compatleg'));
+          e.valid_in_compatibility_mode = compatLeg;
+          e.valid_in_legacy_mode = compatLeg;
+        }
+        console.log(e);
+        return e;
+      });
 }
 
 function ParseInstrTableByColumns(
@@ -2159,7 +2159,8 @@ function TestCanonicalizeOpcodeOfRecentSDM() {
       ['F3', '0F', '01', '/5', '(mod!=11, /5, memory only)']);
   // GETSEC[CAPABILITIES]: a precondition of a register.
   assert.deepEqual(
-      CanonicalizeOpcode('NP 0F 37 (EAX = 0)'), ['NP', '0F', '37', '(EAX = 0)']);
+      CanonicalizeOpcode('NP 0F 37 (EAX = 0)'),
+      ['NP', '0F', '37', '(EAX = 0)']);
   // ADCX: the REX prefix after a mandatory prefix, with a lowercase '.w'.
   assert.deepEqual(
       CanonicalizeOpcode('66 REX.w 0F 38 F6 /r'),
@@ -2215,7 +2216,8 @@ function TestCanonicalizeInstrOfRecentSDM() {
       ['VGATHERPF0DPS', 'vm32z {k1}']);
   // TILELOADD: the AMX operands.
   assert.deepEqual(
-      CanonicalizeInstr('TILELOADD tmm1, sibmem'), ['TILELOADD', 'tmm1', 'sibmem']);
+      CanonicalizeInstr('TILELOADD tmm1, sibmem'),
+      ['TILELOADD', 'tmm1', 'sibmem']);
   // ADD: the space left where a footnote marker was removed.
   assert.deepEqual(
       CanonicalizeInstr('ADD r/m8 , imm8'), ['ADD', 'r/m8', 'imm8']);
@@ -2299,10 +2301,10 @@ function TestJoinWrappedText() {
       '(AVX512VL AND AVX512DQ) OR AVX10.1');
   // VCVTNEEPH2PS: a word wrapped after '_'.
   assert.equal(JoinWrappedText(['AVX_NE_', 'CONVERT']), 'AVX_NE_CONVERT');
-  assert.equal(JoinWrappedText(['AVX512F', '', 'OR AVX10.1']), 'AVX512F OR AVX10.1');
-  // ENCLU[EVERIFYREPORT2]: a flag hyphenated into three lines.
   assert.equal(
-      JoinWrappedText(['EVERI-', 'FYRE-', 'PORT2']), 'EVERIFYREPORT2');
+      JoinWrappedText(['AVX512F', '', 'OR AVX10.1']), 'AVX512F OR AVX10.1');
+  // ENCLU[EVERIFYREPORT2]: a flag hyphenated into three lines.
+  assert.equal(JoinWrappedText(['EVERI-', 'FYRE-', 'PORT2']), 'EVERIFYREPORT2');
 }
 
 function TestSplitMergedCells() {
@@ -2315,7 +2317,8 @@ function TestSplitMergedCells() {
       {validIn3264: 'V/V', cpuid: 'AVX512F OR AVX10.1'});
   // PSHUFW and IMUL: the Op/En column merged with the 64-Bit Mode one.
   assert.deepEqual(
-      SplitOpEnAndValidIn64('RMI Valid', ''), {opEn: 'RMI', validIn64: 'Valid'});
+      SplitOpEnAndValidIn64('RMI Valid', ''),
+      {opEn: 'RMI', validIn64: 'Valid'});
   assert.deepEqual(
       SplitOpEnAndValidIn64('ZO', 'Valid'), {opEn: 'ZO', validIn64: 'Valid'});
   // ADDSUBPD: the Op/En column merged with the 64/32 bit Mode Support one.
@@ -2336,16 +2339,18 @@ function TestSplitMergedCells() {
       {opcode: 'NP 0F 37 (EAX = 7)', instr: 'GETSEC[SMCTRL]'});
   // An opcode byte like 'D8' should not be taken as a mnemonic.
   assert.deepEqual(
-      MoveMnemonicFromOpcode('F3 0F 38 D8 !(11):011:bbb', 'AESDECWIDE256KL m512'),
+      MoveMnemonicFromOpcode(
+          'F3 0F 38 D8 !(11):011:bbb', 'AESDECWIDE256KL m512'),
       {opcode: 'F3 0F 38 D8 !(11):011:bbb', instr: 'AESDECWIDE256KL m512'});
 }
 
 function TestIsEndOfInstrTable() {
   // The section header of the next instruction ends the table.
   assert.equal(
-      IsEndOfInstrTable(
-          {text: 'ENCODEKEY256—Encode 256-Bit Key With Key Locker',
-           attr: {top: 98, left: 69}}),
+      IsEndOfInstrTable({
+        text: 'ENCODEKEY256—Encode 256-Bit Key With Key Locker',
+        attr: {top: 98, left: 69}
+      }),
       true);
   assert.equal(
       IsEndOfInstrTable(
@@ -2353,8 +2358,10 @@ function TestIsEndOfInstrTable() {
       true);
   // ENCODEKEY256: an em dash inside a description does not end the table.
   assert.equal(
-      IsEndOfInstrTable(
-          {text: 'handle and store it in XMM0—3.', attr: {top: 191, left: 527}}),
+      IsEndOfInstrTable({
+        text: 'handle and store it in XMM0—3.',
+        attr: {top: 191, left: 527}
+      }),
       false);
 }
 
@@ -2473,43 +2480,41 @@ function TestParserOfRecentSDM() {
       },
     ],
   ]];
-  assert.deepEqual(Parser_OpInstr_OpEn_6432_CPUID_Desc(table), [{
-                     opcode: 'EVEX.LLIG.66.0F3A.W1 57 /r',
-                     opcode_parsed: ['EVEX.LLIG.66.0F3A.W1', '57', '/r'],
-                     opcode_bytes: [
-                       {
-                         components: ['EVEX.LLIG.66.0F3A.W1'],
-                         byte_type: 'evex-prefix',
-                         byte_size_min: 4,
-                         byte_size_max: 4,
-                       },
-                       {
-                         components: ['57'],
-                         byte_type: 'opcode',
-                         byte_size_min: 1,
-                         byte_size_max: 1,
-                       },
-                       {
-                         components: ['/r'],
-                         byte_type: 'modrm',
-                         byte_size_min: 1,
-                         byte_size_max: 1,
-                       },
-                     ],
-                     instr: 'VREDUCESD xmm1 {k1}{z}, xmm2, xmm3/m64{sae}, imm8',
-                     instr_parsed: [
-                       'VREDUCESD', 'xmm1 {k1}{z}', 'xmm2', 'xmm3/m64{sae}',
-                       'imm8'
-                     ],
-                     op_en: 'A',
-                     valid_in_64bit_mode: true,
-                     valid_in_compatibility_mode: true,
-                     valid_in_legacy_mode: false,
-                     cpuid_feature_flag: 'AVX512DQ OR AVX10.1',
-                     description:
-                         'Perform a reduction transformation on a scalar double' +
-                         ' precision floating-point value in xmm3/m64 by',
-                   }]);
+  assert.deepEqual(
+      Parser_OpInstr_OpEn_6432_CPUID_Desc(table), [{
+        opcode: 'EVEX.LLIG.66.0F3A.W1 57 /r',
+        opcode_parsed: ['EVEX.LLIG.66.0F3A.W1', '57', '/r'],
+        opcode_bytes: [
+          {
+            components: ['EVEX.LLIG.66.0F3A.W1'],
+            byte_type: 'evex-prefix',
+            byte_size_min: 4,
+            byte_size_max: 4,
+          },
+          {
+            components: ['57'],
+            byte_type: 'opcode',
+            byte_size_min: 1,
+            byte_size_max: 1,
+          },
+          {
+            components: ['/r'],
+            byte_type: 'modrm',
+            byte_size_min: 1,
+            byte_size_max: 1,
+          },
+        ],
+        instr: 'VREDUCESD xmm1 {k1}{z}, xmm2, xmm3/m64{sae}, imm8',
+        instr_parsed:
+            ['VREDUCESD', 'xmm1 {k1}{z}', 'xmm2', 'xmm3/m64{sae}', 'imm8'],
+        op_en: 'A',
+        valid_in_64bit_mode: true,
+        valid_in_compatibility_mode: true,
+        valid_in_legacy_mode: false,
+        cpuid_feature_flag: 'AVX512DQ OR AVX10.1',
+        description: 'Perform a reduction transformation on a scalar double' +
+            ' precision floating-point value in xmm3/m64 by',
+      }]);
 }
 
 const HeaderTexts = {
@@ -2805,8 +2810,7 @@ function DedupInstrList(instList: SDMInstr[]): SDMInstr[] {
 }
 
 function ParseSDMDocument(
-    sdmPages, instrIndex, requestedMnemonicList, documentName: string,
-    result: {
+    sdmPages, instrIndex, requestedMnemonicList, documentName: string, result: {
       instList: SDMInstr[],
       passCount: number,
       failCount: number,
@@ -2880,8 +2884,7 @@ function parseSDM(filepaths: string[], requestedMnemonicList) {
       }
     }
   }
-  const instList =
-      AddEnclaveLeafOpcodeBytes(DedupInstrList(result.instList));
+  const instList = AddEnclaveLeafOpcodeBytes(DedupInstrList(result.instList));
   fs.writeFileSync('instr_list.json', JSON.stringify(instList, null, ' '));
   if (failCount) {
     console.error('Failed reasons:');
@@ -2940,8 +2943,8 @@ process.exit((() => {
       'pdf/325383-sdm-vol-2abcd.xml',
       'pdf/325384-sdm-vol-3abcd.xml',
     ];
-    console.error(
-        `--file option is not set. Using default paths (${filepaths.join(', ')}).`);
+    console.error(`--file option is not set. Using default paths (${
+        filepaths.join(', ')}).`);
   } else {
     filepaths = options.file;
   }
